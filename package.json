@@ -1,0 +1,35 @@
+{
+  "name": "nani",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bootstrap": "^4.0.0",
+    "clappr": "^0.2.87",
+    "history": "^4.7.2",
+    "localforage": "^1.6.0",
+    "react": "^16.2.0",
+    "react-debounce-input": "^3.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.1",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^5.9.1",
+    "redux-thunk": "^2.2.0",
+    "uuid": "^3.2.1"
+  },
+  "standard": {
+    "env": [
+      "browser",
+      "node"
+    ]
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
