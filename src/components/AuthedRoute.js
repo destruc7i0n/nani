@@ -7,7 +7,7 @@ const AuthedRoute = ({component: Component, authed, redirect = '/login', ...rest
       {...rest}
       render={(props) => authed
         ? <Component {...props} />
-        : <Redirect to={{pathname: redirect, state: {from: props.location}}} />}
+        : <Redirect to={redirect} />}
     />
   )
 }

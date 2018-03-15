@@ -3,21 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.4",
+    "@fortawesome/fontawesome-free-solid": "^5.0.8",
+    "@fortawesome/react-fontawesome": "^0.0.17",
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "clappr": "^0.2.87",
-    "history": "^4.7.2",
+    "classnames": "^2.2.5",
     "localforage": "^1.6.0",
+    "lodash": "^4.17.5",
     "react": "^16.2.0",
     "react-debounce-input": "^3.2.0",
     "react-dom": "^16.2.0",
+    "react-helmet": "^5.2.0",
+    "react-popper": "^0.8.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
+    "react-transition-group": "^2.2.1",
+    "reactstrap": "^5.0.0-beta.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.9.1",
     "redux-thunk": "^2.2.0",
+    "serve": "^6.5.3",
     "uuid": "^3.2.1"
   },
   "standard": {
@@ -26,10 +35,15 @@
       "node"
     ]
   },
+  "now": {
+    "alias": "nani.now.sh"
+  },
   "scripts": {
     "start": "react-scripts start",
+    "now-start": "serve --single ./build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "yarn build && now"
   }
 }

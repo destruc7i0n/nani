@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import Clappr from 'clappr'
 import LevelSelector from '../lib/clappr-level-selector'
 
+import './Video.css'
+
 class Video extends Component {
   // ignore updates!
   shouldComponentUpdate () {
@@ -52,7 +54,7 @@ class Video extends Component {
 
   render () {
     return (
-      <div>
+      <div className='embed-responsive sort-of-center-md'>
         <div ref={el => { this.playerRef = el }} />
       </div>
     )

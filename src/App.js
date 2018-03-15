@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { startSession } from './actions'
+import { logout, startSession } from './actions'
 
 import { isLoggedIn } from './lib/auth'
 
@@ -12,15 +12,21 @@ import Dashboard from './pages/Dashboard'
 import AuthedRoute from './components/AuthedRoute'
 import Series from './pages/Series'
 import Media from './pages/Media'
+import Queue from './pages/Queue'
+import History from './pages/History'
+
+import 'bootstrap/dist/css/bootstrap.css'
 
 class App extends Component {
   async componentWillMount () {
-    console.log('will')
-    const { dispatch } = this.props
+    const { dispatch, Auth } = this.props
     try {
       await dispatch(startSession())
     } catch (e) {
       console.error(e)
+    }
+    if (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires)) {
+      await dispatch(logout(true))
     }
   }
 
@@ -31,6 +37,8 @@ class App extends Component {
           <Switch>
             <AuthedRoute exact path='/' authed={isLoggedIn()} component={Dashboard} />
             <AuthedRoute exact path='/login' redirect='/' authed={!isLoggedIn()} component={Login} />
+            <AuthedRoute path='/queue' authed={isLoggedIn()} component={Queue} />
+            <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
             <AuthedRoute path='/series/:id/:media' authed={isLoggedIn()} component={Media} />
             <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
           </Switch>

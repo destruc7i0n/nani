@@ -1,4 +1,15 @@
-import { SET_QUEUE_DATA, SET_SEARCH_IDS, ADD_SERIES, ADD_MEDIA, ADD_COLLECTION, ADD_COLLECTION_MEDIA, ADD_SERIES_COLLECTION } from '../actions'
+import {
+  ADD_COLLECTION,
+  ADD_COLLECTION_MEDIA,
+  ADD_MEDIA,
+  ADD_SERIES,
+  ADD_SERIES_COLLECTION,
+  SET_ERROR,
+  SET_HISTORY,
+  SET_QUEUE,
+  SET_SEARCH_IDS,
+  UPDATE_SERIES_QUEUE
+} from '../actions'
 
 const addToObj = (state, key, data) => ({
   ...state,
@@ -9,24 +20,47 @@ const addToObj = (state, key, data) => ({
 })
 
 export default function Data (state = {
-  queueData: [],
   searchIds: [],
   series: {},
   seriesCollections: {},
   media: {},
   collections: {},
-  collectionMedia: {}
+  collectionMedia: {},
+  history: [],
+  queue: [],
+
+  error: false
 }, action) {
   switch (action.type) {
+    case SET_ERROR:
+      return {
+        ...state,
+        error: action.payload
+      }
     case SET_SEARCH_IDS:
       return {
         ...state,
         searchIds: action.payload
       }
-    case SET_QUEUE_DATA:
+    case SET_QUEUE:
       return {
         ...state,
-        queueData: action.payload
+        queue: action.payload
+      }
+    case SET_HISTORY:
+      return {
+        ...state,
+        history: action.payload
+      }
+    case UPDATE_SERIES_QUEUE:
+      return {
+        ...state,
+        series: {
+          [action.payload.id]: {
+            ...state.series[action.payload.id],
+            in_queue: action.payload.inQueue
+          }
+        }
       }
     case ADD_SERIES:
       return addToObj(state, 'series', action.payload)

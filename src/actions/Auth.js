@@ -1,7 +1,7 @@
 import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 import { getUuid } from '../lib/auth'
 
-import { handleError, setQueueData } from './Data'
+import { handleError, setHistory, setQueue } from './Data'
 
 export const UPDATE_AUTH = 'UPDATE_AUTH'
 export const updateAuth = (authData) => ({
@@ -98,8 +98,8 @@ export const logout = (didExpire) => (dispatch, getState) => {
       dispatch(removeAuth())
       await dispatch(startSession())
       resolve()
-      // commit('SET_INITIAL_HISTORY', [])
-      dispatch(setQueueData([]))
+      dispatch(setHistory([]))
+      dispatch(setQueue([]))
     } catch (err) {
       handleError(err, dispatch, reject)
     }

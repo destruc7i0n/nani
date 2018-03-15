@@ -1,12 +1,17 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { getMediaInfo } from '../actions'
-
+import { getMediaForCollection, getMediaInfo } from '../actions'
+import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
+import { Badge } from 'reactstrap'
+
 import Video from '../components/Video'
+import Collection from '../components/Collection'
 
 import api from '../lib/api'
+
+import './Media.css'
 
 class Media extends Component {
   constructor (props) {
@@ -14,38 +19,94 @@ class Media extends Component {
     this.state = {
       streamData: {}
     }
+    this.loadVideo = this.loadVideo.bind(this)
   }
 
   async componentWillMount () {
-    const { match: { params: { media } }, dispatch, Auth } = this.props
-    await dispatch(getMediaInfo(media))
-    const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: media, fields: 'media.stream_data'}})
-    this.setState({
-      streamData: video.data.data.stream_data
-    })
+    const { match: { params } } = this.props
+    await this.loadVideo(params.media)
+  }
+
+  async componentWillReceiveProps (nextProps) {
+    const { match: { params } } = this.props
+    const { match: { params: nextParams } } = nextProps
+    if (nextParams.media !== params.media) {
+      await this.loadVideo(nextParams.media)
+    }
+  }
+
+  async loadVideo (mediaId) {
+    const { dispatch, Auth } = this.props
+    try {
+      const media = await dispatch(getMediaInfo(mediaId))
+      await dispatch(getMediaForCollection(media.collection_id))
+      const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data'}})
+      this.setState({
+        streamData: video.data.data.stream_data
+      })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   render () {
     const { streamData } = this.state
-    const { match: { params: { media: mediaId } }, media } = this.props
+    const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
     const loadedDetails = media[mediaId] && true
     const loadedVideo = Object.keys(streamData).length > 0
+    const mediaObj = media[mediaId]
+    const nextEpisodes = mediaObj && collectionMedia[mediaObj.collection_id]
+      ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
+      : false
     return (
-      <div>
-        <Link to='/'>
-          <button type='button'>
-            Home
-          </button>
-        </Link>
-        <br />
-        { !loadedDetails ? 'Loading...' : (
-          <div>
-            <h1>{media[mediaId].name}</h1>
-            <p>{media[mediaId].description}</p>
-            {!loadedVideo ? 'Loading video...' : <Video streamUrl={streamData.streams[0].url} poster={media[mediaId].screenshot_image.full_url} />}
-          </div>
-        )}
-      </div>
+      <Fragment>
+        <Helmet>
+          <title>
+            {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${mediaObj.collection_name}` : 'Loading...'}
+            {' '}- nani
+          </title>
+        </Helmet>
+        <div className='row'>
+          { !loadedDetails
+            ? (
+              <div className='col-sm-12 text-center'>
+                <h1>Loading...</h1>
+              </div>
+            )
+            : (
+              <div className='col-sm-12'>
+                <div className='row mb-4 bg-light player-background'>
+                  {!loadedVideo
+                    ? <img className='img-fluid sort-of-center-md' src={mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
+                    : <Video streamUrl={streamData.streams[0].url} poster={mediaObj.screenshot_image.full_url} key={mediaId} />}
+                </div>
+                <h3>{mediaObj.name}</h3>
+                <h5>
+                  <Badge color='success'>
+                    <Link to={`/series/${mediaObj.series_id}`} className='text-white'>{mediaObj.collection_name}</Link>
+                  </Badge>
+                  <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge>
+                  <Badge color='secondary' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
+                </h5>
+                <p>{media[mediaId].description}</p>
+                {nextEpisodes && nextEpisodes.length
+                  ? <Collection
+                    mediaIds={
+                      collectionMedia[mediaObj.collection_id]
+                        ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
+                        : []
+                    }
+                    loading={collectionMedia[mediaObj.collection_id] === undefined}
+                    title='Next Episodes'
+                    titleTag='h4'
+                    perPage={3} />
+                  : null
+                }
+              </div>
+            )
+          }
+        </div>
+      </Fragment>
     )
   }
 }
@@ -53,6 +114,7 @@ class Media extends Component {
 export default connect((store) => {
   return {
     Auth: store.Auth,
-    media: store.Data.media
+    media: store.Data.media,
+    collectionMedia: store.Data.collectionMedia
   }
 })(Media)
