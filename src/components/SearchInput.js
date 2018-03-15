@@ -77,7 +77,6 @@ class SearchInput extends Component {
                   to={`/series/${id}`}
                   className='dropdown-item p-2'
                   key={`searchResult-${index}`}
-                  style={{ width: '200px' }}
                   onClick={() => this.setState({ value: '' })}
                 >
                   <span className='d-block font-weight-bold align-middle text-truncate'>{series[id].name}</span>

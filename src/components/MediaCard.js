@@ -23,7 +23,10 @@ class MediaCard extends Component {
             media !== undefined && media.available
               ? (
                 <Link to={`/series/${media.series_id}/${media.media_id}`} style={{ textDecoration: 'none' }}>
-                  <CardImg top width='100%' src={(media && media.screenshot_image && media.screenshot_image.full_url) || null} alt={media.name} />
+                  <CardImg
+                    top
+                    src={(media && media.screenshot_image && media.screenshot_image.full_url) || 'https://via.placeholder.com/640x360'}
+                    alt={media.name} />
                   <CardImgOverlay className='p-1'>
                     {media.episode_number ? <Badge color='primary mr-1' pill>#{media.episode_number}</Badge> : null}
                     {media.duration ? <Badge color='secondary' pill>{Math.floor(media.duration / 60)} min</Badge> : null}

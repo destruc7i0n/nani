@@ -46,7 +46,7 @@ class Media extends Component {
         streamData: video.data.data.stream_data
       })
     } catch (err) {
-      this.setState({ error: err.data.message || true })
+      this.setState({ error: err.data.message || 'An error occurred.' })
       console.error(err)
     }
   }
@@ -80,7 +80,7 @@ class Media extends Component {
               <div className='col-sm-12'>
                 <div className='row mb-4 bg-light player-background'>
                   {!loadedVideo || !streamData.streams.length
-                    ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
+                    ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image && mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
                     : <Video
                       streamUrl={streamData.streams[0].url}
                       key={mediaId}
@@ -92,8 +92,8 @@ class Media extends Component {
                   <Badge color='success'>
                     <Link to={`/series/${mediaObj.series_id}`} className='text-white'>{mediaObj.collection_name || 'Loading...'}</Link>
                   </Badge>
-                  <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge>
-                  <Badge color='secondary' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
+                  {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge> : null}
+                  <Badge color='info' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
                 </h5>
                 <p>{media[mediaId].description}</p>
                 {nextEpisodes && nextEpisodes.length

@@ -36,7 +36,7 @@ class Series extends Component {
       await dispatch(getCollectionsForSeries(id))
     } catch (err) {
       console.error(err)
-      this.setState({ error: err.data.message || true })
+      this.setState({ error: err.data.message || 'An error occurred.' })
     }
   }
 
@@ -57,7 +57,7 @@ class Series extends Component {
           : (
             <Fragment>
               <div className='col-sm-3'>
-                <img src={series[id].portrait_image.full_url} alt={series[id].name} className='img-thumbnail' />
+                <img src={series[id].portrait_image && series[id].portrait_image.full_url} alt={series[id].name} className='img-thumbnail' />
                 <QueueButton inQueue={series[id].in_queue} id={id} />
               </div>
               <div className='col-sm-9'>
