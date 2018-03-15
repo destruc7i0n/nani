@@ -42,7 +42,6 @@ class Series extends Component {
 
   render () {
     const { error } = this.state
-    console.log(error)
     const { match: { params: { id } }, series, seriesCollections, collections } = this.props
     const loaded = series[id] && seriesCollections[id]
     return (
@@ -50,7 +49,7 @@ class Series extends Component {
         <Helmet>
           <title>{ loaded ? series[id].name : 'Loading...' } - nani</title>
         </Helmet>
-        { <h1 className='col-sm-12 text-center'>{error}</h1> || null }
+        { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
         {!loaded
           ? (
             <Loading />

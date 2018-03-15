@@ -13,14 +13,22 @@ import { cancelCurrentRequests } from '../lib/api'
 import { setError } from '../actions'
 
 class AppContainer extends Component {
-  // stop requests when navigating
+  componentDidMount () {
+    const { history } = this.props
+    this.unlisten = history.listen(() => cancelCurrentRequests())
+  }
+
+  componentWillUnmount () {
+    this.unlisten()
+  }
+
+  // scroll to top
   componentDidUpdate (prevProps) {
     const {location: from} = prevProps
     const {location: to} = this.props
     // check if not to same page and not from some pages
-    if (from && from.pathname !== to.pathname && !['/login'].includes(from.pathname)) {
+    if (from && from.pathname !== to.pathname) {
       window.scrollTo(0, 0)
-      cancelCurrentRequests()
     }
   }
 

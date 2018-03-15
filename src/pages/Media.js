@@ -17,7 +17,8 @@ class Media extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      streamData: {}
+      streamData: {},
+      error: ''
     }
     this.loadVideo = this.loadVideo.bind(this)
   }
@@ -44,13 +45,14 @@ class Media extends Component {
       this.setState({
         streamData: video.data.data.stream_data
       })
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      this.setState({ error: err.data.message || true })
+      console.error(err)
     }
   }
 
   render () {
-    const { streamData } = this.state
+    const { streamData, error } = this.state
     const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
     const loadedDetails = media[mediaId] && true
     const loadedVideo = Object.keys(streamData).length > 0
@@ -66,6 +68,7 @@ class Media extends Component {
             {' '}- nani
           </title>
         </Helmet>
+        { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
         <div className='row'>
           { !loadedDetails
             ? (
@@ -76,14 +79,20 @@ class Media extends Component {
             : (
               <div className='col-sm-12'>
                 <div className='row mb-4 bg-light player-background'>
-                  {!loadedVideo
-                    ? <img className='img-fluid sort-of-center-md' src={mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
-                    : <Video streamUrl={streamData.streams[0].url} poster={mediaObj.screenshot_image.full_url} key={mediaId} />}
+                  {!loadedVideo || !streamData.streams.length
+                    ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
+                    : <Video
+                      streamUrl={streamData.streams[0].url}
+                      poster={mediaObj.screenshot_image.full_url}
+                      key={mediaId}
+                      seek={mediaObj.playhead}
+                      id={mediaId}
+                    />}
                 </div>
                 <h3>{mediaObj.name}</h3>
                 <h5>
                   <Badge color='success'>
-                    <Link to={`/series/${mediaObj.series_id}`} className='text-white'>{mediaObj.collection_name}</Link>
+                    <Link to={`/series/${mediaObj.series_id}`} className='text-white'>{mediaObj.collection_name || 'Loading...'}</Link>
                   </Badge>
                   <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge>
                   <Badge color='secondary' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
@@ -93,7 +102,10 @@ class Media extends Component {
                   ? <Collection
                     mediaIds={
                       collectionMedia[mediaObj.collection_id]
-                        ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
+                        // get all the next episodes
+                        ? collectionMedia[mediaObj.collection_id].slice(
+                          collectionMedia[mediaObj.collection_id].indexOf(mediaId) + 1
+                        )
                         : []
                     }
                     loading={collectionMedia[mediaObj.collection_id] === undefined}
