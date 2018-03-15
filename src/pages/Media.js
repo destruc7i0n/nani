@@ -83,9 +83,7 @@ class Media extends Component {
                     ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
                     : <Video
                       streamUrl={streamData.streams[0].url}
-                      poster={mediaObj.screenshot_image.full_url}
                       key={mediaId}
-                      seek={mediaObj.playhead}
                       id={mediaId}
                     />}
                 </div>

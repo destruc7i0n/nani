@@ -26,7 +26,6 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.9.1",
     "redux-thunk": "^2.2.0",
-    "serve": "^6.5.3",
     "uuid": "^3.2.1"
   },
   "standard": {
@@ -35,15 +34,10 @@
       "node"
     ]
   },
-  "now": {
-    "alias": "nani.now.sh"
-  },
   "scripts": {
     "start": "react-scripts start",
-    "now-start": "serve --single ./build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "deploy": "yarn build && now"
+    "eject": "react-scripts eject"
   }
 }

@@ -35,15 +35,15 @@ class Video extends Component {
   }
 
   change () {
-    const { streamUrl, poster, seek = 0, media } = this.props
-    if (streamUrl && poster) {
+    const { streamUrl, media } = this.props
+    if (streamUrl && media) {
       if (this.player) {
         this.destroyPlayer()
       }
       this.player = new Clappr.Player({
         parent: this.playerRef,
         source: streamUrl,
-        poster: poster,
+        poster: media.screenshot_image.full_url || null,
         plugins: [LevelSelector],
         levelSelectorConfig: {
           title: 'Quality',
@@ -57,8 +57,8 @@ class Video extends Component {
         },
         disableVideoTagContextMenu: true
       })
-      if (seek) {
-        this.player.seek(seek)
+      if (media.playhead) {
+        this.player.seek(media.playhead)
       }
       this.player.on(Clappr.Events.PLAYER_PAUSE, () => {
         this.logTime()
@@ -70,9 +70,10 @@ class Video extends Component {
   }
 
   logTime (t) {
-    const { Auth, id } = this.props
+    const { Auth, id, media } = this.props
     const time = t || this.player.getCurrentTime()
-    if (time !== 0 && process.env.NODE_ENV === 'production') {
+    // log time only if it's greater than what is saved
+    if (time !== 0 && time > media.playhead && process.env.NODE_ENV === 'production') {
       const data = new FormData()
       data.append('session_id', Auth.session_id)
       data.append('event', 'playback_status')
