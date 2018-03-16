@@ -95,6 +95,13 @@ class Media extends Component {
                   </Badge>
                   {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge> : null}
                   <Badge color='info' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
+                  <Badge color='warning' className='ml-2'>
+                    <a className='text-white' target='_blank' rel='noopener noreferrer' href={`
+                      http://www.crunchyroll.com/search?q=${mediaObj.collection_name} Episode ${mediaObj.episode_number} ${mediaObj.name}
+                    `}>
+                      Crunchyroll
+                    </a>
+                  </Badge>
                 </h5>
                 <p>{media[mediaId].description}</p>
                 {nextEpisodes && nextEpisodes.length

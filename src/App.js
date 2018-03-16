@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logout, startSession } from './actions'
 
@@ -44,6 +44,7 @@ class App extends Component {
             <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
             <AuthedRoute path='/series/:id/:media' authed={isLoggedIn()} component={Media} />
             <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
+            <Redirect from='*' to='/login' />
           </Switch>
         </AppContainer>
       </Router>

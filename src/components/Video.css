@@ -1,6 +1,12 @@
+@media (min-width: 576px) {
+    .sort-of-center {
+        margin-left: 5rem;
+    }
+}
+
 @media (min-width: 768px) {
     .sort-of-center {
-        margin-left: 15rem !important;
+        margin-left: 15rem;
     }
 }
 

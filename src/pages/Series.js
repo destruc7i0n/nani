@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { getSeriesInfo, getCollectionsForSeries } from '../actions'
 import { Helmet } from 'react-helmet'
 
+import { Button } from 'reactstrap'
+
 import SeriesCollection from '../components/SeriesCollection'
 import Loading from '../components/Loading'
 import QueueButton from '../components/QueueButton'
@@ -61,6 +63,9 @@ class Series extends Component {
               <div className='col-sm-3'>
                 <img src={series[id].portrait_image && useProxy(series[id].portrait_image.full_url)} alt={series[id].name} className='img-thumbnail' />
                 <QueueButton inQueue={series[id].in_queue} id={id} />
+                <Button block color='info' href={
+                  `https://myanimelist.net/search/all?q=${series[id].name}`
+                } target='_blank' rel='noopener noreferrer'>Find on MyAnimeList</Button>
               </div>
               <div className='col-sm-9'>
                 <h1>{series[id].name}</h1>
