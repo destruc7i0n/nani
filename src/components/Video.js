@@ -5,6 +5,7 @@ import Clappr from 'clappr'
 import LevelSelector from '../lib/clappr-level-selector'
 
 import api, { LOCALE, VERSION } from '../lib/api'
+import useProxy from '../lib/useProxy'
 
 import './Video.css'
 
@@ -43,7 +44,7 @@ class Video extends Component {
       this.player = new Clappr.Player({
         parent: this.playerRef,
         source: streamUrl,
-        poster: (media.screenshot_image && media.screenshot_image.full_url) || null,
+        poster: (media.screenshot_image && useProxy(media.screenshot_image.full_url)) || null,
         plugins: [LevelSelector],
         levelSelectorConfig: {
           title: 'Quality',

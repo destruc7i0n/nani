@@ -10,6 +10,7 @@ import Video from '../components/Video'
 import Collection from '../components/Collection'
 
 import api from '../lib/api'
+import useProxy from '../lib/useProxy'
 
 import './Media.css'
 
@@ -80,7 +81,7 @@ class Media extends Component {
               <div className='col-sm-12'>
                 <div className='row mb-4 bg-light player-background'>
                   {!loadedVideo || !streamData.streams.length
-                    ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image && mediaObj.screenshot_image.full_url} alt={mediaObj.name} />
+                    ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
                     : <Video
                       streamUrl={streamData.streams[0].url}
                       key={mediaId}

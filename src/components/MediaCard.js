@@ -7,6 +7,8 @@ import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress } from 'reacts
 
 import Loading from './Loading'
 
+import useProxy from '../lib/useProxy'
+
 import './MediaCard.css'
 
 class MediaCard extends Component {
@@ -25,7 +27,7 @@ class MediaCard extends Component {
                 <Link to={`/series/${media.series_id}/${media.media_id}`} style={{ textDecoration: 'none' }}>
                   <CardImg
                     top
-                    src={(media && media.screenshot_image && media.screenshot_image.full_url) || 'https://via.placeholder.com/640x360'}
+                    src={(media && media.screenshot_image && useProxy(media.screenshot_image.full_url)) || 'https://via.placeholder.com/640x360'}
                     alt={media.name} />
                   <CardImgOverlay className='p-1'>
                     {media.episode_number ? <Badge color='primary mr-1' pill>#{media.episode_number}</Badge> : null}

@@ -13,5 +13,5 @@ export function getUuid () {
 
 export function isLoggedIn () {
   const store = reduxStore.getState()
-  return store.Auth.username && !store.Auth.expiredSession
+  return store.Auth.username && !store.Auth.expiredSession && store.Auth.expires && new Date() < new Date(store.Auth.expires)
 }

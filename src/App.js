@@ -25,7 +25,10 @@ class App extends Component {
     } catch (e) {
       console.error(e)
     }
-    if (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires)) {
+    if (
+      (Object.keys(Auth).length > 0) &&
+      (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires))
+    ) {
       await dispatch(logout(true))
     }
   }

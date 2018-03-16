@@ -7,6 +7,8 @@ import SeriesCollection from '../components/SeriesCollection'
 import Loading from '../components/Loading'
 import QueueButton from '../components/QueueButton'
 
+import useProxy from '../lib/useProxy'
+
 class Series extends Component {
   constructor (props) {
     super(props)
@@ -57,7 +59,7 @@ class Series extends Component {
           : (
             <Fragment>
               <div className='col-sm-3'>
-                <img src={series[id].portrait_image && series[id].portrait_image.full_url} alt={series[id].name} className='img-thumbnail' />
+                <img src={series[id].portrait_image && useProxy(series[id].portrait_image.full_url)} alt={series[id].name} className='img-thumbnail' />
                 <QueueButton inQueue={series[id].in_queue} id={id} />
               </div>
               <div className='col-sm-9'>
