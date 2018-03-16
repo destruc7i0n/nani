@@ -3,3 +3,8 @@
         margin-left: 15rem !important;
     }
 }
+
+.media-control-background {
+    height: 20% !important;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)) !important;
+}

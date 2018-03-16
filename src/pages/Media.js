@@ -42,9 +42,9 @@ class Media extends Component {
     try {
       const media = await dispatch(getMediaInfo(mediaId))
       await dispatch(getMediaForCollection(media.collection_id))
-      const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data'}})
+      const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
       this.setState({
-        streamData: video.data.data.stream_data
+        streamData: video.data.data
       })
     } catch (err) {
       this.setState({ error: err.data.message || 'An error occurred.' })
@@ -56,7 +56,7 @@ class Media extends Component {
     const { streamData, error } = this.state
     const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
     const loadedDetails = media[mediaId] && true
-    const loadedVideo = Object.keys(streamData).length > 0
+    const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
     const mediaObj = media[mediaId]
     const nextEpisodes = mediaObj && collectionMedia[mediaObj.collection_id]
       ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
@@ -80,10 +80,10 @@ class Media extends Component {
             : (
               <div className='col-sm-12'>
                 <div className='row mb-4 bg-light player-background'>
-                  {!loadedVideo || !streamData.streams.length
+                  {!loadedVideo || !streamData.stream_data.streams.length
                     ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
                     : <Video
-                      streamUrl={streamData.streams[0].url}
+                      streamUrl={streamData.stream_data.streams[0].url}
                       key={mediaId}
                       id={mediaId}
                     />}
@@ -110,7 +110,7 @@ class Media extends Component {
                     loading={collectionMedia[mediaObj.collection_id] === undefined}
                     title='Next Episodes'
                     titleTag='h4'
-                    perPage={3} />
+                    perPage={4} />
                   : null
                 }
               </div>
