@@ -43,7 +43,6 @@ class Login extends Component {
             html, body {
               height: 100%;
             }
-
             body {
               display: -ms-flexbox;
               display: -webkit-box;
@@ -86,7 +85,8 @@ class Login extends Component {
           `}</style>
         </Helmet>
         <form className='form-signin' onSubmit={this.handleLogin}>
-          <h1 className='h3 mb-3 font-weight-normal'>nani?!</h1>
+          <h1 className='h3 mb-1 font-weight-normal'>nani?!</h1>
+          <p className='font-italic font-weight-light'>What's Crunchyroll?</p>
           {<p className='text-danger'>{error}</p> || null}
           {expiredSession ? <p className='text-danger'>Your session expired.</p> : null}
           <label htmlFor='inputUsername' className='sr-only'>Username</label>

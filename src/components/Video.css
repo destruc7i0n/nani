@@ -1,10 +1,22 @@
 @media (min-width: 576px) {
     .sort-of-center {
-        margin-left: 5rem;
+        margin-left: 0;
     }
 }
 
 @media (min-width: 768px) {
+    .sort-of-center {
+        margin-left: 2.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .sort-of-center {
+        margin-left: 10rem;
+    }
+}
+
+@media (min-width: 1200px) {
     .sort-of-center {
         margin-left: 15rem;
     }
@@ -12,5 +24,5 @@
 
 .media-control-background {
     height: 20% !important;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)) !important;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)) !important;
 }
