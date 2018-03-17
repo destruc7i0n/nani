@@ -9,18 +9,25 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  Form,
   Nav,
   Navbar,
   NavbarBrand,
   NavbarToggler,
   NavItem,
   NavLink,
+  UncontrolledButtonDropdown,
   UncontrolledDropdown
 } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faHistory, faList, faUser, faStepForward, faClosedCaptioning, faCertificate } from '@fortawesome/fontawesome-free-solid'
+import {
+  faCertificate,
+  faClosedCaptioning,
+  faHistory,
+  faList,
+  faStepForward,
+  faUser
+} from '@fortawesome/fontawesome-free-solid'
 
 import SearchInput from './SearchInput'
 
@@ -78,20 +85,22 @@ class Header extends Component {
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
-            <Form className='d-inline'>
-              <SearchInput />
-            </Form>
-            <UncontrolledDropdown>
-              <DropdownToggle caret className='ml-md-2 w-100'>
-                <FontAwesomeIcon icon={faUser} />
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem header>{Auth.username}</DropdownItem>
-                <DropdownItem onClick={() => dispatch(logout())}>
-                  Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            <Nav className='ml-auto' navbar>
+              <NavItem className='dropdown'>
+                <SearchInput />
+              </NavItem>
+              <UncontrolledButtonDropdown inNavbar>
+                <DropdownToggle caret className='ml-md-2 w-100'>
+                  <FontAwesomeIcon icon={faUser} />
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem header>{Auth.username}</DropdownItem>
+                  <DropdownItem onClick={() => dispatch(logout())}>
+                    Logout
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledButtonDropdown>
+            </Nav>
           </Collapse>
         </Container>
       </Navbar>

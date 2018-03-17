@@ -68,7 +68,7 @@ class SearchInput extends Component {
           placement='bottom-end'
           tabIndex='-1'
           role='menu'
-          className={classNames(['dropdown dropdown-menu dropdown-menu-right', { show: searchIds.length > 0 }])}>
+          className={classNames(['dropdown-menu dropdown-menu-right', { show: searchIds.length > 0 }])}>
           {
             searchIds.length === 0
               ? null

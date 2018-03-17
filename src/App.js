@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { logout, startSession } from './actions'
+import { logout } from './actions'
+import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
 
 import { isLoggedIn } from './lib/auth'
 
@@ -19,13 +19,9 @@ import SeriesList from './pages/SeriesList'
 import 'bootstrap/dist/css/bootstrap.css'
 
 class App extends Component {
-  async componentWillMount () {
+  async componentDidMount () {
+    // ensure logged in
     const { dispatch, Auth } = this.props
-    try {
-      await dispatch(startSession())
-    } catch (e) {
-      console.error(e)
-    }
     if (
       (Object.keys(Auth).length > 0) &&
       (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires))

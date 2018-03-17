@@ -24,7 +24,7 @@ class Media extends Component {
     this.loadVideo = this.loadVideo.bind(this)
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const { match: { params } } = this.props
     await this.loadVideo(params.media)
   }

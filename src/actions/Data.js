@@ -21,11 +21,13 @@ const MEDIA_FIELDS = [
 const SERIES_FIELDS = [
   'series.series_id',
   'series.name',
-  'series.portrait_image',
-  'series.landscape_image',
   'series.description',
-  'series.in_queue'
-].join('.')
+  'series.portrait_image',
+  'series.in_queue',
+  'series.media_count',
+  'series.rating',
+  'series.genres'
+].join(',')
 
 export const handleError = (err, dispatch, reject) => {
   if (!isCancel(err)) {
@@ -336,7 +338,6 @@ export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      console.log(data)
       dispatch(setList(filter, data))
       resolve()
     } catch (err) {

@@ -3,7 +3,12 @@ import { connect } from 'react-redux'
 import { getSeriesInfo, getCollectionsForSeries } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import { Button } from 'reactstrap'
+import { Badge, Button } from 'reactstrap'
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faStar } from '@fortawesome/fontawesome-free-solid'
+
+import { startCase } from 'lodash'
 
 import SeriesCollection from '../components/SeriesCollection'
 import Loading from '../components/Loading'
@@ -20,7 +25,7 @@ class Series extends Component {
     this.load = this.load.bind(this)
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const { match: { params } } = this.props
     await this.load(params.id)
   }
@@ -70,6 +75,18 @@ class Series extends Component {
               <div className='col-sm-9'>
                 <h1>{series[id].name}</h1>
                 <p>{series[id].description}</p>
+                <div className='font-weight-bold pb-2'>
+                  {series[id].rating / 10} / 10
+                  {' '}
+                  <FontAwesomeIcon icon={faStar} className='text-warning' />
+                  {
+                    series[id].genres.map((genre, index) =>
+                      <Badge color='info' key={`genre-${index}`} className='ml-1'>
+                        {startCase(genre)}
+                      </Badge>
+                    )
+                  }
+                </div>
                 {seriesCollections[id].map((collectionId, index) =>
                   <SeriesCollection
                     key={`seriesCollection-${collectionId}`}

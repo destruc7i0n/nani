@@ -7,7 +7,7 @@ import SeriesCard from '../components/SeriesCard'
 import Loading from '../components/Loading'
 
 class SeriesList extends Component {
-  async componentWillMount () {
+  async componentDidMount () {
     const { dispatch, type } = this.props
     try {
       dispatch(getSeriesList(type))

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { setError, startSession } from '../actions'
 import { withRouter } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
@@ -8,14 +9,30 @@ import { Alert } from 'reactstrap'
 
 import Header from './Header'
 import Footer from './Footer'
+import Loading from './Loading'
 
 import { cancelCurrentRequests } from '../lib/api'
-import { setError } from '../actions'
 
 class AppContainer extends Component {
-  componentDidMount () {
-    const { history } = this.props
+  constructor (props) {
+    super(props)
+    this.state = {
+      initSession: false
+    }
+  }
+
+  async componentDidMount () {
+    const { dispatch, history } = this.props
+    // cancel requests on chance
     this.unlisten = history.listen(() => cancelCurrentRequests())
+
+    // init session
+    try {
+      await dispatch(startSession())
+      this.setState({ initSession: true })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   componentWillUnmount () {
@@ -33,6 +50,7 @@ class AppContainer extends Component {
   }
 
   render () {
+    const { initSession } = this.state
     const { dispatch, children, Auth, error } = this.props
     return (
       <div>
@@ -41,8 +59,8 @@ class AppContainer extends Component {
         </Helmet>
         { Auth.username && !Auth.expiredSession ? <Header /> : null }
         <main role='main' className='container'>
-          { error ? <Alert color='danger' toggle={() => dispatch(setError(''))}>Uh oh! An error occurred... Check the console.</Alert> : null }
-          { children }
+          { error ? <Alert color='danger' toggle={() => dispatch(setError(''))}>Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.</Alert> : null }
+          { initSession ? children : <Loading /> }
           <Footer />
         </main>
       </div>

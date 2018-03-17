@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet'
 import Collection from '../components/Collection'
 
 class History extends Component {
-  async componentWillMount () {
+  async componentDidMount () {
     const { dispatch } = this.props
     try {
       await dispatch(getHistory({ limit: 50 }))
