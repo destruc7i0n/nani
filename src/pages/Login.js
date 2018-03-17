@@ -3,6 +3,10 @@ import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { login } from '../actions'
 
+import { Card } from 'reactstrap'
+
+import Footer from '../components/Footer'
+
 class Login extends Component {
   constructor (props) {
     super(props)
@@ -103,6 +107,12 @@ class Login extends Component {
             required
             onChange={({ target: { value: password } }) => this.setState({ password })} />
           <button className='btn btn-lg btn-primary btn-block' type='submit'>Sign in</button>
+          <Card body className='bg-light mt-2'>
+            Your password is sent directly to Crunchyroll, and is never stored.
+            <hr />
+            This site is not endorsed by or affiliated with Crunchyroll.
+          </Card>
+          <Footer />
         </form>
       </div>
     )

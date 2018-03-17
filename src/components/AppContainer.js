@@ -12,6 +12,7 @@ import Footer from './Footer'
 import Loading from './Loading'
 
 import { cancelCurrentRequests } from '../lib/api'
+import { isLoggedIn } from '../lib/auth'
 
 class AppContainer extends Component {
   constructor (props) {
@@ -51,17 +52,18 @@ class AppContainer extends Component {
 
   render () {
     const { initSession } = this.state
-    const { dispatch, children, Auth, error } = this.props
+    const { dispatch, children, error } = this.props
+    const loggedIn = isLoggedIn()
     return (
       <div>
         <Helmet>
           <title>nani</title>
         </Helmet>
-        { Auth.username && !Auth.expiredSession ? <Header /> : null }
+        { loggedIn ? <Header /> : null }
         <main role='main' className='container'>
           { error ? <Alert color='danger' toggle={() => dispatch(setError(''))}>Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.</Alert> : null }
           { initSession ? children : <Loading /> }
-          <Footer />
+          { loggedIn ? <Footer /> : null }
         </main>
       </div>
     )
@@ -72,7 +74,6 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
-      Auth: store.Auth,
       error: store.Data.error
     }
   })
