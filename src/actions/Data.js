@@ -2,8 +2,30 @@ import { isCancel } from 'axios'
 
 import api, { LOCALE, VERSION } from '../lib/api'
 
-const MEDIA_FIELDS = 'media.media_id,media.available,media.available_time,media.collection_id,media.collection_name,media.series_id,media.type,media.episode_number,media.name,media.description,media.screenshot_image,media.created,media.duration,media.playhead,media.bif_url'
-const SERIES_FIELDS = 'series.series_id,series.name,series.portrait_image,series.landscape_image,series.description,series.in_queue'
+const MEDIA_FIELDS = [
+  'media.media_id',
+  'media.available',
+  'media.available_time',
+  'media.collection_id',
+  'media.collection_name',
+  'media.series_id',
+  'media.type',
+  'media.episode_number',
+  'media.name',
+  'media.description',
+  'media.screenshot_image',
+  'media.created',
+  'media.duration',
+  'media.playhead'
+].join(',')
+const SERIES_FIELDS = [
+  'series.series_id',
+  'series.name',
+  'series.portrait_image',
+  'series.landscape_image',
+  'series.description',
+  'series.in_queue'
+].join('.')
 
 export const handleError = (err, dispatch, reject) => {
   if (!isCancel(err)) {
@@ -36,6 +58,15 @@ export const SET_HISTORY = 'SET_HISTORY'
 export const setHistory = (history) => ({
   type: SET_HISTORY,
   payload: history
+})
+
+export const SET_LIST = 'SET_LIST'
+export const setList = (type, list) => ({
+  type: SET_LIST,
+  payload: {
+    type,
+    list
+  }
 })
 
 export const UPDATE_SERIES_QUEUE = 'UPDATE_SERIES_QUEUE'
@@ -284,6 +315,32 @@ export const updateSeriesQueue = ({id, inQueue}) => (dispatch, getState) => {
       resolve()
     } catch (err) {
       handleError(err, dispatch, reject)
+    }
+  })
+}
+
+export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
+  const state = getState()
+  const params = {
+    session_id: state.Auth.session_id,
+    media_type: 'anime',
+    fields: 'series.series_id,series.in_queue,series.name,series.description,series.portrait_image',
+    limit: 54,
+    offset: 0,
+    filter
+  }
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await api({route: 'list_series', params})
+      if (resp.data.error) throw resp
+
+      const data = resp.data.data
+      console.log(data)
+      dispatch(setList(filter, data))
+      resolve()
+    } catch (err) {
+      handleError(err, reject)
     }
   })
 }

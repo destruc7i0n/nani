@@ -6,6 +6,7 @@ import {
   ADD_SERIES_COLLECTION,
   SET_ERROR,
   SET_HISTORY,
+  SET_LIST,
   SET_QUEUE,
   SET_SEARCH_IDS,
   UPDATE_SERIES_QUEUE
@@ -28,6 +29,10 @@ export default function Data (state = {
   collectionMedia: {},
   history: [],
   queue: [],
+  list: {
+    type: '',
+    list: []
+  },
 
   error: false
 }, action) {
@@ -51,6 +56,11 @@ export default function Data (state = {
       return {
         ...state,
         history: action.payload
+      }
+    case SET_LIST:
+      return {
+        ...state,
+        list: action.payload
       }
     case UPDATE_SERIES_QUEUE:
       return {

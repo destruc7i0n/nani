@@ -20,7 +20,7 @@ import {
 } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faHistory, faList, faUser } from '@fortawesome/fontawesome-free-solid'
+import { faHistory, faList, faUser, faStepForward, faClosedCaptioning, faCertificate } from '@fortawesome/fontawesome-free-solid'
 
 import SearchInput from './SearchInput'
 
@@ -58,6 +58,25 @@ class Header extends Component {
                   History
                 </NavLink>
               </NavItem>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  <FontAwesomeIcon icon={faStepForward} />
+                  &nbsp;
+                  Series List
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem tag={Link} to='/list/simulcast'>
+                    <FontAwesomeIcon icon={faClosedCaptioning} />
+                    &nbsp;
+                    Simulcasts
+                  </DropdownItem>
+                  <DropdownItem tag={Link} to='/list/popular'>
+                    <FontAwesomeIcon icon={faCertificate} />
+                    &nbsp;
+                    Popular
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             </Nav>
             <Form className='d-inline'>
               <SearchInput />

@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress } from 'reactstrap'
 
@@ -13,13 +11,12 @@ import './MediaCard.css'
 
 class MediaCard extends Component {
   render () {
-    const { media, width, history } = this.props
+    const { media, width } = this.props
     return (
       <div className={`col-sm-${width} d-flex pb-4`}>
         <Card
           className='d-inline-block mw-100 box-shadow'
           style={{ cursor: 'pointer' }}
-          onClick={() => history.push(`/series/${media.series_id}/${media.media_id}`)}
         >
           {
             media !== undefined && media.available
@@ -50,7 +47,4 @@ class MediaCard extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  connect()
-)(MediaCard)
+export default MediaCard

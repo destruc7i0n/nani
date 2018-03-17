@@ -14,6 +14,7 @@ import Series from './pages/Series'
 import Media from './pages/Media'
 import Queue from './pages/Queue'
 import History from './pages/History'
+import SeriesList from './pages/SeriesList'
 
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -44,6 +45,8 @@ class App extends Component {
             <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
             <AuthedRoute path='/series/:id/:media' authed={isLoggedIn()} component={Media} />
             <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
+            <AuthedRoute path='/list/simulcast' authed={isLoggedIn()} component={(props) => <SeriesList type='simulcast' {...props} />} />
+            <AuthedRoute path='/list/popular' authed={isLoggedIn()} component={(props) => <SeriesList type='popular' {...props} />} />
             <Redirect from='*' to='/login' />
           </Switch>
         </AppContainer>
