@@ -6,7 +6,7 @@ import Loading from './Loading'
 
 class Collection extends Component {
   render () {
-    let { title, titleTag: TitleTag = 'h3', showTitle = true, perPage = 4, mediaIds, media, loading = false } = this.props
+    let { title, titleTag: TitleTag = 'h3', showTitle = true, perPage = 4, mediaIds, media, loading = false, ...attr } = this.props
     const width = 12 / perPage
     return (
       <Fragment>
@@ -15,7 +15,7 @@ class Collection extends Component {
           loading
             ? <Loading size='2x' />
             : <div className='row'>
-              {mediaIds.map((mediaId) => <MediaCard width={width} media={media[mediaId]} key={`mediaCard-${mediaId}`} />)}
+              {mediaIds.map((mediaId) => <MediaCard width={width} media={media[mediaId]} key={`mediaCard-${mediaId}`} {...attr} />)}
             </div>
         }
       </Fragment>

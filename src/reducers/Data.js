@@ -8,6 +8,7 @@ import {
   SET_HISTORY,
   SET_LIST,
   SET_QUEUE,
+  SET_RECENT,
   SET_SEARCH_IDS,
   UPDATE_SERIES_QUEUE
 } from '../actions'
@@ -33,6 +34,7 @@ export default function Data (state = {
     type: '',
     list: []
   },
+  recent: [],
 
   error: false
 }, action) {
@@ -61,6 +63,11 @@ export default function Data (state = {
       return {
         ...state,
         list: action.payload
+      }
+    case SET_RECENT:
+      return {
+        ...state,
+        recent: action.payload
       }
     case UPDATE_SERIES_QUEUE:
       return {

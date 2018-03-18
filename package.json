@@ -10,6 +10,7 @@
     "bootstrap": "^4.0.0",
     "clappr": "^0.2.87",
     "classnames": "^2.2.5",
+    "date-fns": "^1.29.0",
     "localforage": "^1.6.0",
     "lodash": "^4.17.5",
     "react": "^16.2.0",

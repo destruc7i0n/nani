@@ -23,6 +23,7 @@ const SERIES_FIELDS = [
   'series.name',
   'series.description',
   'series.portrait_image',
+  'series.landscape_image',
   'series.in_queue',
   'series.media_count',
   'series.rating',
@@ -69,6 +70,12 @@ export const setList = (type, list) => ({
     type,
     list
   }
+})
+
+export const SET_RECENT = 'SET_RECENT'
+export const setRecent = (recent) => ({
+  type: SET_RECENT,
+  payload: recent
 })
 
 export const UPDATE_SERIES_QUEUE = 'UPDATE_SERIES_QUEUE'
@@ -339,6 +346,34 @@ export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
 
       const data = resp.data.data
       dispatch(setList(filter, data))
+      resolve()
+    } catch (err) {
+      handleError(err, dispatch, reject)
+    }
+  })
+}
+
+export const getRecent = () => (dispatch, getState) => {
+  const state = getState()
+  const params = {
+    session_id: state.Auth.session_id,
+    media_type: 'anime',
+    fields: [MEDIA_FIELDS, 'media.series_name', 'series.most_recent_media'].join(','),
+    limit: 54,
+    offset: 0,
+    filter: 'updated'
+  }
+
+  if (state.Data.recent.length > 0) return Promise.resolve()
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await api({route: 'list_series', params})
+      if (resp.data.error) throw resp
+
+      const data = resp.data.data
+      dispatch(addMediaBulk(data.map((d) => d.most_recent_media)))
+      dispatch(setRecent(data))
       resolve()
     } catch (err) {
       handleError(err, dispatch, reject)

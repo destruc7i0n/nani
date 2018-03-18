@@ -90,17 +90,15 @@ class Media extends Component {
                 </div>
                 <h3>{mediaObj.name}</h3>
                 <h5>
-                  <Badge color='success'>
-                    <Link to={`/series/${mediaObj.series_id}`} className='text-white'>{mediaObj.collection_name || 'Loading...'}</Link>
+                  <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white'>
+                    {mediaObj.collection_name || 'Loading...'}
                   </Badge>
                   {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge> : null}
                   <Badge color='info' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
-                  <Badge color='warning' className='ml-2'>
-                    <a className='text-white' target='_blank' rel='noopener noreferrer' href={`
+                  <Badge color='warning' className='ml-2 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
                       http://www.crunchyroll.com/search?q=${mediaObj.collection_name} Episode ${mediaObj.episode_number} ${mediaObj.name}
                     `}>
-                      Crunchyroll
-                    </a>
+                    Find on Crunchyroll
                   </Badge>
                 </h5>
                 <p>{media[mediaId].description}</p>

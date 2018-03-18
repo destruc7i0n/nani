@@ -26,7 +26,8 @@ import {
   faHistory,
   faList,
   faStepForward,
-  faUser
+  faUser,
+  faClock
 } from '@fortawesome/fontawesome-free-solid'
 
 import SearchInput from './SearchInput'
@@ -63,6 +64,13 @@ class Header extends Component {
                   <FontAwesomeIcon icon={faHistory} />
                   &nbsp;
                   History
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to='/recent'>
+                  <FontAwesomeIcon icon={faClock} />
+                  &nbsp;
+                  Recent
                 </NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
