@@ -28,11 +28,12 @@ class SeriesList extends Component {
         <Helmet>
           <title>{titles[type]} List - nani</title>
         </Helmet>
+        <h3 className='border-bottom pb-3 mb-4'>{titles[type]}</h3>
         <div className='row'>
           {
             loaded
               ? list.list.map((item, index) => <SeriesCard data={item} key={`seriesCard-${index}`} />)
-              : <Loading />
+              : <Loading size='2x' />
           }
         </div>
       </Fragment>

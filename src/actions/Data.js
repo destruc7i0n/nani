@@ -341,7 +341,7 @@ export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
       dispatch(setList(filter, data))
       resolve()
     } catch (err) {
-      handleError(err, reject)
+      handleError(err, dispatch, reject)
     }
   })
 }

@@ -23,7 +23,7 @@ class History extends Component {
         <Helmet>
           <title>History - nani</title>
         </Helmet>
-        <Collection title='History' mediaIds={historyIds} />
+        <Collection title='History' mediaIds={historyIds} loading={historyIds.length === 0} />
       </Fragment>
     )
   }
