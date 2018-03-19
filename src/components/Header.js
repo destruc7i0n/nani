@@ -27,7 +27,8 @@ import {
   faList,
   faStepForward,
   faUser,
-  faClock
+  faClock,
+  faCalendarAlt
 } from '@fortawesome/fontawesome-free-solid'
 
 import SearchInput from './SearchInput'
@@ -88,7 +89,12 @@ class Header extends Component {
                   <DropdownItem tag={Link} to='/list/popular'>
                     <FontAwesomeIcon icon={faCertificate} />
                     &nbsp;
-                    Popular
+                    Popular Anime
+                  </DropdownItem>
+                  <DropdownItem tag={Link} to='/list/newest'>
+                    <FontAwesomeIcon icon={faCalendarAlt} />
+                    &nbsp;
+                    Newest Anime
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>

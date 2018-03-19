@@ -14,11 +14,12 @@ export default function api (opts) {
   const config = {
     method: opts.method || 'get',
     url: `https://api.crunchyroll.com/${opts.route}.${opts.version || '0'}.json`,
-    params: !opts.data ? Object.assign({}, opts.params, {
+    params: !opts.data ? {
+      ...opts.params,
       locale: LOCALE,
       version: VERSION,
       connectivity_type: CONNECTIVITY_TYPE
-    }) : null,
+    } : null,
     data: opts.data,
     cancelToken: !opts.noCancel ? source.token : null
   }

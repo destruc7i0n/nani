@@ -45,6 +45,7 @@ class App extends Component {
             <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
             <AuthedRoute path='/list/simulcast' authed={isLoggedIn()} component={(props) => <SeriesList type='simulcast' {...props} />} />
             <AuthedRoute path='/list/popular' authed={isLoggedIn()} component={(props) => <SeriesList type='popular' {...props} />} />
+            <AuthedRoute path='/list/newest' authed={isLoggedIn()} component={(props) => <SeriesList type='newest' {...props} />} />
             <Redirect from='*' to='/login' />
           </Switch>
         </AppContainer>

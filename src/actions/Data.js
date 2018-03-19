@@ -27,7 +27,8 @@ const SERIES_FIELDS = [
   'series.in_queue',
   'series.media_count',
   'series.rating',
-  'series.genres'
+  'series.genres',
+  'series.year'
 ].join(',')
 
 export const handleError = (err, dispatch, reject) => {

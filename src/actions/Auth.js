@@ -1,5 +1,4 @@
 import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
-import { getUuid } from '../lib/auth'
 
 import { handleError, setHistory, setQueue } from './Data'
 
@@ -28,7 +27,7 @@ export const startSession = () => (dispatch, getState) => {
   const params = {
     access_token: ACCESS_TOKEN,
     device_type: DEVICE_TYPE,
-    device_id: getUuid()
+    device_id: state.Auth.uuid
   }
 
   if (state.Auth.token) {
@@ -42,7 +41,6 @@ export const startSession = () => (dispatch, getState) => {
       dispatch(
         updateAuth({
           session_id: data.session_id,
-          country: data.country_code.toLowerCase(),
           token: data.auth,
           expires: data.expires
         })

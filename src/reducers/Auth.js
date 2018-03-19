@@ -1,7 +1,9 @@
+import uuid from 'uuid/v4'
 import { UPDATE_AUTH, SET_EXPIRED_SESSION, REMOVE_AUTH } from '../actions'
 
 const initialState = {
-  expiredSession: ''
+  expiredSession: '',
+  uuid: uuid()
 }
 
 export default function Auth (state = initialState, action) {

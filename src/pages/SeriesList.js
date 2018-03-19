@@ -21,7 +21,8 @@ class SeriesList extends Component {
     const loaded = list && list.type === type
     const titles = {
       simulcast: 'Simulcasts',
-      popular: 'Popular'
+      popular: 'Popular Anime',
+      newest: 'Newest Anime'
     }
     return (
       <Fragment>

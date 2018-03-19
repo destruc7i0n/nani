@@ -41,11 +41,15 @@ class Media extends Component {
     const { dispatch, Auth } = this.props
     try {
       const media = await dispatch(getMediaInfo(mediaId))
-      await dispatch(getMediaForCollection(media.collection_id))
-      const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
-      this.setState({
-        streamData: video.data.data
-      })
+      if (media.available) {
+        await dispatch(getMediaForCollection(media.collection_id))
+        const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
+        this.setState({
+          streamData: video.data.data
+        })
+      } else {
+        this.setState({ error: 'This is not available.' })
+      }
     } catch (err) {
       this.setState({ error: err.data.message || 'An error occurred.' })
       console.error(err)
@@ -55,7 +59,7 @@ class Media extends Component {
   render () {
     const { streamData, error } = this.state
     const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
-    const loadedDetails = media[mediaId] && true
+    const loadedDetails = media[mediaId] && !error
     const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
     const mediaObj = media[mediaId]
     const nextEpisodes = mediaObj && collectionMedia[mediaObj.collection_id]
