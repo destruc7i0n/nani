@@ -59,9 +59,12 @@ export const setSearchIds = (ids) => ({
 })
 
 export const SET_HISTORY = 'SET_HISTORY'
-export const setHistory = (history) => ({
+export const setHistory = (offset, history) => ({
   type: SET_HISTORY,
-  payload: history
+  payload: {
+    offset,
+    history
+  }
 })
 
 export const SET_LIST = 'SET_LIST'
@@ -150,8 +153,10 @@ export const getQueue = (force) => (dispatch, getState) => {
   })
 }
 
-export const getHistory = ({limit = 24, offset = 0} = {}) => (dispatch, getState) => {
+export const getHistory = ({limit = 24, offset = 0} = {}, append = false) => (dispatch, getState) => {
   const state = getState()
+  // handle appending offset
+  offset = append ? state.Data.history.offset + limit : offset
   const params = {
     session_id: state.Auth.session_id,
     media_types: 'anime|drama',
@@ -166,8 +171,15 @@ export const getHistory = ({limit = 24, offset = 0} = {}) => (dispatch, getState
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      if (offset === 0) {
-        dispatch(setHistory(data))
+      if (!append) {
+        // overwrite the data there
+        dispatch(setHistory(offset, data))
+      } else {
+        // append to the list of data already there
+        dispatch(setHistory(offset, [
+          ...state.Data.history.data,
+          ...data
+        ]))
       }
       dispatch(addSeriesBulk(data.map((d) => d.series)))
       dispatch(addCollectionBulk(data.map((d) => d.collection)))

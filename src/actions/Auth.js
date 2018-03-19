@@ -96,7 +96,7 @@ export const logout = (didExpire) => (dispatch, getState) => {
       dispatch(removeAuth())
       await dispatch(startSession())
       resolve()
-      dispatch(setHistory([]))
+      dispatch(setHistory(0, []))
       dispatch(setQueue([]))
     } catch (err) {
       handleError(err, dispatch, reject)

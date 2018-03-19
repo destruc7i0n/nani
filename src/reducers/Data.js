@@ -28,7 +28,10 @@ export default function Data (state = {
   media: {},
   collections: {},
   collectionMedia: {},
-  history: [],
+  history: {
+    offset: 0,
+    data: []
+  },
   queue: [],
   list: {
     type: '',
@@ -57,7 +60,10 @@ export default function Data (state = {
     case SET_HISTORY:
       return {
         ...state,
-        history: action.payload
+        history: {
+          offset: action.payload.offset,
+          data: action.payload.history
+        }
       }
     case SET_LIST:
       return {

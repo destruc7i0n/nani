@@ -35,6 +35,6 @@ class Dashboard extends Component {
 export default connect((store) => {
   return {
     queue: store.Data.queue,
-    history: store.Data.history
+    history: store.Data.history.data
   }
 })(Dashboard)
