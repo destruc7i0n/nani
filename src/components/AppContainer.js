@@ -56,12 +56,13 @@ class AppContainer extends Component {
     const loggedIn = isLoggedIn()
     return (
       <div>
-        <Helmet>
-          <title>nani</title>
-        </Helmet>
         { loggedIn ? <Header /> : null }
         <main role='main' className='container'>
-          { error ? <Alert color='danger' toggle={() => dispatch(setError(''))}>Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.</Alert> : null }
+          { error
+            ? <Alert color='danger' toggle={() => dispatch(setError(''))}>
+              Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.
+            </Alert>
+            : null }
           { initSession ? children : <Loading /> }
           { loggedIn ? <Footer /> : null }
         </main>

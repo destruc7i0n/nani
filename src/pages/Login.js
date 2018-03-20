@@ -87,7 +87,7 @@ class Login extends Component {
         <form className='form-signin' onSubmit={this.handleLogin}>
           <h1 className='h3 mb-1 font-weight-normal'>nani?!</h1>
           <p className='font-italic font-weight-light'>What's Crunchyroll?</p>
-          {<p className='text-danger'>{error}</p> || null}
+          {error ? <p className='text-danger'>{error}</p> : null}
           {expiredSession ? <p className='text-danger'>Your session expired.</p> : null}
           <label htmlFor='inputUsername' className='sr-only'>Username</label>
           <input

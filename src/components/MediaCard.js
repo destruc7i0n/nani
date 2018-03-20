@@ -14,6 +14,8 @@ import './MediaCard.css'
 class MediaCard extends Component {
   render () {
     const { media, width, showTime = false } = this.props
+    // regex check to ensure there is number
+    const containsNumber = (str) => /\d/.test(str)
     return (
       <div className={`col-sm-${width} d-flex pb-4`}>
         <Card
@@ -29,8 +31,12 @@ class MediaCard extends Component {
                     src={(media && media.screenshot_image && useProxy(media.screenshot_image.full_url)) || 'https://via.placeholder.com/640x360?text=No+Image'}
                     alt={media.name} />
                   <CardImgOverlay className='p-1'>
-                    {media.episode_number ? <Badge color='primary mr-1' pill>#{media.episode_number}</Badge> : null}
-                    {media.duration ? <Badge color='secondary' pill>{Math.floor(media.duration / 60)} min</Badge> : null}
+                    {media.episode_number
+                      ? <Badge color='primary mr-1' pill>
+                        {containsNumber(media.episode_number) ? `#${media.episode_number}` : media.episode_number}
+                      </Badge>
+                      : null}
+                    {media.duration ? <Badge color='secondary' pill>{Math.ceil(media.duration / 60)} min</Badge> : null}
                   </CardImgOverlay>
                   <CardBody className='p-2 media-card-body'>
                     <Progress value={Math.min(100, (media.playhead / media.duration) * 100)} />

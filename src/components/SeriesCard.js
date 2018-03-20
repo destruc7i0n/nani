@@ -27,7 +27,7 @@ class SeriesCard extends Component {
               </Badge>
             </CardImgOverlay>
             <CardBody className='p-2'>
-              <span className='mb-1 d-block font-weight-bold text-dark'>
+              <span className='mb-1 d-block font-weight-bold text-dark text-truncate'>
                 {data.name}
               </span>
               <small className='d-block text-truncate font-italic text-secondary'>{data.description}</small>
