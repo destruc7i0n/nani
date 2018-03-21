@@ -1,4 +1,4 @@
-// taken from umi
+// based on umi's api.js
 
 import axios, {CancelToken} from 'axios'
 

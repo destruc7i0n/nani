@@ -3,7 +3,6 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { setError, startSession } from '../actions'
 import { withRouter } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 
 import { Alert } from 'reactstrap'
 

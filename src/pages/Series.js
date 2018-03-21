@@ -33,6 +33,7 @@ class Series extends Component {
   async componentWillReceiveProps (nextProps) {
     const { match: { params } } = this.props
     const { match: { params: nextParams } } = nextProps
+    // check that the next id isn't the same as the old, then load
     if (nextParams.id !== params.id) {
       await this.load(nextParams.id)
     }

@@ -21,6 +21,7 @@ class Recent extends Component {
   render () {
     const { recent } = this.props
 
+    // order by date
     const days = recent.reduce((days, r) => {
       const recent = r.most_recent_media
       const id = recent.media_id

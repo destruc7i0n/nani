@@ -1,3 +1,5 @@
+// some functions taken from umi
+
 import { isCancel } from 'axios'
 
 import api, { LOCALE, VERSION } from '../lib/api'

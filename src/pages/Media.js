@@ -32,6 +32,7 @@ class Media extends Component {
   async componentWillReceiveProps (nextProps) {
     const { match: { params } } = this.props
     const { match: { params: nextParams } } = nextProps
+    // check if the media isn't the same, then load
     if (nextParams.media !== params.media) {
       await this.loadVideo(nextParams.media)
     }
@@ -41,9 +42,11 @@ class Media extends Component {
     const { dispatch, Auth } = this.props
     try {
       const media = await dispatch(getMediaInfo(mediaId))
+      // only if available
       if (media.available) {
         await dispatch(getMediaForCollection(media.collection_id))
         const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
+        console.log(video.data.data.stream_data)
         this.setState({
           streamData: video.data.data
         })
@@ -98,7 +101,7 @@ class Media extends Component {
                     {mediaObj.collection_name || 'Loading...'}
                   </Badge>
                   {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge> : null}
-                  <Badge color='info' className='ml-2'>{Math.floor(mediaObj.duration / 60)} min</Badge>
+                  <Badge color='info' className='ml-2'>{Math.ceil(mediaObj.duration / 60)} min</Badge>
                   <Badge color='warning' className='ml-2 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
                       http://www.crunchyroll.com/search?q=${mediaObj.collection_name} Episode ${mediaObj.episode_number} ${mediaObj.name}
                     `}>
