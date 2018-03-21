@@ -33,6 +33,8 @@ import {
 
 import SearchInput from './SearchInput'
 
+import './Header.css'
+
 class Header extends Component {
   constructor (props) {
     super(props)
@@ -55,28 +57,28 @@ class Header extends Component {
             <Nav className='mr-auto' navbar>
               <NavItem>
                 <NavLink tag={Link} to='/queue'>
-                  <FontAwesomeIcon icon={faList} />
+                  <FontAwesomeIcon icon={faList} className='responsive-hidden' />
                   &nbsp;
                   Queue
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/history'>
-                  <FontAwesomeIcon icon={faHistory} />
+                  <FontAwesomeIcon icon={faHistory} className='responsive-hidden' />
                   &nbsp;
                   History
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/recent'>
-                  <FontAwesomeIcon icon={faClock} />
+                  <FontAwesomeIcon icon={faClock} className='responsive-hidden' />
                   &nbsp;
                   Recent
                 </NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  <FontAwesomeIcon icon={faStepForward} />
+                  <FontAwesomeIcon icon={faStepForward} className='responsive-hidden' />
                   &nbsp;
                   Series List
                 </DropdownToggle>

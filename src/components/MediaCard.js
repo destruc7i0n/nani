@@ -17,7 +17,7 @@ class MediaCard extends Component {
     // regex check to ensure there is number
     const containsNumber = (str) => /\d/.test(str)
     return (
-      <div className={`col-sm-${width} d-flex pb-4`}>
+      <div className={`col-lg-${width} col-md-6 d-flex pb-4`}>
         <Card
           className='d-inline-block mw-100 box-shadow'
           style={{ cursor: 'pointer' }}
