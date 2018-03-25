@@ -8,6 +8,7 @@ import { Badge } from 'reactstrap'
 
 import Video from '../components/Video'
 import Collection from '../components/Collection'
+import MALButton from '../components/MALButton'
 
 import api from '../lib/api'
 import useProxy from '../lib/useProxy'
@@ -46,7 +47,6 @@ class Media extends Component {
       if (media.available) {
         await dispatch(getMediaForCollection(media.collection_id))
         const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
-        console.log(video.data.data.stream_data)
         this.setState({
           streamData: video.data.data
         })
@@ -107,6 +107,7 @@ class Media extends Component {
                     `}>
                     Find on Crunchyroll
                   </Badge>
+                  <MALButton id={mediaId} media={mediaObj} />
                 </h5>
                 <p>{media[mediaId].description}</p>
                 {nextEpisodes && nextEpisodes.length

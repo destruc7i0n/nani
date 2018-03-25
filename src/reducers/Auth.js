@@ -1,7 +1,8 @@
 import uuid from 'uuid/v4'
-import { UPDATE_AUTH, SET_EXPIRED_SESSION, REMOVE_AUTH } from '../actions'
+import { UPDATE_AUTH, SET_EXPIRED_SESSION, REMOVE_AUTH, UPDATE_MAL } from '../actions'
 
 const initialState = {
+  mal: {username: '', token: ''},
   expiredSession: '',
   uuid: uuid()
 }
@@ -12,6 +13,11 @@ export default function Auth (state = initialState, action) {
       return {
         ...state,
         ...action.payload
+      }
+    case UPDATE_MAL:
+      return {
+        ...state,
+        mal: action.payload
       }
     case REMOVE_AUTH:
       return initialState

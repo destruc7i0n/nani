@@ -9,7 +9,7 @@ class SeriesCard extends Component {
   render () {
     const { data } = this.props
     return (
-      <div className='col-sm-2 d-flex pb-4'>
+      <div className='col-sm-6 col-md-4 col-lg-2 d-flex pb-4'>
         <Card
           className='d-inline-block mw-100 box-shadow'
           style={{ cursor: 'pointer' }}

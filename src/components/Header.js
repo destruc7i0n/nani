@@ -32,6 +32,7 @@ import {
 } from '@fortawesome/fontawesome-free-solid'
 
 import SearchInput from './SearchInput'
+import Options from './Options'
 
 import './Header.css'
 
@@ -106,7 +107,7 @@ class Header extends Component {
                 <SearchInput />
               </NavItem>
               <UncontrolledButtonDropdown inNavbar>
-                <DropdownToggle caret className='ml-md-2 w-100'>
+                <DropdownToggle caret className='ml-md-2 mr-md-2 w-100'>
                   <FontAwesomeIcon icon={faUser} />
                 </DropdownToggle>
                 <DropdownMenu right>
@@ -116,6 +117,9 @@ class Header extends Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledButtonDropdown>
+              <NavItem>
+                <Options />
+              </NavItem>
             </Nav>
           </Collapse>
         </Container>

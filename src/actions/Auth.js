@@ -1,3 +1,4 @@
+import axios from 'axios'
 import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 
 import { handleError, setHistory, setQueue } from './Data'
@@ -21,6 +22,16 @@ export const setExpiredSession = (payload) => ({
   type: SET_EXPIRED_SESSION,
   payload
 })
+
+export const UPDATE_MAL = 'UPDATE_MAL'
+export const updateMal = (username, token) => ({
+  type: UPDATE_MAL,
+  payload: {
+    username,
+    token
+  }
+})
+export const removeMal = () => updateMal('', '')
 
 export const startSession = () => (dispatch, getState) => {
   const state = getState()
@@ -100,6 +111,22 @@ export const logout = (didExpire) => (dispatch, getState) => {
       dispatch(setQueue([]))
     } catch (err) {
       handleError(err, dispatch, reject)
+    }
+  })
+}
+
+export const loginMal = (username, password) => (dispatch) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {data} = await axios.post('/api/mal_login', {username, password})
+      if (!data.error && data.success) {
+        dispatch(updateMal(data.data.username, data.data.token))
+        resolve()
+      } else {
+        reject(new Error(data.error))
+      }
+    } catch (err) {
+      reject(err)
     }
   })
 }
