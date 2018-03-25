@@ -43,7 +43,7 @@ class MALButton extends Component {
     if (media && media.collection_name && id) {
       this.setState({ available: false, updated: false })
       try {
-        const {data: {error, success, data}} = await axios.get(`/api/mal_search?name=${media.collection_name}`)
+        const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${media.collection_name}`)
         if (!error && success) {
           this.setState({ available: true, malItem: data })
         }
@@ -66,7 +66,7 @@ class MALButton extends Component {
 
       try {
         // post
-        await axios.post('/api/mal_update', {
+        await axios.post('/.netlify/functions/mal_update', {
           token: mal.token,
           id: malItem.id,
           episode,

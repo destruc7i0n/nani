@@ -118,7 +118,7 @@ export const logout = (didExpire) => (dispatch, getState) => {
 export const loginMal = (username, password) => (dispatch) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const {data} = await axios.post('/api/mal_login', {username, password})
+      const {data} = await axios.post('/.netlify/functions/mal_login', {username, password})
       if (!data.error && data.success) {
         dispatch(updateMal(data.data.username, data.data.token))
         resolve()

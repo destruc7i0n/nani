@@ -39,10 +39,10 @@
     ]
   },
   "proxy": {
-    "/api": {
+    "/.netlify/functions": {
       "target": "http://localhost:9000",
       "pathRewrite": {
-        "^/api": ""
+        "^/\\.netlify/functions": ""
       }
     }
   },
