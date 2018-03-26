@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 
 export async function handler (event, context, callback) {
   // parse body
-  console.log(event)
   const { body = '' } = event
   const parsedBody = JSON.parse(body)
   const { username, password } = parsedBody

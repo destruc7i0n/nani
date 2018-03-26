@@ -65,6 +65,8 @@ class Options extends Component {
                       <small className='text-center'>
                         If you choose to login, on each anime you're watching that is available on MyAnimeList,
                         there will be a button that will allow you to update the episode you're watching on MyAnimeList.
+                        <br />
+                        Your login will only be used for authentication with MyAnimeList. It will not be stored on any server.
                       </small>
                       <br />
                       <small className='text-danger'>
