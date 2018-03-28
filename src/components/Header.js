@@ -59,44 +59,44 @@ class Header extends Component {
               <NavItem>
                 <NavLink tag={Link} to='/queue'>
                   <FontAwesomeIcon icon={faList} className='responsive-hidden' />
-                  &nbsp;
+                  {' '}
                   Queue
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/history'>
                   <FontAwesomeIcon icon={faHistory} className='responsive-hidden' />
-                  &nbsp;
+                  {' '}
                   History
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/recent'>
                   <FontAwesomeIcon icon={faClock} className='responsive-hidden' />
-                  &nbsp;
+                  {' '}
                   Recent
                 </NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                   <FontAwesomeIcon icon={faStepForward} className='responsive-hidden' />
-                  &nbsp;
+                  {' '}
                   Series List
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem tag={Link} to='/list/simulcast'>
                     <FontAwesomeIcon icon={faClosedCaptioning} />
-                    &nbsp;
+                    {' '}
                     Simulcasts
                   </DropdownItem>
                   <DropdownItem tag={Link} to='/list/popular'>
                     <FontAwesomeIcon icon={faCertificate} />
-                    &nbsp;
+                    {' '}
                     Popular Anime
                   </DropdownItem>
                   <DropdownItem tag={Link} to='/list/newest'>
                     <FontAwesomeIcon icon={faCalendarAlt} />
-                    &nbsp;
+                    {' '}
                     Newest Anime
                   </DropdownItem>
                 </DropdownMenu>
