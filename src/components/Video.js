@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import Clappr from 'clappr'
 import LevelSelector from '../lib/clappr-level-selector'
+import ChromecastPlugin from '../lib/clappr-chromecast-plugin'
 
 import api, { LOCALE, VERSION } from '../lib/api'
 import useProxy from '../lib/useProxy'
@@ -45,7 +46,7 @@ class Video extends Component {
         parent: this.playerRef,
         source: streamUrl,
         poster: (media.screenshot_image && useProxy(media.screenshot_image.full_url)) || null,
-        plugins: [LevelSelector],
+        plugins: [LevelSelector, ChromecastPlugin],
         levelSelectorConfig: {
           title: 'Quality',
           labels: {
@@ -54,6 +55,13 @@ class Video extends Component {
             2: '480p',
             1: '360p',
             0: '240p'
+          }
+        },
+        chromecast: {
+          media: {
+            type: ChromecastPlugin.TvSeries,
+            title: media.name,
+            subtitle: media.description
           }
         },
         disableVideoTagContextMenu: true

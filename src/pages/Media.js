@@ -109,7 +109,7 @@ class Media extends Component {
                   </Badge>
                   <MALButton id={mediaId} media={mediaObj} />
                 </h5>
-                <p>{media[mediaId].description}</p>
+                <p>{mediaObj.description}</p>
                 {nextEpisodes && nextEpisodes.length
                   ? <Collection
                     mediaIds={
