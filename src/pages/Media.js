@@ -9,6 +9,7 @@ import { Badge } from 'reactstrap'
 import Video from '../components/Video'
 import Collection from '../components/Collection'
 import MALButton from '../components/MALButton'
+import QueueButton from '../components/QueueButton'
 import Loading from '../components/Loading'
 
 import api from '../lib/api'
@@ -113,6 +114,7 @@ class Media extends Component {
                     Find on Crunchyroll
                   </Badge>
                   <MALButton id={mediaId} media={mediaObj} />
+                  <QueueButton id={mediaObj.series_id} badge className='ml-2' />
                 </h5>
                 <p>{mediaObj.description}</p>
                 {nextEpisodes && nextEpisodes.length

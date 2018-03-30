@@ -36,6 +36,8 @@ import Options from './Options'
 
 import './Header.css'
 
+import icon from '../assets/ninja-blue.png'
+
 class Header extends Component {
   constructor (props) {
     super(props)
@@ -51,6 +53,8 @@ class Header extends Component {
       <Navbar color='dark' expand='md' dark className='mb-4' sticky='top'>
         <Container>
           <NavbarBrand tag={Link} to='/'>
+            <img src={icon} alt='nani?!' className='navbar-image' />
+            {' '}
             nani?!
           </NavbarBrand>
           <NavbarToggler onClick={() => this.setState({ collapsed: !collapsed })} />

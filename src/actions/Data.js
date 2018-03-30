@@ -1,6 +1,7 @@
 // some functions taken from umi
 
 import { isCancel } from 'axios'
+import { omit } from 'lodash'
 
 import api, { LOCALE, VERSION } from '../lib/api'
 
@@ -373,7 +374,7 @@ export const getRecent = () => (dispatch, getState) => {
   const params = {
     session_id: state.Auth.session_id,
     media_type: 'anime',
-    fields: [MEDIA_FIELDS, 'media.series_name', 'series.most_recent_media'].join(','),
+    fields: [MEDIA_FIELDS, SERIES_FIELDS, 'media.series_name', 'series.most_recent_media'].join(','),
     limit: 54,
     offset: 0,
     filter: 'updated'
@@ -388,6 +389,7 @@ export const getRecent = () => (dispatch, getState) => {
 
       const data = resp.data.data
       dispatch(addMediaBulk(data.map((d) => d.most_recent_media)))
+      dispatch(addSeriesBulk(data.map((d) => omit(d, 'most_recent_media'))))
       dispatch(setRecent(data))
       resolve()
     } catch (err) {

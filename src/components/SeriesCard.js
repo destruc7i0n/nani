@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Badge, Card, CardBody, CardImg, CardImgOverlay } from 'reactstrap'
+import { Card, CardBody, CardImg, CardImgOverlay } from 'reactstrap'
+
+import QueueButton from './QueueButton'
 
 import useProxy from '../lib/useProxy'
 
@@ -20,11 +22,7 @@ class SeriesCard extends Component {
               src={data && data.portrait_image && useProxy(data.portrait_image.full_url)}
               alt={data.name} />
             <CardImgOverlay className='p-1'>
-              <Badge color={data.in_queue ? 'success' : 'danger'}>
-                { data.in_queue
-                  ? 'In Queue'
-                  : 'Not in Queue'}
-              </Badge>
+              <QueueButton inQueue={data.in_queue} id={data.series_id} badge />
             </CardImgOverlay>
             <CardBody className='p-2'>
               <span className='mb-1 d-block font-weight-bold text-dark text-truncate'>

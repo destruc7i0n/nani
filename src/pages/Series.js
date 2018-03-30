@@ -68,7 +68,7 @@ class Series extends Component {
             <Fragment>
               <div className='col-sm-3'>
                 <img src={series[id].portrait_image && useProxy(series[id].portrait_image.full_url)} alt={series[id].name} className='img-thumbnail' />
-                <QueueButton inQueue={series[id].in_queue} id={id} />
+                <QueueButton id={id} block className='mt-2' />
                 <Button block color='info' href={
                   `https://myanimelist.net/search/all?q=${series[id].name}`
                 } target='_blank' rel='noopener noreferrer'>Find on MyAnimeList</Button>

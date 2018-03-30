@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { setError, startSession } from '../actions'
 import { withRouter } from 'react-router-dom'
 
-import { Alert } from 'reactstrap'
+import { Alert, Button } from 'reactstrap'
 
 import Header from './Header'
 import Footer from './Footer'
@@ -49,6 +49,11 @@ class AppContainer extends Component {
     }
   }
 
+  reloadPage (e) {
+    e.preventDefault()
+    window.location.reload()
+  }
+
   render () {
     const { initSession } = this.state
     const { dispatch, children, error } = this.props
@@ -59,7 +64,9 @@ class AppContainer extends Component {
         <main role='main' className='container'>
           { error
             ? <Alert color='danger' toggle={() => dispatch(setError(''))}>
-              Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.
+              Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or or try again later.
+              {' '}
+              <Button onClick={this.reloadPage}>Reload</Button>
             </Alert>
             : null }
           { initSession ? children : <Loading /> }
