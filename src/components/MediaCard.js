@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress } from 'reactstrap'
@@ -13,7 +14,9 @@ import './MediaCard.css'
 
 class MediaCard extends Component {
   render () {
-    const { media, width, showTime = false } = this.props
+    const { media, width, showTime = false, series } = this.props
+    // grab the series for the media
+    const mediaSeries = media ? series[media.series_id] : {}
     // regex check to ensure there is number
     const containsNumber = (str) => /\d/.test(str)
     return (
@@ -41,7 +44,7 @@ class MediaCard extends Component {
                   <CardBody className='p-2 media-card-body'>
                     <Progress value={Math.min(100, (media.playhead / media.duration) * 100)} />
                     <span className='mb-1 d-block text-truncate font-weight-bold text-dark'>
-                      {media.collection_name || `Episode #${media.episode_number}` }
+                      {mediaSeries.name || `Episode #${media.episode_number}` }
                     </span>
                     <small className='d-block text-truncate font-italic text-secondary'>
                       {media.name || `Episode #${media.episode_number}`}
@@ -64,4 +67,8 @@ class MediaCard extends Component {
   }
 }
 
-export default MediaCard
+export default connect((store) => {
+  return {
+    series: store.Data.series
+  }
+})(MediaCard)

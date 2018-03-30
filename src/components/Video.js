@@ -13,6 +13,8 @@ import './Video.css'
 class Video extends Component {
   constructor (props) {
     super(props)
+    // manually store the amount of time watched
+    this.loggedTime = props.media.playhead
     this.logTime = this.logTime.bind(this)
   }
 
@@ -79,10 +81,11 @@ class Video extends Component {
   }
 
   logTime (t) {
-    const { Auth, id, media } = this.props
+    const { Auth, id } = this.props
     const time = t || this.player.getCurrentTime()
     // log time only if it's greater than what is saved
-    if (time !== 0 && time > media.playhead && process.env.NODE_ENV === 'production') {
+    if (time !== 0 && time > this.loggedTime && process.env.NODE_ENV === 'production') {
+      this.loggedTime = time
       const data = new FormData()
       data.append('session_id', Auth.session_id)
       data.append('event', 'playback_status')

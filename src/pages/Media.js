@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { getMediaForCollection, getMediaInfo } from '../actions'
+import { getMediaForCollection, getMediaInfo, getSeriesInfo } from '../actions'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
@@ -9,6 +9,7 @@ import { Badge } from 'reactstrap'
 import Video from '../components/Video'
 import Collection from '../components/Collection'
 import MALButton from '../components/MALButton'
+import Loading from '../components/Loading'
 
 import api from '../lib/api'
 import useProxy from '../lib/useProxy'
@@ -46,6 +47,7 @@ class Media extends Component {
       // only if available
       if (media.available) {
         await dispatch(getMediaForCollection(media.collection_id))
+        await dispatch(getSeriesInfo(media.series_id))
         const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
         this.setState({
           streamData: video.data.data
@@ -61,10 +63,15 @@ class Media extends Component {
 
   render () {
     const { streamData, error } = this.state
-    const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
-    const loadedDetails = media[mediaId] && !error
-    const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
+    const { match: { params: { media: mediaId } }, media, collectionMedia, series } = this.props
+    // the current media object and the series
     const mediaObj = media[mediaId]
+    const currentSeries = mediaObj && series ? series[mediaObj.series_id] : null
+    // check that both of the above are loaded and no error
+    const loadedDetails = mediaObj && currentSeries && !error
+    // check that the video URL exists
+    const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
+    // remove episodes that are before the one currently being watched
     const nextEpisodes = mediaObj && collectionMedia[mediaObj.collection_id]
       ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
@@ -72,7 +79,7 @@ class Media extends Component {
       <Fragment>
         <Helmet>
           <title>
-            {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${mediaObj.collection_name}` : 'Loading...'}
+            {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${currentSeries.name}` : 'Loading...'}
             {' '}- nani
           </title>
         </Helmet>
@@ -80,9 +87,7 @@ class Media extends Component {
         <div className='row'>
           { !loadedDetails
             ? (
-              <div className='col-sm-12 text-center'>
-                <h1>Loading...</h1>
-              </div>
+              <Loading />
             )
             : (
               <div className='col-sm-12'>
@@ -98,12 +103,12 @@ class Media extends Component {
                 <h3>{mediaObj.name}</h3>
                 <h5>
                   <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white'>
-                    {mediaObj.collection_name || 'Loading...'}
+                    {currentSeries.name || 'Loading...'}
                   </Badge>
-                  {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode #{mediaObj.episode_number}</Badge> : null}
+                  {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode {mediaObj.episode_number}</Badge> : null}
                   <Badge color='info' className='ml-2'>{Math.ceil(mediaObj.duration / 60)} min</Badge>
                   <Badge color='warning' className='ml-2 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
-                      http://www.crunchyroll.com/search?q=${mediaObj.collection_name} Episode ${mediaObj.episode_number} ${mediaObj.name}
+                      http://www.crunchyroll.com/search?q=${currentSeries.name} Episode ${mediaObj.episode_number} ${mediaObj.name}
                     `}>
                     Find on Crunchyroll
                   </Badge>
@@ -139,6 +144,7 @@ export default connect((store) => {
   return {
     Auth: store.Auth,
     media: store.Data.media,
-    collectionMedia: store.Data.collectionMedia
+    collectionMedia: store.Data.collectionMedia,
+    series: store.Data.series
   }
 })(Media)
