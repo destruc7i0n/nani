@@ -7,6 +7,8 @@ import { Card } from 'reactstrap'
 
 import Footer from '../components/Footer'
 
+import icon from '../assets/ninja-blue.png'
+
 class Login extends Component {
   constructor (props) {
     super(props)
@@ -40,10 +42,8 @@ class Login extends Component {
           <title>Login - nani</title>
           {/* language=CSS */}
           <style>{`
-            html, body {
-              height: 100%;
-            }
             body {
+              margin-top: 10vh;
               display: -ms-flexbox;
               display: -webkit-box;
               display: flex;
@@ -85,6 +85,7 @@ class Login extends Component {
           `}</style>
         </Helmet>
         <form className='form-signin' onSubmit={this.handleLogin}>
+          <img src={icon} className='img-fluid' alt='nani?!' style={{ maxWidth: '100px' }} />
           <h1 className='h3 mb-1 font-weight-normal'>nani?!</h1>
           <p className='font-italic font-weight-light'>What's Crunchyroll?</p>
           {error ? <p className='text-danger'>{error}</p> : null}
