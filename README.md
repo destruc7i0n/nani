@@ -5,8 +5,9 @@ What's Crunchyroll?
 
 ## Images
 ![Dashboard](https://i.imgur.com/iqn0bwo.png)
+![Queue](https://i.imgur.com/Tb7n4aZ.png)
 ![Series](https://i.imgur.com/RrDgjLG.png)
-![Video](https://i.imgur.com/jRSxPuf.png)
+![Video](https://i.imgur.com/vLYKgxt.png)
 
 There are a few more here: https://imgur.com/a/R5cNW
 
@@ -17,7 +18,7 @@ There are a few more here: https://imgur.com/a/R5cNW
 - MyAnimeList updating support
 - Much more...
 
-<sub>* Streaming will not work on many newer shows from the website, sadly Crunchyroll is adding CORS headers. I'm working on a public solution for this.</sub>
+<sub>* Streaming will not work on many newer shows in the browser. Use the desktop app.</sub>
 
 ## Development
 To run in development, run
@@ -30,6 +31,14 @@ To build static files, run
 ```sh
 yarn build
 ```
+
+To build the desktop app, run
+```sh
+cd desktop
+yarn install
+yarn build
+```
+Install what is in the `dist` folder.
 
 ## Deployment
 This is meant to be deployed on Netlify, to take advantage of their proxy feature and functions.
