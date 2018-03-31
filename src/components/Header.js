@@ -46,6 +46,12 @@ class Header extends Component {
     }
   }
 
+  componentDidMount () {
+    if (document.querySelector('.navbar-dark') && window.navigator.standalone) {
+      document.querySelector('.navbar-dark').style.paddingTop = '15pt'
+    }
+  }
+
   render () {
     const { collapsed } = this.state
     const { dispatch, Auth } = this.props
