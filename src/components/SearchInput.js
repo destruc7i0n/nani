@@ -9,6 +9,8 @@ import { DebounceInput } from 'react-debounce-input'
 
 import classNames from 'classnames'
 
+import './SearchInput.css'
+
 class SearchInput extends Component {
   constructor (props) {
     super(props)

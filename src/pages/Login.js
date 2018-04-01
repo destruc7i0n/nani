@@ -95,7 +95,7 @@ class Login extends Component {
             type='text'
             id='inputUsername'
             className='form-control'
-            placeholder='Username'
+            placeholder='Username / Email'
             required
             autoFocus
             onChange={({ target: { value: username } }) => this.setState({ username })} />

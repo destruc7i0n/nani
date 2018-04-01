@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Clappr from 'clappr'
 import LevelSelector from '../lib/clappr-level-selector'
 import ChromecastPlugin from '../lib/clappr-chromecast-plugin'
+import ResponsiveContainer from '../lib/clappr-responsive-container-plugin'
 
 import api, { LOCALE, VERSION } from '../lib/api'
 import useProxy from '../lib/useProxy'
@@ -48,7 +49,9 @@ class Video extends Component {
         parent: this.playerRef,
         source: streamUrl,
         poster: (media.screenshot_image && useProxy(media.screenshot_image.full_url)) || null,
-        plugins: [LevelSelector, ChromecastPlugin],
+        plugins: {
+          core: [LevelSelector, ChromecastPlugin, ResponsiveContainer]
+        },
         levelSelectorConfig: {
           title: 'Quality',
           labels: {
@@ -103,7 +106,7 @@ class Video extends Component {
 
   render () {
     return (
-      <div className='embed-responsive sort-of-center'>
+      <div className='w-75'>
         <div ref={el => { this.playerRef = el }} />
       </div>
     )

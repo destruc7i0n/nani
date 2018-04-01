@@ -81,12 +81,13 @@ class MALButton extends Component {
 
   render () {
     const { available, updated } = this.state
+    const { dispatch, ...props } = this.props
     return this.isLoggedIn() && available ? (
       <Badge
-        className='ml-2'
         href='#'
         color={updated ? 'success' : 'danger'}
         onClick={this.updateMAL}
+        {...props}
       >
         MAL:
         &nbsp;

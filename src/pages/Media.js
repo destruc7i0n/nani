@@ -6,6 +6,14 @@ import { Link } from 'react-router-dom'
 
 import { Badge } from 'reactstrap'
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {
+  faTv,
+  faClock,
+  faSearch,
+  faListOl
+} from '@fortawesome/fontawesome-free-solid'
+
 import Video from '../components/Video'
 import Collection from '../components/Collection'
 import MALButton from '../components/MALButton'
@@ -92,9 +100,9 @@ class Media extends Component {
             )
             : (
               <div className='col-sm-12'>
-                <div className='row mb-4 bg-light player-background'>
+                <div className='d-flex mb-4 bg-light player-background justify-content-center'>
                   {!loadedVideo || !streamData.stream_data.streams.length
-                    ? <img className='img-fluid sort-of-center' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
+                    ? <img className='img-fluid' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
                     : <Video
                       streamUrl={streamData.stream_data.streams[0].url}
                       key={mediaId}
@@ -102,19 +110,33 @@ class Media extends Component {
                     />}
                 </div>
                 <h3>{mediaObj.name}</h3>
-                <h5>
-                  <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white'>
+                <h5 className='d-flex flex-column flex-sm-row flex-wrap'>
+                  <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white mb-1 text-truncate'>
+                    <FontAwesomeIcon icon={faTv} />
+                    {' '}
                     {currentSeries.name || 'Loading...'}
                   </Badge>
-                  {mediaObj.episode_number ? <Badge color='secondary' className='ml-2'>Episode {mediaObj.episode_number}</Badge> : null}
-                  <Badge color='info' className='ml-2'>{Math.ceil(mediaObj.duration / 60)} min</Badge>
-                  <Badge color='warning' className='ml-2 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
+                  {mediaObj.episode_number
+                    ? <Badge color='secondary' className='ml-sm-2 mb-1 badge-outline'>
+                      <FontAwesomeIcon icon={faListOl} />
+                      {' '}
+                      Episode {mediaObj.episode_number}
+                    </Badge>
+                    : null}
+                  <Badge color='info' className='ml-sm-2 mb-1 badge-outline'>
+                    <FontAwesomeIcon icon={faClock} />
+                    {' '}
+                    {Math.ceil(mediaObj.duration / 60)} min
+                  </Badge>
+                  <Badge color='warning' className='ml-sm-2 mb-1 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
                       http://www.crunchyroll.com/search?q=${currentSeries.name} Episode ${mediaObj.episode_number} ${mediaObj.name}
                     `}>
+                    <FontAwesomeIcon icon={faSearch} />
+                    {' '}
                     Find on Crunchyroll
                   </Badge>
-                  <MALButton id={mediaId} media={mediaObj} />
-                  <QueueButton id={mediaObj.series_id} badge className='ml-2' />
+                  <MALButton id={mediaId} media={mediaObj} className='ml-sm-2 mb-1' />
+                  <QueueButton id={mediaObj.series_id} badge className='ml-sm-2 mb-1' />
                 </h5>
                 <p>{mediaObj.description}</p>
                 {nextEpisodes && nextEpisodes.length

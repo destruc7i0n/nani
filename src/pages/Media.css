@@ -1,3 +1,17 @@
 .player-background {
     border-radius: 20px;
 }
+
+.badge.badge-outline {
+    background-color: transparent;
+}
+
+.badge.badge-outline.badge-info {
+    border: 1px solid var(--info);
+    color: var(--info);
+}
+
+.badge.badge-outline.badge-secondary {
+    border: 1px solid var(--secondary);
+    color: var(--secondary);
+}
