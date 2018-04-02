@@ -13,7 +13,7 @@ let source = CancelToken.source()
 export default function api (opts) {
   const config = {
     method: opts.method || 'get',
-    url: `https://nani.ninja/proxy/api/${opts.route}.${opts.version || '0'}.json`,
+    url: `https://api.crunchyroll.com/${opts.route}.${opts.version || '0'}.json`,
     params: !opts.data ? {
       ...opts.params,
       locale: LOCALE,
