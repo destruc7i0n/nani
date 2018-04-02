@@ -69,7 +69,10 @@ class Video extends Component {
             subtitle: media.description
           }
         },
-        disableVideoTagContextMenu: true
+        disableVideoTagContextMenu: true,
+        playback: {
+          crossOrigin: 'anonymous'
+        }
       })
       if (media.playhead) {
         this.player.seek(media.playhead)

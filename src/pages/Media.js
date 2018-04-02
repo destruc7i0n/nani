@@ -84,6 +84,13 @@ class Media extends Component {
     const nextEpisodes = mediaObj && collectionMedia[mediaObj.collection_id]
       ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
+    // small function to format time
+    const formatTime = (secs) => {
+      const minutes = Math.floor(secs / 60)
+      let seconds = secs - (minutes * 60)
+      seconds = seconds < 10 ? `0${seconds}` : seconds
+      return `${minutes}:${seconds}`
+    }
     return (
       <Fragment>
         <Helmet>
@@ -126,7 +133,7 @@ class Media extends Component {
                   <Badge color='info' className='ml-sm-2 mb-1 badge-outline'>
                     <FontAwesomeIcon icon={faClock} />
                     {' '}
-                    {Math.ceil(mediaObj.duration / 60)} min
+                    {formatTime(mediaObj.duration)}
                   </Badge>
                   <Badge color='warning' className='ml-sm-2 mb-1 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
                       http://www.crunchyroll.com/search?q=${currentSeries.name} Episode ${mediaObj.episode_number} ${mediaObj.name}
