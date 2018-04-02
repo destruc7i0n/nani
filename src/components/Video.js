@@ -6,10 +6,10 @@ import LevelSelector from '../lib/clappr-level-selector'
 import ChromecastPlugin from '../lib/clappr-chromecast-plugin'
 import ResponsiveContainer from '../lib/clappr-responsive-container-plugin'
 
-import api, { LOCALE, VERSION } from '../lib/api'
 import useProxy from '../lib/useProxy'
 
 import './Video.css'
+import { updatePlaybackTime } from '../actions'
 
 class Video extends Component {
   constructor (props) {
@@ -69,10 +69,7 @@ class Video extends Component {
             subtitle: media.description
           }
         },
-        disableVideoTagContextMenu: true,
-        playback: {
-          crossOrigin: 'anonymous'
-        }
+        disableVideoTagContextMenu: true
       })
       if (media.playhead) {
         this.player.seek(media.playhead)
@@ -86,24 +83,13 @@ class Video extends Component {
     }
   }
 
-  logTime (t) {
-    const { Auth, id } = this.props
+  async logTime (t) {
+    const { dispatch, id } = this.props
     const time = t || this.player.getCurrentTime()
     // log time only if it's greater than what is saved
     if (time !== 0 && time > this.loggedTime && process.env.NODE_ENV === 'production') {
+      await dispatch(updatePlaybackTime(time, id))
       this.loggedTime = time
-      const data = new FormData()
-      data.append('session_id', Auth.session_id)
-      data.append('event', 'playback_status')
-      data.append('playhead', time)
-      data.append('media_id', id)
-      data.append('locale', LOCALE)
-      data.append('version', VERSION)
-      api({
-        method: 'post',
-        route: 'log',
-        data
-      })
     }
   }
 

@@ -91,6 +91,15 @@ export const updateSeriesQueueData = (id, inQueue) => ({
   payload: { id, inQueue }
 })
 
+export const SET_PLAYBACK_TIME = 'SET_PLAYBACK_TIME'
+export const setPlaybackTime = (time, id) => ({
+  type: SET_PLAYBACK_TIME,
+  payload: {
+    id,
+    time
+  }
+})
+
 const addIdCheckBulk = (id, obj, action) => ({
   type: action,
   // eslint-disable-next-line array-callback-return
@@ -362,6 +371,34 @@ export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
 
       const data = resp.data.data
       dispatch(setList(filter, data))
+      resolve()
+    } catch (err) {
+      handleError(err, dispatch, reject)
+    }
+  })
+}
+
+export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
+  const state = getState()
+  const form = new FormData()
+  form.append('session_id', state.Auth.session_id)
+  form.append('event', 'playback_status')
+  form.append('playhead', time)
+  form.append('media_id', id)
+  form.append('locale', LOCALE)
+  form.append('version', VERSION)
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await api({
+        method: 'post',
+        route: 'log',
+        data: form
+      })
+      if (resp.data.error) throw resp
+
+      // update the time in the store too
+      dispatch(setPlaybackTime(time, id))
       resolve()
     } catch (err) {
       handleError(err, dispatch, reject)

@@ -57,7 +57,10 @@ class Media extends Component {
       if (media.available) {
         await dispatch(getMediaForCollection(media.collection_id))
         await dispatch(getSeriesInfo(media.series_id))
-        const video = await api({route: 'info', params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}})
+        const video = await api({
+          route: 'info',
+          params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}
+        })
         this.setState({
           streamData: video.data.data
         })
@@ -109,7 +112,7 @@ class Media extends Component {
               <div className='col-sm-12'>
                 <div className='d-flex mb-4 bg-light player-background justify-content-center'>
                   {!loadedVideo || !streamData.stream_data.streams.length
-                    ? <img className='img-fluid' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
+                    ? <img className='player-image' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
                     : <Video
                       streamUrl={streamData.stream_data.streams[0].url}
                       key={mediaId}

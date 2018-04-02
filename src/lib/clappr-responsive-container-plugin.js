@@ -18,7 +18,7 @@ export default class ResponsiveContainer extends UICorePlugin {
   }
   resize () {
     const width = (this.playerWrapper.clientWidth === 0 ? this.options.width : this.playerWrapper.clientWidth)
-    const height = Math.floor(this.options.height / this.options.width * width)
+    const height = this.options.height / this.options.width * width
     this.core.resize({ width: width, height: height })
   }
 }

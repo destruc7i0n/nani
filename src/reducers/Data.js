@@ -7,6 +7,7 @@ import {
   SET_ERROR,
   SET_HISTORY,
   SET_LIST,
+  SET_PLAYBACK_TIME,
   SET_QUEUE,
   SET_RECENT,
   SET_SEARCH_IDS,
@@ -79,9 +80,21 @@ export default function Data (state = {
       return {
         ...state,
         series: {
+          ...state.series,
           [action.payload.id]: {
             ...state.series[action.payload.id],
             in_queue: action.payload.inQueue
+          }
+        }
+      }
+    case SET_PLAYBACK_TIME:
+      return {
+        ...state,
+        media: {
+          ...state.media,
+          [action.payload.id]: {
+            ...state.media[action.payload.id],
+            playback: action.payload.time
           }
         }
       }

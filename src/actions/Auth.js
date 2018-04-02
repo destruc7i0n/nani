@@ -58,7 +58,7 @@ export const startSession = () => (dispatch, getState) => {
       )
       resolve()
     } catch (err) {
-      reject(err)
+      handleError(err, dispatch, reject)
     }
   })
 }

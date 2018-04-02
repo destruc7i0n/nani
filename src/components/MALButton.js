@@ -39,11 +39,11 @@ class MALButton extends Component {
   }
 
   async checkOnMAL () {
-    const { media, id } = this.props
+    const { media, id, series } = this.props
     if (media && media.collection_name && id) {
       this.setState({ available: false, updated: false })
       try {
-        const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${media.collection_name}`)
+        const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${series.name}`)
         if (!error && success) {
           this.setState({ available: true, malItem: data })
         }
@@ -81,7 +81,7 @@ class MALButton extends Component {
 
   render () {
     const { available, updated } = this.state
-    const { dispatch, ...props } = this.props
+    const { dispatch, collectionMedia, series, ...props } = this.props
     return this.isLoggedIn() && available ? (
       <Badge
         href='#'
@@ -98,9 +98,10 @@ class MALButton extends Component {
 }
 
 export default connect((store, props) => {
-  const { media: { collection_id: id = 0 } = {} } = props
+  const { media: { collection_id: collectionId = 0, series_id: seriesId = 0 } = {} } = props
   return {
     mal: store.Auth.mal,
-    collectionMedia: store.Data.collectionMedia[id]
+    collectionMedia: store.Data.collectionMedia[collectionId],
+    series: store.Data.series[seriesId]
   }
 })(MALButton)
