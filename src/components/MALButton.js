@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import axios from 'axios'
-import { isEqual } from 'lodash'
 
 import { Badge } from 'reactstrap'
 
@@ -33,7 +32,9 @@ class MALButton extends Component {
   }
 
   async componentWillReceiveProps (nextProps) {
-    if (this.isLoggedIn(nextProps) && !isEqual(nextProps, this.props)) {
+    const { id } = this.props
+    const { id: nextId } = nextProps
+    if (this.isLoggedIn(nextProps) && nextId !== id) {
       await this.checkOnMAL()
     }
   }

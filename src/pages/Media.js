@@ -4,7 +4,7 @@ import { getMediaForCollection, getMediaInfo, getSeriesInfo } from '../actions'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
-import { Badge } from 'reactstrap'
+import { Badge, Card, CardImg, CardImgOverlay } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import {
@@ -112,7 +112,12 @@ class Media extends Component {
               <div className='col-sm-12'>
                 <div className='d-flex mb-4 bg-light player-background justify-content-center'>
                   {!loadedVideo || !streamData.stream_data.streams.length
-                    ? <img className='player-image' src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
+                    ? <Card inverse className='w-75'>
+                      <CardImg src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
+                      <CardImgOverlay className='d-flex align-items-center justify-content-center'>
+                        <Loading />
+                      </CardImgOverlay>
+                    </Card>
                     : <Video
                       streamUrl={streamData.stream_data.streams[0].url}
                       key={mediaId}
@@ -124,7 +129,7 @@ class Media extends Component {
                   <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white mb-1 text-truncate'>
                     <FontAwesomeIcon icon={faTv} />
                     {' '}
-                    {currentSeries.name || 'Loading...'}
+                    {mediaObj.collection_name || 'Loading...'}
                   </Badge>
                   {mediaObj.episode_number
                     ? <Badge color='secondary' className='ml-sm-2 mb-1 badge-outline'>
