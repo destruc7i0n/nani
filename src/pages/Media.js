@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 
 import { Badge, Card, CardImg, CardImgOverlay } from 'reactstrap'
 
+import Img from 'react-image'
+
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import {
   faTv,
@@ -21,7 +23,7 @@ import QueueButton from '../components/QueueButton'
 import Loading from '../components/Loading'
 
 import api from '../lib/api'
-import useProxy from '../lib/useProxy'
+import withProxy from '../lib/withProxy'
 
 import './Media.css'
 
@@ -94,6 +96,7 @@ class Media extends Component {
       seconds = seconds < 10 ? `0${seconds}` : seconds
       return `${minutes}:${seconds}`
     }
+    const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
     return (
       <Fragment>
         <Helmet>
@@ -113,7 +116,10 @@ class Media extends Component {
                 <div className='d-flex mb-4 bg-light player-background justify-content-center'>
                   {!loadedVideo || !streamData.stream_data.streams.length
                     ? <Card inverse className='w-75'>
-                      <CardImg src={mediaObj.screenshot_image && useProxy(mediaObj.screenshot_image.full_url)} alt={mediaObj.name} />
+                      <CardImg tag={Img} decode={false} src={imgFullURL ? [
+                        withProxy(imgFullURL),
+                        imgFullURL
+                      ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={mediaObj.name} />
                       <CardImgOverlay className='d-flex align-items-center justify-content-center'>
                         <Loading />
                       </CardImgOverlay>

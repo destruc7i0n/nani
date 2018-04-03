@@ -6,7 +6,7 @@ import LevelSelector from '../lib/clappr-level-selector'
 import ChromecastPlugin from '../lib/clappr-chromecast-plugin'
 import ResponsiveContainer from '../lib/clappr-responsive-container-plugin'
 
-import useProxy from '../lib/useProxy'
+import withProxy from '../lib/withProxy'
 
 import './Video.css'
 import { updatePlaybackTime } from '../actions'
@@ -48,7 +48,7 @@ class Video extends Component {
       this.player = new Clappr.Player({
         parent: this.playerRef,
         source: streamUrl,
-        poster: (media.screenshot_image && useProxy(media.screenshot_image.full_url)) || null,
+        poster: (media.screenshot_image && withProxy(media.screenshot_image.full_url)) || null,
         plugins: {
           core: [LevelSelector, ChromecastPlugin, ResponsiveContainer]
         },

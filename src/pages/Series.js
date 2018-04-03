@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet'
 
 import { Badge, Button } from 'reactstrap'
 
+import Img from 'react-image'
+
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/fontawesome-free-solid'
 
@@ -13,8 +15,9 @@ import { startCase } from 'lodash'
 import SeriesCollection from '../components/SeriesCollection'
 import Loading from '../components/Loading'
 import QueueButton from '../components/QueueButton'
+import ImageLoader from '../components/ImageLoader'
 
-import useProxy from '../lib/useProxy'
+import withProxy from '../lib/withProxy'
 
 class Series extends Component {
   constructor (props) {
@@ -54,6 +57,7 @@ class Series extends Component {
     const { error } = this.state
     const { match: { params: { id } }, series, seriesCollections, collections } = this.props
     const loaded = series[id] && seriesCollections[id]
+    const imgFullURL = series[id] && series[id].portrait_image && series[id].portrait_image.full_url
     return (
       <div className='row'>
         <Helmet>
@@ -67,7 +71,10 @@ class Series extends Component {
           : (
             <Fragment>
               <div className='col-sm-3'>
-                <img src={series[id].portrait_image && useProxy(series[id].portrait_image.full_url)} alt={series[id].name} className='img-thumbnail' />
+                <Img loader={<ImageLoader height={300} />} src={imgFullURL ? [
+                  withProxy(imgFullURL),
+                  imgFullURL
+                ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series[id].name} className='img-thumbnail' />
                 <QueueButton id={id} block className='mt-2' />
                 <Button block color='info' href={
                   `https://myanimelist.net/search/all?q=${series[id].name}`

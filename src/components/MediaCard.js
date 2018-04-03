@@ -4,12 +4,15 @@ import { Link } from 'react-router-dom'
 
 import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress } from 'reactstrap'
 
+import Img from 'react-image'
+
 import { format } from 'date-fns'
 
 import Loading from './Loading'
 import QueueButton from './QueueButton'
+import ImageLoader from './ImageLoader'
 
-import useProxy from '../lib/useProxy'
+import withProxy from '../lib/withProxy'
 
 import './MediaCard.css'
 
@@ -20,6 +23,7 @@ class MediaCard extends Component {
     const mediaSeries = media && series[media.series_id] ? series[media.series_id] : {}
     // regex check to ensure there is number
     const containsNumber = (str) => /\d/.test(str)
+    const imgFullURL = media && media.screenshot_image && media.screenshot_image.full_url
     return (
       <div className={`col-lg-${width} col-md-6 d-flex pb-4`}>
         <Card
@@ -33,9 +37,14 @@ class MediaCard extends Component {
                   <div className='row'>
                     <div className={width === 12 ? 'col-lg-4' : 'col-lg-12'}>
                       <CardImg
+                        tag={Img}
                         top
                         className='media-card-img'
-                        src={(media && media.screenshot_image && useProxy(media.screenshot_image.full_url)) || 'https://via.placeholder.com/640x360?text=No+Image'}
+                        loader={<ImageLoader />}
+                        src={imgFullURL ? [
+                          withProxy(imgFullURL),
+                          imgFullURL
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
                       <CardImgOverlay className='pl-4 pr-4 p-1'>
                         {media.episode_number
