@@ -131,33 +131,33 @@ class Media extends Component {
                     />}
                 </div>
                 <h3>{mediaObj.name}</h3>
-                <h5 className='d-flex flex-column flex-sm-row flex-wrap'>
-                  <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white mb-1 text-truncate'>
+                <h5 className='d-flex flex-column flex-md-row flex-wrap'>
+                  <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white mb-1 text-truncate mr-md-2'>
                     <FontAwesomeIcon icon={faTv} />
                     {' '}
                     {mediaObj.collection_name || 'Loading...'}
                   </Badge>
                   {mediaObj.episode_number
-                    ? <Badge color='secondary' className='ml-sm-2 mb-1 badge-outline'>
+                    ? <Badge color='secondary' className='mr-md-2 mb-1 badge-outline'>
                       <FontAwesomeIcon icon={faListOl} />
                       {' '}
                       Episode {mediaObj.episode_number}
                     </Badge>
                     : null}
-                  <Badge color='info' className='ml-sm-2 mb-1 badge-outline'>
+                  <Badge color='info' className='mr-md-2 mb-1 badge-outline'>
                     <FontAwesomeIcon icon={faClock} />
                     {' '}
                     {formatTime(mediaObj.duration)}
                   </Badge>
-                  <Badge color='warning' className='ml-sm-2 mb-1 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
+                  <Badge color='warning' className='mr-md-2 mb-1 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
                       http://www.crunchyroll.com/search?q=${currentSeries.name} Episode ${mediaObj.episode_number} ${mediaObj.name}
                     `}>
                     <FontAwesomeIcon icon={faSearch} />
                     {' '}
                     Find on Crunchyroll
                   </Badge>
-                  <MALButton id={mediaId} media={mediaObj} className='ml-sm-2 mb-1' />
-                  <QueueButton id={mediaObj.series_id} badge className='ml-sm-2 mb-1' />
+                  <MALButton id={mediaId} media={mediaObj} className='mr-md-2 mb-1' />
+                  <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
                 </h5>
                 <p>{mediaObj.description}</p>
                 {nextEpisodes && nextEpisodes.length

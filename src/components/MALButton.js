@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import axios from 'axios'
@@ -40,11 +40,11 @@ class MALButton extends Component {
   }
 
   async checkOnMAL () {
-    const { media, id, series } = this.props
+    const { media, id } = this.props
     if (media && media.collection_name && id) {
       this.setState({ available: false, updated: false })
       try {
-        const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${series.name}`)
+        const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${media.collection_name}`)
         if (!error && success) {
           this.setState({ available: true, malItem: data })
         }
@@ -81,28 +81,38 @@ class MALButton extends Component {
   }
 
   render () {
-    const { available, updated } = this.state
+    const { available, updated, malItem } = this.state
     const { dispatch, collectionMedia, series, ...props } = this.props
     return this.isLoggedIn() && available ? (
-      <Badge
-        href='#'
-        color={updated ? 'success' : 'danger'}
-        onClick={this.updateMAL}
-        {...props}
-      >
-        MAL:
-        &nbsp;
-        <FontAwesomeIcon icon={updated ? faCheckCircle : faTimesCircle} />
-      </Badge>
+      <Fragment>
+        <Badge
+          href='#'
+          color={updated ? 'success' : 'danger'}
+          onClick={this.updateMAL}
+          {...props}
+        >
+          MAL:
+          &nbsp;
+          <FontAwesomeIcon icon={updated ? faCheckCircle : faTimesCircle} />
+        </Badge>
+        <Badge
+          href={`https://myanimelist.net/anime/${malItem.id}`}
+          target='_blank'
+          rel='noopener noreferrer'
+          color='dark'
+          {...props}
+        >
+          View on MyAnimeList
+        </Badge>
+      </Fragment>
     ) : null
   }
 }
 
 export default connect((store, props) => {
-  const { media: { collection_id: collectionId = 0, series_id: seriesId = 0 } = {} } = props
+  const { media: { collection_id: collectionId = 0 } = {} } = props
   return {
     mal: store.Auth.mal,
-    collectionMedia: store.Data.collectionMedia[collectionId],
-    series: store.Data.series[seriesId]
+    collectionMedia: store.Data.collectionMedia[collectionId]
   }
 })(MALButton)
