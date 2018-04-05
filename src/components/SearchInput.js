@@ -18,9 +18,19 @@ class SearchInput extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      value: ''
+      searchIds: [],
+      value: '',
+      selectedIndex: 0
     }
     this.search = this.search.bind(this)
+    this.handleSelect = this.handleSelect.bind(this)
+  }
+
+  static getDerivedStateFromProps (nextProps) {
+    const { searchIds } = nextProps
+    return {
+      searchIds: searchIds.splice(0, 5)
+    }
   }
 
   componentDidMount () {
@@ -51,10 +61,43 @@ class SearchInput extends Component {
     await dispatch(search(trimmed))
   }
 
+  handleSelect (event) {
+    let { selectedIndex, value, searchIds } = this.state
+    const { dispatch, history } = this.props
+    const { key = -1 } = event
+
+    if (key === 'ArrowUp') { // up
+      if (value === '' || value < 3) return
+      event.preventDefault()
+      selectedIndex -= 1
+      if (selectedIndex < 0) {
+        selectedIndex = searchIds.length - 1
+      }
+    } else if (key === 'ArrowDown') { // down
+      if (value === '' || value < 3) return
+      event.preventDefault()
+      selectedIndex += 1
+      if (selectedIndex === searchIds.length) {
+        selectedIndex = 0
+      }
+    } else if (key === 'Enter') {
+      if (value === '' || value < 3) return
+      event.preventDefault()
+      const resultId = searchIds[selectedIndex]
+      history.push(`/series/${resultId}`)
+      selectedIndex = 0
+      value = ''
+    } else if (key === 'Escape') {
+      value = ''
+      dispatch(setSearchIds([]))
+    }
+    this.setState({ selectedIndex, value })
+  }
+
   render () {
-    const { value } = this.state
-    let { searchIds, series } = this.props
-    searchIds = searchIds.splice(0, 5)
+    let { value, searchIds, selectedIndex } = this.state
+    let { series } = this.props
+
     return (
       <Manager>
         <Target>
@@ -67,6 +110,7 @@ class SearchInput extends Component {
             autoComplete='off'
             value={value}
             onChange={this.search}
+            onKeyDown={this.handleSelect}
           />
         </Target>
         <Popper
@@ -80,7 +124,7 @@ class SearchInput extends Component {
               : searchIds.map((id, index) => (
                 <Link
                   to={`/series/${id}`}
-                  className='dropdown-item p-2 d-flex flex-row'
+                  className={classNames('dropdown-item p-2 d-flex flex-row', { 'active': index === selectedIndex })}
                   key={`searchResult-${index}`}
                   onClick={() => this.setState({ value: '' })}
                 >

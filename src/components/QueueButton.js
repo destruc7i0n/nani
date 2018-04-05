@@ -26,6 +26,7 @@ class QueueButton extends Component {
         inQueue: nextProps.inQueue
       }
     }
+    return {}
   }
 
   async handle (e) {
