@@ -20,16 +20,14 @@ import {
 } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {
-  faCertificate,
-  faClosedCaptioning,
-  faHistory,
-  faList,
-  faStepForward,
-  faUser,
-  faClock,
-  faCalendarAlt
-} from '@fortawesome/fontawesome-free-solid'
+import faCertificate from '@fortawesome/fontawesome-free-solid/faCertificate'
+import faClosedCaptioning from '@fortawesome/fontawesome-free-solid/faClosedCaptioning'
+import faHistory from '@fortawesome/fontawesome-free-solid/faHistory'
+import faList from '@fortawesome/fontawesome-free-solid/faList'
+import faStepForward from '@fortawesome/fontawesome-free-solid/faStepForward'
+import faUser from '@fortawesome/fontawesome-free-solid/faUser'
+import faClock from '@fortawesome/fontawesome-free-solid/faClock'
+import faCalendarAlt from '@fortawesome/fontawesome-free-solid/faCalendarAlt'
 
 import SearchInput from './SearchInput'
 import Options from './Options'
@@ -58,7 +56,7 @@ class Header extends Component {
       }>
         <Container>
           <NavbarBrand tag={Link} to='/'>
-            <img src={icon} alt='nani?!' className='navbar-image' />
+            <img src={icon} alt='nani?!' className='navbar-image d-md-none d-lg-inline-block' />
             {' '}
             nani?!
           </NavbarBrand>
@@ -67,28 +65,28 @@ class Header extends Component {
             <Nav className='mr-auto' navbar>
               <NavItem>
                 <NavLink tag={Link} to='/queue'>
-                  <FontAwesomeIcon icon={faList} className='responsive-hidden' />
+                  <FontAwesomeIcon icon={faList} className='d-md-none d-lg-inline-block' />
                   {' '}
                   Queue
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/history'>
-                  <FontAwesomeIcon icon={faHistory} className='responsive-hidden' />
+                  <FontAwesomeIcon icon={faHistory} className='d-md-none d-lg-inline-block' />
                   {' '}
                   History
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/recent'>
-                  <FontAwesomeIcon icon={faClock} className='responsive-hidden' />
+                  <FontAwesomeIcon icon={faClock} className='d-md-none d-lg-inline-block' />
                   {' '}
                   Recent
                 </NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  <FontAwesomeIcon icon={faStepForward} className='responsive-hidden' />
+                  <FontAwesomeIcon icon={faStepForward} className='d-md-none d-lg-inline-block' />
                   {' '}
                   Series List
                 </DropdownToggle>

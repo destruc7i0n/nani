@@ -1,18 +1,31 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { updateSeriesQueue } from '../actions'
 
 import { Button, Badge } from 'reactstrap'
 
+import classNames from 'classnames'
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faPlus from '@fortawesome/fontawesome-free-solid/faPlus'
+import faMinus from '@fortawesome/fontawesome-free-solid/faMinus'
+
 class QueueButton extends Component {
   constructor (props) {
     super(props)
-    const { inQueue, id, series } = props
     this.state = {
-      // set from the prop or from the series object directly
-      inQueue: inQueue || (series[id] && series[id].in_queue)
+      inQueue: false
     }
     this.handle = this.handle.bind(this)
+  }
+
+  // update each time the props are updated
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (nextProps.inQueue !== prevState.inQueue) {
+      return {
+        inQueue: nextProps.inQueue
+      }
+    }
   }
 
   async handle (e) {
@@ -30,7 +43,7 @@ class QueueButton extends Component {
   render () {
     const { inQueue } = this.state
     // grab some unnecessary props to make them not go into the tag (because of ...props)
-    const { dispatch, badge, inQueue: isInQueue, ...props } = this.props
+    const { dispatch, series, id, badge, inQueue: isInQueue, className, ...props } = this.props
 
     let Tag, attrs
     if (badge) {
@@ -41,18 +54,25 @@ class QueueButton extends Component {
       }
     } else {
       Tag = Button
-      attrs = {...props}
+      attrs = props
     }
     return (
-      <Tag color={inQueue ? 'danger' : 'success'} onClick={this.handle} {...attrs}>
-        {inQueue ? 'Remove from Queue' : 'Add to Queue'}
+      <Tag color='light' onClick={this.handle} className={classNames(className, {
+        'text-danger': inQueue,
+        'text-success': !inQueue
+      })} {...attrs}>
+        {inQueue
+          ? <Fragment><FontAwesomeIcon icon={faMinus} /> Remove from Queue</Fragment>
+          : <Fragment><FontAwesomeIcon icon={faPlus} /> Add to Queue</Fragment>}
       </Tag>
     )
   }
 }
 
-export default connect((store) => {
+export default connect((store, props) => {
+  const { id } = props
+  const currentSeries = store.Data.series[id]
   return {
-    series: store.Data.series
+    inQueue: currentSeries && currentSeries.in_queue
   }
 })(QueueButton)

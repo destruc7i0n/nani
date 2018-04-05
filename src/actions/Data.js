@@ -312,7 +312,8 @@ export const getMediaInfo = (id) => (dispatch, getState) => {
   const state = getState()
   const params = {
     session_id: state.Auth.session_id,
-    media_id: id
+    media_id: id,
+    fields: MEDIA_FIELDS
   }
 
   if (state.Data.media[id]) return Promise.resolve(state.Data.media[id])

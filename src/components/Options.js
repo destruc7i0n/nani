@@ -5,7 +5,7 @@ import { loginMal, removeMal } from '../actions'
 import { Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Col, Label, Input, Alert } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCog } from '@fortawesome/fontawesome-free-solid'
+import faCog from '@fortawesome/fontawesome-free-solid/faCog'
 
 class Options extends Component {
   constructor (props) {

@@ -6,7 +6,8 @@ import axios from 'axios'
 import { Badge } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faTimesCircle } from '@fortawesome/fontawesome-free-solid'
+import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle'
+import faTimesCircle from '@fortawesome/fontawesome-free-solid/faTimesCircle'
 
 class MALButton extends Component {
   constructor (props) {
@@ -24,7 +25,7 @@ class MALButton extends Component {
 
   isLoggedIn (props = this.props) {
     const { mal } = props
-    return mal.username && mal.token
+    return mal.username && mal.token && true
   }
 
   async componentDidMount () {
@@ -82,7 +83,7 @@ class MALButton extends Component {
 
   render () {
     const { available, updated, malItem } = this.state
-    const { dispatch, collectionMedia, series, ...props } = this.props
+    const { dispatch, collectionMedia, series, media, ...props } = this.props
     return this.isLoggedIn() && available ? (
       <Fragment>
         <Badge

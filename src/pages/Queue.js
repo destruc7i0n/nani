@@ -23,7 +23,7 @@ class Queue extends Component {
         <Helmet>
           <title>Queue - nani</title>
         </Helmet>
-        <Collection title='Queue' perPage={1} showDescription showQueueButton mediaIds={queueIds} loading={queueIds.length === 0} />
+        <Collection title='Queue' perPage={1} size='lg' mediaIds={queueIds} loading={queueIds.length === 0} />
       </Fragment>
     )
   }

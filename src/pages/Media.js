@@ -9,12 +9,10 @@ import { Badge, Card, CardImg, CardImgOverlay } from 'reactstrap'
 import Img from 'react-image'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {
-  faTv,
-  faClock,
-  faSearch,
-  faListOl
-} from '@fortawesome/fontawesome-free-solid'
+import faTv from '@fortawesome/fontawesome-free-solid/faTv'
+import faClock from '@fortawesome/fontawesome-free-solid/faClock'
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
+import faListOl from '@fortawesome/fontawesome-free-solid/faListOl'
 
 import Video from '../components/Video'
 import Collection from '../components/Collection'
@@ -58,7 +56,9 @@ class Media extends Component {
       // only if available
       if (media.available) {
         await dispatch(getMediaForCollection(media.collection_id))
+        // preload the series info
         await dispatch(getSeriesInfo(media.series_id))
+        // grab the media stream URL
         const video = await api({
           route: 'info',
           params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}
@@ -77,12 +77,11 @@ class Media extends Component {
 
   render () {
     const { streamData, error } = this.state
-    const { match: { params: { media: mediaId } }, media, collectionMedia, series } = this.props
+    const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
     // the current media object and the series
     const mediaObj = media[mediaId]
-    const currentSeries = mediaObj && series ? series[mediaObj.series_id] : null
     // check that both of the above are loaded and no error
-    const loadedDetails = mediaObj && currentSeries && !error
+    const loadedDetails = mediaObj && !error
     // check that the video URL exists
     const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
     // remove episodes that are before the one currently being watched
@@ -101,7 +100,7 @@ class Media extends Component {
       <Fragment>
         <Helmet>
           <title>
-            {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${currentSeries.name}` : 'Loading...'}
+            {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${mediaObj.collection_name}` : 'Loading...'}
             {' '}- nani
           </title>
         </Helmet>
@@ -149,8 +148,8 @@ class Media extends Component {
                     {' '}
                     {formatTime(mediaObj.duration)}
                   </Badge>
-                  <Badge color='warning' className='mr-md-2 mb-1 text-white' tag='a' target='_blank' rel='noopener noreferrer' href={`
-                      http://www.crunchyroll.com/search?q=${currentSeries.name} Episode ${mediaObj.episode_number} ${mediaObj.name}
+                  <Badge color='secondary' className='mr-md-2 mb-1' tag='a' target='_blank' rel='noopener noreferrer' href={`
+                      http://www.crunchyroll.com/search?q=${mediaObj.collection_name} Episode ${mediaObj.episode_number} ${mediaObj.name}
                     `}>
                     <FontAwesomeIcon icon={faSearch} />
                     {' '}
@@ -189,7 +188,6 @@ export default connect((store) => {
   return {
     Auth: store.Auth,
     media: store.Data.media,
-    collectionMedia: store.Data.collectionMedia,
-    series: store.Data.series
+    collectionMedia: store.Data.collectionMedia
   }
 })(Media)

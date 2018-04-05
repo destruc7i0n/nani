@@ -8,7 +8,8 @@ import { Badge, Button } from 'reactstrap'
 import Img from 'react-image'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faStar } from '@fortawesome/fontawesome-free-solid'
+import faStar from '@fortawesome/fontawesome-free-solid/faStar'
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
 
 import { startCase } from 'lodash'
 
@@ -70,7 +71,7 @@ class Series extends Component {
           )
           : (
             <Fragment>
-              <div className='col-sm-3'>
+              <div className='col-sm-4 col-lg-3'>
                 <Img loader={<ImageLoader height={300} />} src={imgFullURL ? [
                   withProxy(imgFullURL),
                   imgFullURL
@@ -78,9 +79,13 @@ class Series extends Component {
                 <QueueButton id={id} block className='mt-2' />
                 <Button block color='info' href={
                   `https://myanimelist.net/search/all?q=${series[id].name}`
-                } target='_blank' rel='noopener noreferrer'>Find on MyAnimeList</Button>
+                } target='_blank' rel='noopener noreferrer'>
+                  <FontAwesomeIcon icon={faSearch} />
+                  {' '}
+                  Find on MyAnimeList
+                </Button>
               </div>
-              <div className='col-sm-9'>
+              <div className='col-sm-8 col-lg-9'>
                 <h1>{series[id].name}</h1>
                 <p>{series[id].description}</p>
                 <div className='font-weight-bold pb-2'>

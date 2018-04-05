@@ -1,13 +1,7 @@
-.media-card-progress {
-    height: 0.35rem !important;
-    border-radius: 0 !important;
-}
-
-.media-card-img {
-    height: calc(100% - 0.35rem);
-    object-fit: cover;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+.media-card-body > .progress {
+    height: 0.35rem;
+    margin: -8px -8px 0;
+    border-radius: 0;
 }
 
 .box-shadow {

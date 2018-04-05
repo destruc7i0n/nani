@@ -2,27 +2,29 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { Badge, Card, CardBody, CardImg, CardImgOverlay, Progress } from 'reactstrap'
+import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress, Button } from 'reactstrap'
 
 import Img from 'react-image'
 
-import { format } from 'date-fns'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faInfo from '@fortawesome/fontawesome-free-solid/faInfo'
 
 import Loading from './Loading'
+import QueueButton from './QueueButton'
 import ImageLoader from './ImageLoader'
 
 import withProxy from '../lib/withProxy'
 
-import './MediaCard.css'
+import './MediaCardLarge.css'
 
-class MediaCard extends Component {
+class MediaCardLarge extends Component {
   render () {
-    const { media, width, showTime = false, series } = this.props
+    const { media, series } = this.props
     // grab the series for the media
     const mediaSeries = media && series[media.series_id] ? series[media.series_id] : {}
     const imgFullURL = media && media.screenshot_image && media.screenshot_image.full_url
     return (
-      <div className={`col-12 col-sm-6 col-lg-${width} d-flex pb-4`}>
+      <div className={`col-12 col-sm-12 d-flex pb-4`}>
         <Card
           className='d-inline-block w-100 box-shadow'
           style={{ cursor: 'pointer' }}
@@ -31,18 +33,19 @@ class MediaCard extends Component {
             media !== undefined && media.available
               ? (
                 <Link to={`/series/${media.series_id}/${media.media_id}`} style={{ textDecoration: 'none' }}>
-                  <div className='row'>
-                    <div className='col-12'>
+                  <div className='row d-flex flex-row h-100'>
+                    <div className='col-sm-5 col-md-4'>
                       <CardImg
                         tag={Img}
                         top
-                        loader={<ImageLoader height={125} />}
+                        className='media-card-img'
+                        loader={<ImageLoader />}
                         src={imgFullURL ? [
                           withProxy(imgFullURL),
                           imgFullURL
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
-                      <CardImgOverlay className='p-1 pl-4'>
+                      <CardImgOverlay className='pl-4 pr-4 pb-3 p-2 d-flex flex-row flex-wrap align-items-start'>
                         {media.episode_number
                           ? <Badge color='primary mr-1' pill>
                             {`E${media.episode_number}`}
@@ -50,23 +53,26 @@ class MediaCard extends Component {
                           : null}
                         {media.duration ? <Badge color='secondary' pill>{Math.ceil(media.duration / 60)} min</Badge> : null}
                       </CardImgOverlay>
+                      <Progress className='media-card-progress' value={Math.min(100, (media.playhead / media.duration) * 100)} />
                     </div>
-                    <div className='col-12'>
-                      <CardBody className='p-2 media-card-body'>
-                        <Progress className='media-card-progress' value={Math.min(100, (media.playhead / media.duration) * 100)} />
+                    <div className='col-sm-7 col-md-8 d-flex flex-column pl-sm-0'>
+                      <CardBody className='p-2 d-flex flex-column'>
                         <span className='mb-1 d-block text-truncate font-weight-bold text-dark'>
                           {mediaSeries.name || `Episode ${media.episode_number}` }
                         </span>
                         <small className='d-block text-truncate font-italic text-secondary'>
                           {media.name || `Episode ${media.episode_number}`}
                         </small>
-                        {
-                          showTime
-                            ? <Badge className='text-uppercase w-100' color='success'>
-                              {format(new Date(media.available_time), '[Released at] h:mm aa')}
-                            </Badge>
-                            : null
-                        }
+                        <p className='text-muted mt-2'>{media.description}</p>
+
+                        <div className='mt-auto'>
+                          <Button tag={Link} to={`/series/${media.series_id}`} size='sm' className='mr-1' color='primary'>
+                            <FontAwesomeIcon icon={faInfo} />
+                            {' '}
+                            Show Info
+                          </Button>
+                          <QueueButton id={media.series_id} size='sm' />
+                        </div>
                       </CardBody>
                     </div>
                   </div>
@@ -84,4 +90,4 @@ export default connect((store) => {
   return {
     series: store.Data.series
   }
-})(MediaCard)
+})(MediaCardLarge)
