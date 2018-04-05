@@ -6,8 +6,11 @@ import { search, setSearchIds } from '../actions'
 
 import { Manager, Target, Popper } from 'react-popper'
 import { DebounceInput } from 'react-debounce-input'
+import Img from 'react-image'
 
 import classNames from 'classnames'
+
+import withProxy from '../lib/withProxy'
 
 import './SearchInput.css'
 
@@ -77,10 +80,17 @@ class SearchInput extends Component {
               : searchIds.map((id, index) => (
                 <Link
                   to={`/series/${id}`}
-                  className='dropdown-item p-2'
+                  className='dropdown-item p-2 d-flex flex-row'
                   key={`searchResult-${index}`}
                   onClick={() => this.setState({ value: '' })}
                 >
+                  <Img
+                    src={[
+                      series[id] && series[id].landscape_image && withProxy(series[id].landscape_image.small_url),
+                      series[id] && series[id].landscape_image && series[id].landscape_image.small_url
+                    ]}
+                    className='img-fluid pr-1'
+                    alt={series[id].name} />
                   <span className='d-block font-weight-bold align-middle text-truncate'>{series[id].name}</span>
                 </Link>
               ))
