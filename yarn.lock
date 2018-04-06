@@ -2090,9 +2090,9 @@ detect-node@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.3.tgz#a2033c09cc8e158d37748fbde7507832bd6ce127"
 
-detect-port-alt@1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/detect-port-alt/-/detect-port-alt-1.1.5.tgz#a1aa8fc805a4a5df9b905b7ddc7eed036bcce889"
+detect-port-alt@1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/detect-port-alt/-/detect-port-alt-1.1.6.tgz#24707deabe932d4a3cf621302027c2b266568275"
   dependencies:
     address "^1.0.1"
     debug "^2.6.0"
@@ -4304,9 +4304,9 @@ jsonify@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
 
-jsonwebtoken@^8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.2.0.tgz#690ec3a9e7e95e2884347ce3e9eb9d389aa598b3"
+jsonwebtoken@^8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.2.1.tgz#333ee39aa8f238f32fa41693e7a2fb7e42f82b31"
   dependencies:
     jws "^3.1.4"
     lodash.includes "^4.3.0"
@@ -5856,15 +5856,15 @@ react-debounce-input@^3.2.0:
     lodash.debounce "^4"
     prop-types "^15"
 
-react-dev-utils@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-5.0.0.tgz#425ac7c9c40c2603bc4f7ab8836c1406e96bb473"
+react-dev-utils@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-5.0.1.tgz#1f396e161fe44b595db1b186a40067289bf06613"
   dependencies:
     address "1.0.3"
     babel-code-frame "6.26.0"
     chalk "1.1.3"
     cross-spawn "5.1.0"
-    detect-port-alt "1.1.5"
+    detect-port-alt "1.1.6"
     escape-string-regexp "1.0.5"
     filesize "3.5.11"
     global-modules "1.0.0"
@@ -5879,9 +5879,9 @@ react-dev-utils@^5.0.0:
     strip-ansi "3.0.1"
     text-table "0.2.0"
 
-react-dom@^16.3.0:
-  version "16.3.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.0.tgz#b318e52184188ecb5c3e81117420cca40618643e"
+react-dom@^16.3.1:
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.1.tgz#6a3c90a4fb62f915bdbcf6204422d93a7d4ca573"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -5907,6 +5907,10 @@ react-image@^1.3.1:
   dependencies:
     prop-types "15.6.0"
 
+react-onclickoutside@^6.7.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.7.1.tgz#6a5b5b8b4eae6b776259712c89c8a2b36b17be93"
+
 react-popper@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-0.8.3.tgz#0f73333137c9fb0af6ec4074d2d0585a0a0461e1"
@@ -5914,9 +5918,9 @@ react-popper@^0.8.3:
     popper.js "^1.12.9"
     prop-types "^15.6.0"
 
-react-popper@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-0.9.2.tgz#27a198e421e45e53261734dca28c6e57dd2c1604"
+react-popper@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-0.9.5.tgz#02a24ef3eec33af9e54e8358ab70eb0e331edd05"
   dependencies:
     popper.js "^1.14.1"
     prop-types "^15.6.1"
@@ -5955,9 +5959,9 @@ react-router@^4.2.0:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
-react-scripts@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-1.1.3.tgz#6bc3157620cbac75e24b1bf8057d358755ea1341"
+react-scripts@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-1.1.4.tgz#d5c230e707918d6dd2d06f303b10f5222d017c88"
   dependencies:
     autoprefixer "7.1.6"
     babel-core "6.26.0"
@@ -5988,7 +5992,7 @@ react-scripts@1.1.3:
     postcss-loader "2.0.8"
     promise "8.0.1"
     raf "3.4.0"
-    react-dev-utils "^5.0.0"
+    react-dev-utils "^5.0.1"
     resolve "1.6.0"
     style-loader "0.19.0"
     sw-precache-webpack-plugin "0.11.4"
@@ -6028,9 +6032,9 @@ react-transition-group@^2.3.0:
     prop-types "^15.5.8"
     warning "^3.0.0"
 
-react@^16.3.0:
-  version "16.3.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.3.0.tgz#fc5a01c68f91e9b38e92cf83f7b795ebdca8ddff"
+react@^16.3.1:
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.3.1.tgz#4a2da433d471251c69b6033ada30e2ed1202cfd8"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"

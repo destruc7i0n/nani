@@ -6,6 +6,7 @@ import { search, setSearchIds } from '../actions'
 
 import { Manager, Target, Popper } from 'react-popper'
 import { DebounceInput } from 'react-debounce-input'
+import onClickOutside from 'react-onclickoutside'
 import Img from 'react-image'
 
 import classNames from 'classnames'
@@ -20,10 +21,13 @@ class SearchInput extends Component {
     this.state = {
       searchIds: [],
       value: '',
-      selectedIndex: 0
+      selectedIndex: 0,
+      focused: true
     }
+
     this.search = this.search.bind(this)
-    this.handleSelect = this.handleSelect.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
+    this.handleClickOutside = this.handleClickOutside.bind(this)
   }
 
   static getDerivedStateFromProps (nextProps) {
@@ -35,17 +39,23 @@ class SearchInput extends Component {
 
   componentDidMount () {
     const { history } = this.props
-    this.unlisten = history.listen(() => this.resetSearch())
+    this.unlisten = history.listen(() => this.resetSearch(true))
   }
 
   componentWillUnmount () {
     this.unlisten()
   }
 
-  resetSearch () {
+  resetSearch (fromHistory = false) {
+    const { searchIds } = this.state
     const { dispatch } = this.props
-    // reset search ids
-    dispatch(setSearchIds([]))
+
+    if (searchIds.length > 0 && fromHistory) {
+      // reset search ids
+      dispatch(setSearchIds([]))
+      // reset text, focused and selected index
+      this.setState({ value: '', focused: false, selectedIndex: 0 })
+    }
   }
 
   async search ({ target: { value } }) {
@@ -61,10 +71,10 @@ class SearchInput extends Component {
     await dispatch(search(trimmed))
   }
 
-  handleSelect (event) {
+  handleKeyDown (event) {
     let { selectedIndex, value, searchIds } = this.state
-    const { dispatch, history } = this.props
-    const { key = -1 } = event
+    const { history } = this.props
+    const { key } = event
 
     if (key === 'ArrowUp') { // up
       if (value === '' || value < 3) return
@@ -73,29 +83,36 @@ class SearchInput extends Component {
       if (selectedIndex < 0) {
         selectedIndex = searchIds.length - 1
       }
+      this.setState({ selectedIndex })
     } else if (key === 'ArrowDown') { // down
       if (value === '' || value < 3) return
       event.preventDefault()
       selectedIndex += 1
-      if (selectedIndex === searchIds.length) {
+      if (selectedIndex >= searchIds.length) {
         selectedIndex = 0
       }
+      this.setState({ selectedIndex })
     } else if (key === 'Enter') {
       if (value === '' || value < 3) return
       event.preventDefault()
       const resultId = searchIds[selectedIndex]
+      // add to the history the page and redirect
       history.push(`/series/${resultId}`)
       selectedIndex = 0
-      value = ''
+      this.setState({ selectedIndex })
     } else if (key === 'Escape') {
-      value = ''
-      dispatch(setSearchIds([]))
+      // un-focus
+      this.setState({ focused: false })
     }
-    this.setState({ selectedIndex, value })
+  }
+
+  // un-focus when clicking out
+  handleClickOutside () {
+    this.setState({ focused: false })
   }
 
   render () {
-    let { value, searchIds, selectedIndex } = this.state
+    let { value, searchIds, selectedIndex, focused } = this.state
     let { series } = this.props
 
     return (
@@ -110,14 +127,15 @@ class SearchInput extends Component {
             autoComplete='off'
             value={value}
             onChange={this.search}
-            onKeyDown={this.handleSelect}
+            onKeyDown={this.handleKeyDown}
+            onFocus={() => this.setState({ focused: true })}
           />
         </Target>
         <Popper
           placement='bottom-end'
           tabIndex='-1'
           role='menu'
-          className={classNames(['dropdown-menu dropdown-menu-right', { show: searchIds.length > 0 }])}>
+          className={classNames(['dropdown-menu dropdown-menu-right', { show: focused && searchIds.length > 0 }])}>
           {
             searchIds.length === 0
               ? null
@@ -127,6 +145,7 @@ class SearchInput extends Component {
                   className={classNames('dropdown-item p-2 d-flex flex-row', { 'active': index === selectedIndex })}
                   key={`searchResult-${index}`}
                   onClick={() => this.setState({ value: '' })}
+                  onMouseEnter={() => this.setState({ selectedIndex: index })}
                 >
                   <Img
                     src={[
@@ -152,5 +171,6 @@ export default compose(
       searchIds: store.Data.searchIds,
       series: store.Data.series
     }
-  })
+  }),
+  onClickOutside
 )(SearchInput)

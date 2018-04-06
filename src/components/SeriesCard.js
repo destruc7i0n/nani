@@ -31,7 +31,7 @@ class SeriesCard extends Component {
               ] : 'https://via.placeholder.com/640x960?text=No+Image'}
               alt={data.name} />
             <CardImgOverlay className='p-1'>
-              <QueueButton inQueue={data.in_queue} id={data.series_id} badge />
+              <QueueButton inQueue={data.in_queue} id={data.series_id} badge colored />
             </CardImgOverlay>
             <CardBody className='p-2'>
               <span className='mb-1 d-block font-weight-bold text-dark text-truncate'>

@@ -44,7 +44,7 @@ class QueueButton extends Component {
   render () {
     const { inQueue } = this.state
     // grab some unnecessary props to make them not go into the tag (because of ...props)
-    const { dispatch, series, id, badge, inQueue: isInQueue, className, ...props } = this.props
+    const { dispatch, series, id, badge, inQueue: isInQueue, className, colored, ...props } = this.props
 
     let Tag, attrs
     if (badge) {
@@ -58,10 +58,20 @@ class QueueButton extends Component {
       attrs = props
     }
     return (
-      <Tag color='light' onClick={this.handle} className={classNames(className, {
-        'text-danger': inQueue,
-        'text-success': !inQueue
-      })} {...attrs}>
+      <Tag
+        color={colored
+          ? inQueue
+            ? 'danger'
+            : 'success'
+          : 'light'}
+        onClick={this.handle}
+        className={classNames(
+          className, {
+            // only use these if not colored button
+            'text-danger': !colored && inQueue,
+            'text-success': !colored && !inQueue
+          })
+        } {...attrs}>
         {inQueue
           ? <Fragment><FontAwesomeIcon icon={faMinus} /> Remove from Queue</Fragment>
           : <Fragment><FontAwesomeIcon icon={faPlus} /> Add to Queue</Fragment>}
