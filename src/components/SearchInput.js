@@ -112,9 +112,11 @@ class SearchInput extends Component {
       event.preventDefault()
       const resultId = searchIds[selectedIndex]
       // add to the history the page and redirect
-      history.push(`/series/${resultId}`)
-      selectedIndex = 0
-      this.setState({ selectedIndex })
+      if (resultId) {
+        history.push(`/series/${resultId}`)
+        selectedIndex = 0
+        this.setState({ selectedIndex })
+      }
     } else if (key === 'Escape') {
       // un-focus
       this.blur()
