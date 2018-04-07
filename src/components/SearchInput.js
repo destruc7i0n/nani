@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
@@ -25,6 +26,8 @@ class SearchInput extends Component {
       focused: true
     }
 
+    this.inputElement = undefined
+
     this.search = this.search.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleClickOutside = this.handleClickOutside.bind(this)
@@ -39,22 +42,34 @@ class SearchInput extends Component {
 
   componentDidMount () {
     const { history } = this.props
-    this.unlisten = history.listen(() => this.resetSearch(true))
+    this.unlisten = history.listen(() => this.resetSearch())
   }
 
   componentWillUnmount () {
     this.unlisten()
   }
 
-  resetSearch (fromHistory = false) {
-    const { searchIds } = this.state
+  blur () {
+    const inst = findDOMNode(this.inputElement)
+    if (inst) inst.blur()
+  }
+
+  resetSearch () {
+    const { searchIds, focused } = this.state
     const { dispatch } = this.props
 
-    if (searchIds.length > 0 && fromHistory) {
-      // reset search ids
-      dispatch(setSearchIds([]))
-      // reset text, focused and selected index
-      this.setState({ value: '', focused: false, selectedIndex: 0 })
+    // if search results
+    if (searchIds.length > 0) {
+      // reset selected index
+      let newState = {selectedIndex: 0, value: ''}
+      // un-focus and reset value if focused
+      if (focused) {
+        this.blur()
+        newState['focused'] = false
+        // reset search ids
+        dispatch(setSearchIds([]))
+      }
+      this.setState(newState)
     }
   }
 
@@ -102,13 +117,17 @@ class SearchInput extends Component {
       this.setState({ selectedIndex })
     } else if (key === 'Escape') {
       // un-focus
+      this.blur()
       this.setState({ focused: false })
     }
   }
 
-  // un-focus when clicking out
   handleClickOutside () {
-    this.setState({ focused: false })
+    const { focused } = this.state
+    // only if not on mobile
+    if (window.matchMedia && !window.matchMedia('(max-width: 767px)').matches && focused) {
+      this.setState({ focused: false })
+    }
   }
 
   render () {
@@ -126,6 +145,7 @@ class SearchInput extends Component {
             debounceTimeout={200}
             autoComplete='off'
             value={value}
+            ref={el => { this.inputElement = el }}
             onChange={this.search}
             onKeyDown={this.handleKeyDown}
             onFocus={() => this.setState({ focused: true })}
