@@ -16,6 +16,8 @@ class Video extends Component {
     super(props)
     // manually store the amount of time watched
     this.loggedTime = props.media.playhead
+    // if already seeked
+    this.seeked = false
     this.logTime = this.logTime.bind(this)
   }
 
@@ -40,7 +42,7 @@ class Video extends Component {
   }
 
   change () {
-    const { streamUrl, media } = this.props
+    const { streamUrl, media, playCallback = () => null } = this.props
     if (streamUrl && media) {
       if (this.player) {
         this.destroyPlayer()
@@ -71,9 +73,15 @@ class Video extends Component {
         },
         disableVideoTagContextMenu: true
       })
-      if (media.playhead) {
-        this.player.seek(media.playhead)
-      }
+      this.player.on(Clappr.Events.PLAYER_PLAY, () => {
+        // seek video on first player play, this will fix it on mobile too!
+        if (media.playhead && !this.seeked) {
+          this.player.seek(media.playhead)
+        }
+        // run the callback
+        playCallback()
+        this.seeked = true
+      })
       this.player.on(Clappr.Events.PLAYER_PAUSE, () => {
         this.logTime()
       })
@@ -95,9 +103,7 @@ class Video extends Component {
 
   render () {
     return (
-      <div className='w-75'>
-        <div ref={el => { this.playerRef = el }} />
-      </div>
+      <div ref={el => { this.playerRef = el }} />
     )
   }
 }

@@ -13,6 +13,7 @@ import faTv from '@fortawesome/fontawesome-free-solid/faTv'
 import faClock from '@fortawesome/fontawesome-free-solid/faClock'
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
 import faListOl from '@fortawesome/fontawesome-free-solid/faListOl'
+import faFastForward from '@fortawesome/fontawesome-free-solid/faFastForward'
 
 import Video from '../components/Video'
 import Collection from '../components/Collection'
@@ -30,7 +31,8 @@ class Media extends Component {
     super(props)
     this.state = {
       streamData: {},
-      error: ''
+      error: '',
+      videoPlayed: false
     }
     this.loadVideo = this.loadVideo.bind(this)
   }
@@ -76,7 +78,7 @@ class Media extends Component {
   }
 
   render () {
-    const { streamData, error } = this.state
+    const { streamData, error, videoPlayed } = this.state
     const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
     // the current media object and the series
     const mediaObj = media[mediaId]
@@ -95,6 +97,11 @@ class Media extends Component {
       seconds = seconds < 10 ? `0${seconds}` : seconds
       return `${minutes}:${seconds}`
     }
+    // the amount of time not watched
+    const timeLeftToWatch = mediaObj && mediaObj.playhead !== 0 // only if played
+      ? mediaObj.duration - mediaObj.playhead // get the amount of time left to watch in seconds
+      : 0 // otherwise, 0
+    // grab the image url
     const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
     return (
       <Fragment>
@@ -112,22 +119,42 @@ class Media extends Component {
             )
             : (
               <div className='col-sm-12'>
-                <div className='d-flex mb-4 bg-light player-background justify-content-center'>
-                  {!loadedVideo || !streamData.stream_data.streams.length
-                    ? <Card inverse className='w-75'>
-                      <CardImg tag={Img} decode={false} src={imgFullURL ? [
-                        withProxy(imgFullURL),
-                        imgFullURL
-                      ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={mediaObj.name} />
-                      <CardImgOverlay className='d-flex align-items-center justify-content-center'>
-                        <Loading />
-                      </CardImgOverlay>
-                    </Card>
-                    : <Video
-                      streamUrl={streamData.stream_data.streams[0].url}
-                      key={mediaId}
-                      id={mediaId}
-                    />}
+                <div className='d-flex mb-4 mt-2 bg-light player-background justify-content-center'>
+                  <div className='w-75 video-box'>
+                    {!loadedVideo || !streamData.stream_data.streams.length
+                      // loading video
+                      ? <Card inverse>
+                        <CardImg tag={Img} src={imgFullURL ? [
+                          withProxy(imgFullURL),
+                          imgFullURL
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={mediaObj.name} />
+                        <CardImgOverlay className='d-flex align-items-center justify-content-center'>
+                          <Loading />
+                        </CardImgOverlay>
+                      </Card>
+                      // loaded video
+                      : <Fragment>
+                        <Video
+                          streamUrl={streamData.stream_data.streams[0].url}
+                          playCallback={() => this.setState({ videoPlayed: true })}
+                          key={mediaId}
+                          id={mediaId}
+                        />
+                        {
+                          // only show if more than 30 seconds, not 0 and not played yet
+                          timeLeftToWatch && timeLeftToWatch >= 30 && !videoPlayed
+                            ? <div className='video-overlay'>
+                              <div className='mt-auto video-resuming'>
+                                <FontAwesomeIcon icon={faFastForward} />
+                                {' '}
+                                Resuming from {formatTime(mediaObj.playhead)}
+                              </div>
+                            </div>
+                            : null
+                        }
+                      </Fragment>
+                    }
+                  </div>
                 </div>
                 <h3>{mediaObj.name}</h3>
                 <h5 className='d-flex flex-column flex-md-row flex-wrap'>

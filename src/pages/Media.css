@@ -15,3 +15,21 @@
     border: 1px solid var(--secondary);
     color: var(--secondary);
 }
+
+.video-box {
+    position: relative;
+}
+
+.video-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.video-resuming {
+    width: 100%;
+    background-color: rgba(0,0,0,.6);
+    font-style: italic;
+    color: #fff;
+    padding: 1rem;
+}
