@@ -77,7 +77,7 @@ class Series extends Component {
                   imgFullURL
                 ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series[id].name} className='img-thumbnail' />
                 <QueueButton id={id} block className='mt-2' />
-                <Button block color='light' href={
+                <Button className='text-truncate' block color='light' href={
                   `https://myanimelist.net/search/all?q=${series[id].name}`
                 } target='_blank' rel='noopener noreferrer'>
                   <FontAwesomeIcon icon={faSearch} />

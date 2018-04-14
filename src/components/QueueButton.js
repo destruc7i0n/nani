@@ -70,7 +70,7 @@ class QueueButton extends Component {
             // only use these if not colored button
             'text-danger': !colored && inQueue,
             'text-success': !colored && !inQueue
-          })
+          }, 'mw-100 text-truncate')
         } {...attrs}>
         {inQueue
           ? <Fragment><FontAwesomeIcon icon={faMinus} /> Remove from Queue</Fragment>

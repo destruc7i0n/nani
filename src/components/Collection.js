@@ -12,7 +12,7 @@ class Collection extends Component {
     const Tag = size === 'sm' ? MediaCard : MediaCardLarge
     return (
       <Fragment>
-        {showTitle ? <TitleTag className='border-bottom pb-3 mb-4'>{title}</TitleTag> : <hr className='mb-4' />}
+        {showTitle && title && <TitleTag className='border-bottom pb-3 mb-4'>{title}</TitleTag>}
         {
           loading
             ? <Loading size='2x' />
