@@ -144,7 +144,7 @@ class Media extends Component {
                           // only show if more than 30 seconds, not 0 and not played yet
                           timeLeftToWatch && timeLeftToWatch >= 30 && !videoPlayed
                             ? <div className='video-overlay'>
-                              <div className='mt-auto video-resuming'>
+                              <div className='video-resuming'>
                                 <FontAwesomeIcon icon={faFastForward} />
                                 {' '}
                                 Resuming from {formatTime(mediaObj.playhead)}

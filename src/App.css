@@ -1,0 +1,12 @@
+/* makes the page not move when scrollable */
+html {
+    overflow-y: scroll;
+}
+
+.logo {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-mask: url(./assets/ninja.svg) no-repeat center;
+    mask: url(./assets/ninja.svg) no-repeat center;
+    background-color: #007bff;
+}

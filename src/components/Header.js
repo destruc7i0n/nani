@@ -32,10 +32,6 @@ import faCalendarAlt from '@fortawesome/fontawesome-free-solid/faCalendarAlt'
 import SearchInput from './SearchInput'
 import Options from './Options'
 
-import './Header.css'
-
-import icon from '../assets/ninja-blue.png'
-
 class Header extends Component {
   constructor (props) {
     super(props)
@@ -56,7 +52,7 @@ class Header extends Component {
       }>
         <Container>
           <NavbarBrand tag={Link} to='/'>
-            <img src={icon} alt='nani?!' className='navbar-image d-md-none d-lg-inline-block' />
+            <div className='logo d-md-none d-lg-inline-block' style={{ width: '2rem', height: '2rem' }} />
             {' '}
             nani?!
           </NavbarBrand>

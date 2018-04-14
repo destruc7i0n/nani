@@ -18,6 +18,7 @@ import Recent from './pages/Recent'
 import SeriesList from './pages/SeriesList'
 
 import 'bootstrap/dist/css/bootstrap.css'
+import './App.css'
 
 class App extends Component {
   async componentDidMount () {
