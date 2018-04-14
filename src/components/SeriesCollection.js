@@ -1,8 +1,6 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getMediaForCollection } from '../actions'
-
-import { Card, CardBody, CardFooter } from 'reactstrap'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp'
@@ -47,25 +45,23 @@ class SeriesCollection extends Component {
     const { loaded, expanded } = this.state
     const { title, collectionMedia, id, perPage = 3 } = this.props
     return (
-      <Card className='mt-4'>
-        <CardBody style={{ cursor: 'pointer' }} onClick={this.toggleExpanded}>
+      <div className='mt-4'>
+        <h4 className='border-bottom pb-3 mb-4' style={{ cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleExpanded}>
           <div className='d-flex justify-content-between'>
-            <h5>{title}</h5>
+            {title}
             <FontAwesomeIcon icon={expanded ? faCaretUp : faCaretDown} className='align-self-center ml-1' />
           </div>
-        </CardBody>
+        </h4>
         {
           expanded
-            ? <CardFooter className='pt-4'>
-              <Collection
-                mediaIds={loaded && collectionMedia[id] ? collectionMedia[id] : []}
-                loading={!loaded && !collectionMedia[id]}
-                perPage={perPage}
-                showTitle={false} />
-            </CardFooter>
+            ? <Collection
+              mediaIds={loaded && collectionMedia[id] ? collectionMedia[id] : []}
+              loading={!loaded && !collectionMedia[id]}
+              perPage={perPage}
+              showTitle={false} />
             : null
         }
-      </Card>
+      </div>
     )
   }
 }
