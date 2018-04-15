@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getMediaForCollection } from '../actions'
+import { getMediaForCollection } from '../../actions'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp'

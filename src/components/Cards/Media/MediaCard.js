@@ -8,10 +8,10 @@ import Img from 'react-image'
 
 import { format } from 'date-fns'
 
-import Loading from './Loading'
-import ImageLoader from './ImageLoader'
+import Loading from '../../Loading/Loading'
+import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy from '../lib/withProxy'
+import withProxy from '../../../lib/withProxy'
 
 import './MediaCard.css'
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { getHistory, getQueue } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import Collection from '../components/Collection'
+import Collection from '../components/Collections/Collection'
 
 class Dashboard extends Component {
   async componentDidMount () {
@@ -22,8 +22,8 @@ class Dashboard extends Component {
     const historyIds = history.map((item) => item.media.media_id)
     return (
       <Fragment>
-        <Helmet>
-          <title>Dashboard - nani</title>
+        <Helmet defer={false}>
+          <title>Dashboard</title>
         </Helmet>
         <Collection title='Queue' mediaIds={queueIds} loading={queueIds.length === 0} />
         <Collection title='History' mediaIds={historyIds} loading={historyIds.length === 0} />

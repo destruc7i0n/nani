@@ -5,8 +5,8 @@ import { Helmet } from 'react-helmet'
 
 import { isToday, isYesterday, differenceInCalendarDays } from 'date-fns'
 
-import Collection from '../components/Collection'
-import Loading from '../components/Loading'
+import Collection from '../components/Collections/Collection'
+import Loading from '../components/Loading/Loading'
 
 class Recent extends Component {
   async componentDidMount () {
@@ -41,8 +41,8 @@ class Recent extends Component {
 
     return (
       <Fragment>
-        <Helmet>
-          <title>Recent - nani</title>
+        <Helmet defer={false}>
+          <title>Recent</title>
         </Helmet>
         <h3 className='border-bottom pb-3 mb-4'>Recent</h3>
         {

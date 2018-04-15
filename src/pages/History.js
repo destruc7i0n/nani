@@ -5,8 +5,8 @@ import { Helmet } from 'react-helmet'
 
 import { Button } from 'reactstrap'
 
-import Collection from '../components/Collection'
-import Loading from '../components/Loading'
+import Collection from '../components/Collections/Collection'
+import Loading from '../components/Loading/Loading'
 
 class History extends Component {
   constructor (props) {
@@ -44,8 +44,8 @@ class History extends Component {
     const loading = historyIds.length === 0
     return (
       <Fragment>
-        <Helmet>
-          <title>History - nani</title>
+        <Helmet defer={false}>
+          <title>History</title>
         </Helmet>
         <Collection title='History' mediaIds={historyIds} loading={loading} />
         { !loading

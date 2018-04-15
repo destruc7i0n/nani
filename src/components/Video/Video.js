@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { updatePlaybackTime } from '../../actions'
 
 import Clappr from 'clappr'
-import LevelSelector from '../lib/clappr-level-selector'
-import ChromecastPlugin from '../lib/clappr-chromecast-plugin'
-import ResponsiveContainer from '../lib/clappr-responsive-container-plugin'
+import LevelSelector from '../../lib/clappr-level-selector'
+import ChromecastPlugin from '../../lib/clappr-chromecast-plugin'
+import ResponsiveContainer from '../../lib/clappr-responsive-container-plugin'
 
-import withProxy from '../lib/withProxy'
+import withProxy from '../../lib/withProxy'
 
 import './Video.css'
-import { updatePlaybackTime } from '../actions'
 
 class Video extends Component {
   constructor (props) {
@@ -96,7 +96,11 @@ class Video extends Component {
     const time = t || this.player.getCurrentTime()
     // log time only if it's greater than what is saved
     if (time !== 0 && time > this.loggedTime && process.env.NODE_ENV === 'production') {
-      await dispatch(updatePlaybackTime(time, id))
+      try {
+        await dispatch(updatePlaybackTime(time, id))
+      } catch (err) {
+        console.error(err)
+      }
       this.loggedTime = time
     }
   }

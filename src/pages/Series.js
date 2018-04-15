@@ -13,10 +13,10 @@ import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
 
 import { startCase } from 'lodash'
 
-import SeriesCollection from '../components/SeriesCollection'
-import Loading from '../components/Loading'
-import QueueButton from '../components/QueueButton'
-import ImageLoader from '../components/ImageLoader'
+import SeriesCollection from '../components/Collections/SeriesCollection'
+import Loading from '../components/Loading/Loading'
+import QueueButton from '../components/Buttons/QueueButton'
+import ImageLoader from '../components/Loading/ImageLoader'
 
 import withProxy from '../lib/withProxy'
 
@@ -24,26 +24,38 @@ class Series extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      seriesId: '',
       error: ''
     }
     this.load = this.load.bind(this)
   }
 
-  async componentDidMount () {
-    const { match: { params } } = this.props
-    await this.load(params.id)
-  }
-
-  async componentWillReceiveProps (nextProps) {
-    const { match: { params } } = this.props
-    const { match: { params: nextParams } } = nextProps
-    // check that the next id isn't the same as the old, then load
-    if (nextParams.id !== params.id) {
-      await this.load(nextParams.id)
+  static getDerivedStateFromProps (nextProps, prevState) {
+    const { match: { params: { id: nextSeries } = {} } } = nextProps
+    const { seriesId: prevSeries } = prevState
+    if (nextSeries !== prevSeries) {
+      return {
+        seriesId: nextSeries,
+        error: ''
+      }
     }
   }
 
-  async load (id) {
+  async componentDidMount () {
+    await this.load()
+  }
+
+  async componentDidUpdate (prevProps, prevState) {
+    const { seriesId: nextSeries } = this.state
+    const { seriesId: prevSeries } = prevState
+    // check that the next id isn't the same as the old, then load
+    if (nextSeries !== prevSeries) {
+      await this.load()
+    }
+  }
+
+  async load () {
+    const { seriesId: id } = this.state
     const { dispatch } = this.props
     try {
       await dispatch(getSeriesInfo(id))
@@ -61,7 +73,7 @@ class Series extends Component {
     const imgFullURL = series[id] && series[id].portrait_image && series[id].portrait_image.full_url
     return (
       <div className='row'>
-        <Helmet>
+        <Helmet defer={false}>
           <title>{ loaded ? series[id].name : 'Loading...' } - nani</title>
         </Helmet>
         { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }

@@ -9,11 +9,11 @@ import Img from 'react-image'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faInfo from '@fortawesome/fontawesome-free-solid/faInfo'
 
-import Loading from './Loading'
-import QueueButton from './QueueButton'
-import ImageLoader from './ImageLoader'
+import Loading from '../../Loading/Loading'
+import QueueButton from '../../Buttons/QueueButton'
+import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy from '../lib/withProxy'
+import withProxy from '../../../lib/withProxy'
 
 import './MediaCardLarge.css'
 

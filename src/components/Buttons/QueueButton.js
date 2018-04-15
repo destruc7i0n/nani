@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { updateSeriesQueue } from '../actions'
+import { updateSeriesQueue } from '../../actions'
 
 import { Button, Badge } from 'reactstrap'
 

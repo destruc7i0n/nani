@@ -4,7 +4,7 @@ import { getMediaForCollection, getMediaInfo, getSeriesInfo } from '../actions'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
-import { Badge, Card, CardImg, CardImgOverlay } from 'reactstrap'
+import { Badge } from 'reactstrap'
 
 import Img from 'react-image'
 
@@ -15,13 +15,14 @@ import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
 import faListOl from '@fortawesome/fontawesome-free-solid/faListOl'
 import faFastForward from '@fortawesome/fontawesome-free-solid/faFastForward'
 
-import Video from '../components/Video'
-import Collection from '../components/Collection'
-import MALButton from '../components/MALButton'
-import QueueButton from '../components/QueueButton'
-import Loading from '../components/Loading'
+import Video from '../components/Video/Video'
+import Collection from '../components/Collections/Collection'
+import MALButton from '../components/Buttons/MALButton'
+import QueueButton from '../components/Buttons/QueueButton'
+import Loading from '../components/Loading/Loading'
 
 import api from '../lib/api'
+import { isCancel } from 'axios'
 import withProxy from '../lib/withProxy'
 
 import './Media.css'
@@ -30,6 +31,7 @@ class Media extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      mediaId: '',
       streamData: {},
       error: '',
       videoPlayed: false
@@ -37,21 +39,36 @@ class Media extends Component {
     this.loadVideo = this.loadVideo.bind(this)
   }
 
-  async componentDidMount () {
-    const { match: { params } } = this.props
-    await this.loadVideo(params.media)
+  static getDerivedStateFromProps (nextProps, prevState) {
+    const { match: { params: { media: nextMedia } = {} } } = nextProps
+    const { mediaId: prevMedia } = prevState
+    // reset on each media change
+    if (nextMedia !== prevMedia) {
+      return {
+        mediaId: nextMedia,
+        streamData: {},
+        error: '',
+        videoPlayed: false
+      }
+    }
+    return null
   }
 
-  async componentWillReceiveProps (nextProps) {
-    const { match: { params } } = this.props
-    const { match: { params: nextParams } } = nextProps
+  async componentDidMount () {
+    await this.loadVideo()
+  }
+
+  async componentDidUpdate (prevProps, prevState) {
+    const { mediaId: nextMedia } = this.state
+    const { mediaId: prevMedia } = prevState
     // check if the media isn't the same, then load
-    if (nextParams.media !== params.media) {
-      await this.loadVideo(nextParams.media)
+    if (nextMedia !== prevMedia) {
+      await this.loadVideo()
     }
   }
 
-  async loadVideo (mediaId) {
+  async loadVideo () {
+    const { mediaId } = this.state
     const { dispatch, Auth } = this.props
     try {
       const media = await dispatch(getMediaInfo(mediaId))
@@ -72,8 +89,11 @@ class Media extends Component {
         this.setState({ error: 'This is not available.' })
       }
     } catch (err) {
-      this.setState({ error: err.data.message || 'An error occurred.' })
-      console.error(err)
+      // check that it isn't an error from the request being cancelled
+      if (!isCancel(err)) {
+        this.setState({ error: err.data.message || 'An error occurred.' })
+        console.error(err)
+      }
     }
   }
 
@@ -105,10 +125,9 @@ class Media extends Component {
     const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
     return (
       <Fragment>
-        <Helmet>
+        <Helmet defer={false}>
           <title>
             {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${mediaObj.collection_name}` : 'Loading...'}
-            {' '}- nani
           </title>
         </Helmet>
         { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
@@ -123,15 +142,15 @@ class Media extends Component {
                   <div className='w-75 video-box'>
                     {!loadedVideo || !streamData.stream_data.streams.length
                       // loading video
-                      ? <Card inverse>
-                        <CardImg tag={Img} src={imgFullURL ? [
+                      ? <Fragment>
+                        <Img src={imgFullURL ? [
                           withProxy(imgFullURL),
                           imgFullURL
-                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={mediaObj.name} />
-                        <CardImgOverlay className='d-flex align-items-center justify-content-center'>
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='w-100' alt={mediaObj.name} />
+                        <div className='video-loading-overlay text-white'>
                           <Loading />
-                        </CardImgOverlay>
-                      </Card>
+                        </div>
+                      </Fragment>
                       // loaded video
                       : <Fragment>
                         <Video
@@ -176,13 +195,13 @@ class Media extends Component {
                     {formatTime(mediaObj.duration)}
                   </Badge>
                   <Badge color='secondary' className='mr-md-2 mb-1' tag='a' target='_blank' rel='noopener noreferrer' href={`
-                      http://www.crunchyroll.com/search?q=${mediaObj.collection_name} Episode ${mediaObj.episode_number} ${mediaObj.name}
+                      http://www.crunchyroll.com/media-${mediaObj.media_id}
                     `}>
                     <FontAwesomeIcon icon={faSearch} />
                     {' '}
-                    Find on Crunchyroll
+                    Open on Crunchyroll
                   </Badge>
-                  <MALButton id={mediaId} media={mediaObj} className='mr-md-2 mb-1' />
+                  <MALButton id={mediaObj.series_id} media={mediaObj} className='mr-md-2 mb-1' />
                   <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
                 </h5>
                 <p>{mediaObj.description}</p>

@@ -5,10 +5,10 @@ import { Card, CardBody, CardImg, CardImgOverlay } from 'reactstrap'
 
 import Img from 'react-image'
 
-import QueueButton from './QueueButton'
-import ImageLoader from './ImageLoader'
+import QueueButton from '../../Buttons/QueueButton'
+import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy from '../lib/withProxy'
+import withProxy from '../../../lib/withProxy'
 
 class SeriesCard extends Component {
   render () {

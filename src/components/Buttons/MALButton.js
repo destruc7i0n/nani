@@ -13,6 +13,7 @@ class MALButton extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      id: '0',
       available: false,
       malItem: {},
       updated: false
@@ -28,22 +29,36 @@ class MALButton extends Component {
     return mal.username && mal.token && true
   }
 
-  async componentDidMount () {
-    if (this.isLoggedIn()) await this.checkOnMAL()
+  static getDerivedStateFromProps (nextProps, prevState) {
+    const { id: prevId } = prevState
+    const { id: nextId } = nextProps
+    // reset on update
+    if (nextId !== prevId) {
+      return {
+        id: nextProps.id,
+        available: false,
+        malItem: {},
+        updated: false
+      }
+    }
+    return null
   }
 
-  async componentWillReceiveProps (nextProps) {
-    const { id } = this.props
-    const { id: nextId } = nextProps
-    if (this.isLoggedIn(nextProps) && nextId !== id) {
+  async componentDidMount () {
+    await this.checkOnMAL()
+  }
+
+  async componentDidUpdate (prevProps, prevState) {
+    const { id: nextId } = this.state
+    const { id: prevId } = prevState
+    if (nextId !== prevId) {
       await this.checkOnMAL()
     }
   }
 
   async checkOnMAL () {
     const { media, id } = this.props
-    if (media && media.collection_name && id) {
-      this.setState({ available: false, updated: false })
+    if (media && media.collection_name && id && this.isLoggedIn()) {
       try {
         const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${media.collection_name}`)
         if (!error && success) {

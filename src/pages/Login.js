@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Helmet } from 'react-helmet'
 import { login } from '../actions'
+import { Helmet } from 'react-helmet'
 
 import { Card } from 'reactstrap'
 
-import Footer from '../components/Footer'
+import Footer from '../components/Footer/Footer'
 
 class Login extends Component {
   constructor (props) {
@@ -36,8 +36,8 @@ class Login extends Component {
     const { expiredSession } = this.props
     return (
       <div className='text-center'>
-        <Helmet>
-          <title>Login - nani</title>
+        <Helmet defer={false}>
+          <title>Login</title>
           {/* language=CSS */}
           <style>{`
             body {

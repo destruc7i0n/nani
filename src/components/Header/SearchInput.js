@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { search, setSearchIds } from '../actions'
+import { search, setSearchIds } from '../../actions'
 
 import { Manager, Target, Popper } from 'react-popper'
 import { DebounceInput } from 'react-debounce-input'
@@ -12,7 +12,7 @@ import Img from 'react-image'
 
 import classNames from 'classnames'
 
-import withProxy from '../lib/withProxy'
+import withProxy from '../../lib/withProxy'
 
 import './SearchInput.css'
 

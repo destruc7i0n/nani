@@ -91,9 +91,9 @@ export const updateSeriesQueueData = (id, inQueue) => ({
   payload: { id, inQueue }
 })
 
-export const SET_PLAYBACK_TIME = 'SET_PLAYBACK_TIME'
-export const setPlaybackTime = (time, id) => ({
-  type: SET_PLAYBACK_TIME,
+export const SET_PLAYHEAD_TIME = 'SET_PLAYHEAD_TIME'
+export const setPlayheadTime = (time, id) => ({
+  type: SET_PLAYHEAD_TIME,
   payload: {
     id,
     time
@@ -399,7 +399,7 @@ export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       // update the time in the store too
-      dispatch(setPlaybackTime(time, id))
+      dispatch(setPlayheadTime(time, id))
       resolve()
     } catch (err) {
       handleError(err, dispatch, reject)

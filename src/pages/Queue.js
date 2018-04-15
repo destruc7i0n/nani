@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { getQueue } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import Collection from '../components/Collection'
+import Collection from '../components/Collections/Collection'
 
 class Queue extends Component {
   async componentDidMount () {
@@ -20,10 +20,10 @@ class Queue extends Component {
     const queueIds = queue.map((item) => item.most_likely_media.media_id)
     return (
       <Fragment>
-        <Helmet>
-          <title>Queue - nani</title>
+        <Helmet defer={false}>
+          <title>Queue</title>
         </Helmet>
-        <Collection title='Queue' perPage={1} size='lg' mediaIds={queueIds} loading={queueIds.length === 0} />
+        <Collection title='Queue' size='lg' mediaIds={queueIds} loading={queueIds.length === 0} />
       </Fragment>
     )
   }

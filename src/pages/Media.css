@@ -26,6 +26,16 @@
     width: 100%;
 }
 
+.video-loading-overlay {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .video-resuming {
     width: 100%;
     background-color: rgba(0,0,0,.6);

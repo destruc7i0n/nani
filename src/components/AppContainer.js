@@ -1,14 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { setError, startSession } from '../actions'
+import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { Alert, Button } from 'reactstrap'
 
-import Header from './Header'
-import Footer from './Footer'
-import Loading from './Loading'
+import Header from './Header/Header'
+import Footer from './Footer/Footer'
+import Loading from './Loading/Loading'
 
 import { cancelCurrentRequests } from '../lib/api'
 import { isLoggedIn } from '../lib/auth'
@@ -59,7 +60,8 @@ class AppContainer extends Component {
     const { dispatch, children, error } = this.props
     const loggedIn = isLoggedIn()
     return (
-      <div>
+      <Fragment>
+        <Helmet titleTemplate='%s - nani' />
         { loggedIn ? <Header /> : null }
         <main role='main' className='container'>
           { error
@@ -72,7 +74,7 @@ class AppContainer extends Component {
           { initSession ? children : <Loading /> }
           { loggedIn ? <Footer /> : null }
         </main>
-      </div>
+      </Fragment>
     )
   }
 }

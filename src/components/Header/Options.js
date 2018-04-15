@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { loginMal, removeMal } from '../actions'
+import { loginMal, removeMal } from '../../actions'
 
 import { Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Col, Label, Input, Alert } from 'reactstrap'
 
