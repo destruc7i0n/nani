@@ -73,7 +73,7 @@ class MALButton extends Component {
   async updateMAL (e) {
     e.preventDefault()
     const { malItem, updated } = this.state
-    const { id, collectionMedia, mal } = this.props
+    const { media: { media_id: id }, collectionMedia, mal } = this.props
     // check if logged in etc.
     if (malItem && this.isLoggedIn() && !updated) {
       // get the index, which is about the same as the episode number

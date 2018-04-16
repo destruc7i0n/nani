@@ -39,6 +39,7 @@ class Series extends Component {
         error: ''
       }
     }
+    return null
   }
 
   async componentDidMount () {
