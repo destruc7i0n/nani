@@ -12,11 +12,11 @@ const LoadingSeriesCard = () => (
         height={300}
         width={200}
         primaryColor='#f3f3f3'
-        secondaryColor='#ecebeb'
+        secondaryColor='#f7f7f7'
       >
-        <rect x='0' y='0' rx='5' ry='5' width='200' height='230' />
-        <rect x='10' y='240' rx='5' ry='5' width='100' height='25' />
-        <rect x='10' y='270' rx='5' ry='5' width='175' height='20' />
+        <rect x='0' y='0' rx='5' ry='5' width='200' height='240' />
+        <rect x='10' y='250' rx='5' ry='5' width='100' height='25' />
+        <rect x='10' y='280' rx='5' ry='5' width='175' height='20' />
       </ContentLoader>
     </Card>
   </div>

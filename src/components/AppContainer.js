@@ -65,10 +65,9 @@ class AppContainer extends Component {
         { loggedIn ? <Header /> : null }
         <main role='main' className='container'>
           { error
-            ? <Alert color='danger' toggle={() => dispatch(setError(''))}>
+            ? <Alert color='danger' className='d-flex align-items-center' toggle={() => dispatch(setError(''))}>
               Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or or try again later.
-              {' '}
-              <Button onClick={this.reloadPage}>Reload</Button>
+              <Button onClick={this.reloadPage} size='sm' className='ml-auto'>Reload</Button>
             </Alert>
             : null }
           { initSession ? children : <Loading /> }

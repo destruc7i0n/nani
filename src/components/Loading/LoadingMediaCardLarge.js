@@ -12,7 +12,7 @@ const LoadingMediaCard = () => (
         height={200}
         width={1000}
         primaryColor='#f3f3f3'
-        secondaryColor='#ecebeb'
+        secondaryColor='#f7f7f7'
       >
         {/* image */}
         <rect x='0' y='0' rx='0' ry='0' width='350' height='200' />

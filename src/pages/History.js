@@ -12,6 +12,7 @@ class History extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      loaded: false,
       loadingMore: false
     }
     this.loadMore = this.loadMore.bind(this)
@@ -21,6 +22,7 @@ class History extends Component {
     const { dispatch } = this.props
     try {
       await dispatch(getHistory())
+      this.setState({ loaded: true })
     } catch (err) {
       console.error(err)
     }
@@ -38,10 +40,10 @@ class History extends Component {
   }
 
   render () {
-    const { loadingMore } = this.state
+    const { loaded, loadingMore } = this.state
     const { history } = this.props
     const historyIds = history.map((item) => item.media.media_id)
-    const loading = historyIds.length === 0
+    const loading = !loaded && historyIds.length === 0
     return (
       <Fragment>
         <Helmet defer={false}>

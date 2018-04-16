@@ -8,7 +8,17 @@ import LoadingMediaCardLarge from '../Loading/LoadingMediaCardLarge'
 
 class Collection extends Component {
   render () {
-    let { title, titleTag: TitleTag = 'h3', showTitle = true, perPage = 4, mediaIds, media, loading = false, size = 'sm', ...attr } = this.props
+    let {
+      title = '',
+      titleTag: TitleTag = 'h3',
+      showTitle = true,
+      perPage = 4,
+      mediaIds = [],
+      media = {},
+      loading = false,
+      size = 'sm',
+      ...attr
+    } = this.props
     const width = 12 / perPage
     const Tag = size === 'sm' ? MediaCard : MediaCardLarge
     const LoadingTag = size === 'sm'
@@ -24,7 +34,11 @@ class Collection extends Component {
           {
             loading
               ? [...Array(10).keys()].map((index) => <LoadingTag width={width} key={`loadingMediaCard-${index}`} />)
-              : mediaIds.map((mediaId) => <Tag width={width} media={media[mediaId]} key={`mediaCard-${mediaId}`} {...attr} />)
+              : mediaIds.length !== 0
+                ? mediaIds.map((mediaId) => <Tag width={width} media={media[mediaId]} key={`mediaCard-${mediaId}`} {...attr} />)
+                : <div className='col-12 text-center'>
+                  No items.
+                </div>
           }
         </div>
       </Fragment>

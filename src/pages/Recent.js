@@ -6,7 +6,6 @@ import { Helmet } from 'react-helmet'
 import { isToday, isYesterday, differenceInCalendarDays } from 'date-fns'
 
 import Collection from '../components/Collections/Collection'
-import Loading from '../components/Loading/Loading'
 
 class Recent extends Component {
   async componentDidMount () {
@@ -50,7 +49,7 @@ class Recent extends Component {
             ? Object.keys(days).map((d, index) =>
               <Collection title={d} titleTag='h4' mediaIds={days[d]} key={`recentCollection-${index}`} showTime />
             )
-            : <Loading size='2x' />
+            : <Collection title={'Today'} titleTag='h4' loading />
         }
       </Fragment>
     )

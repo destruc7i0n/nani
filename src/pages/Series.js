@@ -74,7 +74,7 @@ class Series extends Component {
     return (
       <div className='row'>
         <Helmet defer={false}>
-          <title>{ loaded ? series[id].name : 'Loading...' } - nani</title>
+          <title>{ loaded ? series[id].name : 'Loading...' }</title>
         </Helmet>
         { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
         {!loaded
