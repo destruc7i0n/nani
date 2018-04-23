@@ -6,6 +6,7 @@ import Clappr from 'clappr'
 import LevelSelector from '../../lib/clappr-level-selector'
 import ChromecastPlugin from '../../lib/clappr-chromecast-plugin'
 import ResponsiveContainer from '../../lib/clappr-responsive-container-plugin'
+import PlaybackRatePlugin from '../../lib/clappr-playback-rate-plugin'
 
 import withProxy from '../../lib/withProxy'
 
@@ -15,7 +16,7 @@ class Video extends Component {
   constructor (props) {
     super(props)
     // manually store the amount of time watched
-    this.loggedTime = props.media.playhead
+    this.loggedTime = props.media.playhead || 0
     // if already seeked
     this.seeked = false
     this.logTime = this.logTime.bind(this)
@@ -50,9 +51,15 @@ class Video extends Component {
       this.player = new Clappr.Player({
         parent: this.playerRef,
         source: streamUrl,
-        poster: (media.screenshot_image && withProxy(media.screenshot_image.full_url)) || null,
+        poster: {
+          // if the first image doesn't work, it'll fall back to the second
+          custom: [
+            `url(${media.screenshot_image && withProxy(media.screenshot_image.full_url)}) top left / cover no-repeat`,
+            `url(${media.screenshot_image && media.screenshot_image.full_url}) top left / cover no-repeat`
+          ].join(', ')
+        },
         plugins: {
-          core: [LevelSelector, ChromecastPlugin, ResponsiveContainer]
+          core: [LevelSelector, ChromecastPlugin, ResponsiveContainer, PlaybackRatePlugin]
         },
         levelSelectorConfig: {
           title: 'Quality',
@@ -70,6 +77,15 @@ class Video extends Component {
             title: media.name,
             subtitle: media.description
           }
+        },
+        playbackRateConfig: {
+          defaultValue: '1.0',
+          options: [
+            {value: '0.5', label: '0.5x'},
+            {value: '1.0', label: '1x'},
+            {value: '1.5', label: '1.5x'},
+            {value: '2.0', label: '2x'}
+          ]
         },
         disableVideoTagContextMenu: true
       })
