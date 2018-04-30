@@ -16,17 +16,13 @@
     color: var(--secondary);
 }
 
-.video-box {
-    position: relative;
-}
-
 .video-overlay {
     position: absolute;
     bottom: 0;
     width: 100%;
 }
 
-.video-loading-overlay {
+.video-center-overlay {
     display: flex;
     align-items: center;
     position: absolute;
@@ -34,6 +30,42 @@
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.video-overlay-left, .video-overlay-right {
+    padding: 1.5rem;
+    border-radius: 20px;
+    transition: background-color 0.5s linear;
+}
+
+@media (max-width: 576px) {
+    .video-overlay-left, .video-overlay-right {
+        padding: 1rem !important;
+    }
+}
+
+.video-overlay-left {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 25%;
+}
+
+.video-overlay-right {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 25%;
+}
+
+.video-overlay-left:hover, .video-overlay-right:hover {
+    background-color: #e9ecef;
 }
 
 .video-resuming {

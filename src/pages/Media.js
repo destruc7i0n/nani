@@ -14,6 +14,8 @@ import faClock from '@fortawesome/fontawesome-free-solid/faClock'
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
 import faListOl from '@fortawesome/fontawesome-free-solid/faListOl'
 import faFastForward from '@fortawesome/fontawesome-free-solid/faFastForward'
+import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
+import faCaretLeft from '@fortawesome/fontawesome-free-solid/faCaretLeft'
 
 import Video from '../components/Video/Video'
 import Collection from '../components/Collections/Collection'
@@ -106,10 +108,15 @@ class Media extends Component {
     const loadedDetails = mediaObj && !error
     // check that the video URL exists
     const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
+    // the current collection
+    const currentCollection = mediaObj && collectionMedia[mediaObj.collection_id]
     // remove episodes that are before the one currently being watched
-    const nextEpisodes = mediaObj && collectionMedia[mediaObj.collection_id]
-      ? collectionMedia[mediaObj.collection_id].filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
+    const nextEpisodes = mediaObj && currentCollection
+      ? currentCollection.filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
+    // grab the ids for the next or previous episode
+    const nextEpisode = currentCollection && currentCollection[currentCollection.indexOf(mediaObj.media_id) + 1]
+    const prevEpisode = currentCollection && currentCollection[currentCollection.indexOf(mediaObj.media_id) - 1]
     // small function to format time
     const formatTime = (secs) => {
       const minutes = Math.floor(secs / 60)
@@ -138,8 +145,28 @@ class Media extends Component {
             )
             : (
               <div className='col-sm-12'>
-                <div className='d-flex mb-4 mt-2 bg-light player-background justify-content-center'>
-                  <div className='w-75 video-box'>
+                <div className='d-flex mb-4 mt-2 bg-light player-background justify-content-center position-relative'>
+                  {prevEpisode ? (
+                    <Link
+                      className='position-absolute video-overlay-left text-muted'
+                      to={`/series/${mediaObj.collection_id}/${prevEpisode}`}
+                    >
+                      <div className='d-flex mr-auto'>
+                        <FontAwesomeIcon icon={faCaretLeft} size='3x' />
+                      </div>
+                    </Link>
+                  ) : null}
+                  {nextEpisode ? (
+                    <Link
+                      className='position-absolute video-overlay-right text-muted'
+                      to={`/series/${mediaObj.collection_id}/${nextEpisode}`}
+                    >
+                      <div className='d-flex ml-auto'>
+                        <FontAwesomeIcon icon={faCaretRight} size='3x' />
+                      </div>
+                    </Link>
+                  ) : null}
+                  <div className='w-75 position-relative'>
                     {!loadedVideo || !streamData.stream_data.streams.length
                       // loading video
                       ? <Fragment>
@@ -147,7 +174,7 @@ class Media extends Component {
                           withProxy(imgFullURL),
                           imgFullURL
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='w-100' alt={mediaObj.name} />
-                        <div className='video-loading-overlay text-white'>
+                        <div className='video-center-overlay text-white'>
                           <Loading />
                         </div>
                       </Fragment>

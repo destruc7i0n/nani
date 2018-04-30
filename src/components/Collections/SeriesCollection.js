@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { getMediaForCollection } from '../../actions'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp'
+import faCaretLeft from '@fortawesome/fontawesome-free-solid/faCaretLeft'
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 
 import Collection from './Collection'
@@ -49,7 +49,7 @@ class SeriesCollection extends Component {
         <h4 className='border-bottom pb-3 mb-4' style={{ cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleExpanded}>
           <div className='d-flex justify-content-between'>
             {title}
-            <FontAwesomeIcon icon={expanded ? faCaretUp : faCaretDown} className='align-self-center ml-1' />
+            <FontAwesomeIcon icon={expanded ? faCaretDown : faCaretLeft} className='align-self-center ml-1' />
           </div>
         </h4>
         {

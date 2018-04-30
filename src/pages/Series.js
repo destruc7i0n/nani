@@ -104,10 +104,10 @@ class Series extends Component {
                 <div className='font-weight-bold pb-2'>
                   {series[id].rating / 10} / 10
                   {' '}
-                  <FontAwesomeIcon icon={faStar} className='text-warning' />
+                  <FontAwesomeIcon icon={faStar} className='text-warning mr-1' />
                   {
                     series[id].genres.map((genre, index) =>
-                      <Badge color='info' key={`genre-${index}`} className='ml-1'>
+                      <Badge color='info' key={`genre-${index}`} className='mr-1'>
                         {startCase(genre)}
                       </Badge>
                     )
