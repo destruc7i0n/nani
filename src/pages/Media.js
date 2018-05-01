@@ -145,10 +145,10 @@ class Media extends Component {
             )
             : (
               <div className='col-sm-12'>
-                <div className='d-flex mb-4 mt-2 bg-light player-background justify-content-center position-relative'>
+                <div className='d-flex mb-4 mt-2 bg-dark player-background justify-content-center position-relative'>
                   {prevEpisode ? (
                     <Link
-                      className='position-absolute video-overlay-left text-muted'
+                      className='position-absolute video-overlay-left text-white'
                       to={`/series/${mediaObj.collection_id}/${prevEpisode}`}
                     >
                       <FontAwesomeIcon icon={faCaretLeft} size='3x' />
@@ -156,7 +156,7 @@ class Media extends Component {
                   ) : null}
                   {nextEpisode ? (
                     <Link
-                      className='position-absolute video-overlay-right text-muted'
+                      className='position-absolute video-overlay-right text-white'
                       to={`/series/${mediaObj.collection_id}/${nextEpisode}`}
                     >
                       <FontAwesomeIcon icon={faCaretRight} size='3x' />

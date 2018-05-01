@@ -38,22 +38,25 @@
     align-items: center;
     flex-direction: row;
     position: absolute;
-    border-radius: 1rem;
     width: 5%;
     height: 100%;
     transition: background-color 0.5s linear;
 }
 
 .video-overlay-left {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
     left: 0;
 }
 
 .video-overlay-right {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
     right: 0;
 }
 
 .video-overlay-left:hover, .video-overlay-right:hover {
-    background-color: #e9ecef;
+    background-color: #111315;
 }
 
 .video-resuming {
