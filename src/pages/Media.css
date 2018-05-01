@@ -40,7 +40,7 @@
 
 @media (max-width: 576px) {
     .video-overlay-left, .video-overlay-right {
-        padding: 1rem !important;
+        padding: 0.5rem !important;
     }
 }
 

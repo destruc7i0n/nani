@@ -120,7 +120,7 @@ class Media extends Component {
     // small function to format time
     const formatTime = (secs) => {
       const minutes = Math.floor(secs / 60)
-      let seconds = secs - (minutes * 60)
+      let seconds = Math.floor(secs - (minutes * 60))
       seconds = seconds < 10 ? `0${seconds}` : seconds
       return `${minutes}:${seconds}`
     }
