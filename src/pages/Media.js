@@ -151,9 +151,7 @@ class Media extends Component {
                       className='position-absolute video-overlay-left text-muted'
                       to={`/series/${mediaObj.collection_id}/${prevEpisode}`}
                     >
-                      <div className='d-flex mr-auto'>
-                        <FontAwesomeIcon icon={faCaretLeft} size='3x' />
-                      </div>
+                      <FontAwesomeIcon icon={faCaretLeft} size='3x' />
                     </Link>
                   ) : null}
                   {nextEpisode ? (
@@ -161,12 +159,10 @@ class Media extends Component {
                       className='position-absolute video-overlay-right text-muted'
                       to={`/series/${mediaObj.collection_id}/${nextEpisode}`}
                     >
-                      <div className='d-flex ml-auto'>
-                        <FontAwesomeIcon icon={faCaretRight} size='3x' />
-                      </div>
+                      <FontAwesomeIcon icon={faCaretRight} size='3x' />
                     </Link>
                   ) : null}
-                  <div className='w-75 position-relative'>
+                  <div className='player-width position-relative'>
                     {!loadedVideo || !streamData.stream_data.streams.length
                       // loading video
                       ? <Fragment>

@@ -1,5 +1,5 @@
 .player-background {
-    border-radius: 20px;
+    border-radius: 1rem;
 }
 
 .badge.badge-outline {
@@ -33,35 +33,23 @@
 }
 
 .video-overlay-left, .video-overlay-right {
-    padding: 1.5rem;
-    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    position: absolute;
+    border-radius: 1rem;
+    width: 5%;
+    height: 100%;
     transition: background-color 0.5s linear;
 }
 
-@media (max-width: 576px) {
-    .video-overlay-left, .video-overlay-right {
-        padding: 0.5rem !important;
-    }
-}
-
 .video-overlay-left {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    position: absolute;
     left: 0;
-    height: 100%;
-    width: 25%;
 }
 
 .video-overlay-right {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    position: absolute;
     right: 0;
-    height: 100%;
-    width: 25%;
 }
 
 .video-overlay-left:hover, .video-overlay-right:hover {
@@ -74,4 +62,18 @@
     font-style: italic;
     color: #fff;
     padding: 1rem;
+}
+
+.player-width {
+    width: 90% !important;
+}
+
+@media (max-width: 768px) {
+    .player-width {
+        width: 80% !important;
+    }
+
+    .video-overlay-left, .video-overlay-right {
+        width: 10% !important;
+    }
 }
