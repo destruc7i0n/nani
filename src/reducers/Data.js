@@ -1,6 +1,7 @@
 import {
   ADD_COLLECTION,
   ADD_COLLECTION_MEDIA,
+  ADD_MAL_ITEM,
   ADD_MEDIA,
   ADD_SERIES,
   ADD_SERIES_COLLECTION,
@@ -39,6 +40,7 @@ export default function Data (state = {
     list: []
   },
   recent: [],
+  mal: {},
 
   error: false
 }, action) {
@@ -96,6 +98,14 @@ export default function Data (state = {
             ...state.media[action.payload.id],
             playhead: action.payload.time
           }
+        }
+      }
+    case ADD_MAL_ITEM:
+      return {
+        ...state,
+        mal: {
+          ...state.mal,
+          [action.payload.id]: action.payload.data
         }
       }
     case ADD_SERIES:

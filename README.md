@@ -5,14 +5,14 @@ What's Crunchyroll?
 
 ## Images
 ![Dashboard](https://i.imgur.com/iqn0bwo.png)
-![Queue](https://i.imgur.com/Tb7n4aZ.png)
-![Series](https://i.imgur.com/RrDgjLG.png)
-![Video](https://i.imgur.com/vLYKgxt.png)
+![Queue](https://i.imgur.com/b9anAaK.png)
+![Series](https://i.imgur.com/nI5euO6.png)
+![Video](https://i.imgur.com/kad1azD.png)
 
 There are a few more here: https://imgur.com/a/R5cNW
 
 ## Features
-- Fast, modern and responsive interface
+- Fast, modern, and responsive interface
 - Stream\* and search anime
 - Manage your queue
 - MyAnimeList updating support

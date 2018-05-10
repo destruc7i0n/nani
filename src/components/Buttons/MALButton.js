@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { getMalItem } from '../../actions'
 
 import axios from 'axios'
 
@@ -16,29 +17,26 @@ class MALButton extends Component {
       id: '0',
       available: false,
       malItem: {},
-      updated: false
+      updated: false,
+      loggedIn: false
     }
 
     this.checkOnMAL = this.checkOnMAL.bind(this)
     this.updateMAL = this.updateMAL.bind(this)
-    this.isLoggedIn = this.isLoggedIn.bind(this)
-  }
-
-  isLoggedIn (props = this.props) {
-    const { mal } = props
-    return mal.username && mal.token && true
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
-    const { id: prevId } = prevState
-    const { id: nextId } = nextProps
-    // reset on update
-    if (nextId !== prevId) {
+    const { id: prevId, loggedIn: oldLoggedIn } = prevState
+    const { id: nextId, mal } = nextProps
+    const isLoggedIn = mal.username && mal.token && true
+    // reset on update or auth change
+    if (nextId !== prevId || isLoggedIn !== oldLoggedIn) {
       return {
         id: nextProps.id,
         available: false,
         malItem: {},
-        updated: false
+        updated: false,
+        loggedIn: isLoggedIn
       }
     }
     return null
@@ -49,21 +47,21 @@ class MALButton extends Component {
   }
 
   async componentDidUpdate (prevProps, prevState) {
-    const { id: nextId } = this.state
-    const { id: prevId } = prevState
-    if (nextId !== prevId) {
+    const { id: nextId, loggedIn: newLoggedIn } = this.state
+    const { id: prevId, loggedIn: oldLoggedIn } = prevState
+    // update on id change or auth change
+    if (nextId !== prevId || newLoggedIn !== oldLoggedIn) {
       await this.checkOnMAL()
     }
   }
 
   async checkOnMAL () {
-    const { media, id } = this.props
-    if (media && media.collection_name && id && this.isLoggedIn()) {
+    const { loggedIn } = this.state
+    const { dispatch, media, id } = this.props
+    if (media && media.collection_name && id && loggedIn) {
       try {
-        const {data: {error, success, data}} = await axios.get(`/.netlify/functions/mal_search?name=${media.collection_name}`)
-        if (!error && success) {
-          this.setState({ available: true, malItem: data })
-        }
+        const data = await dispatch(getMalItem(media.collection_name, id))
+        this.setState({ available: true, malItem: data })
       } catch (err) {
         console.error(err)
       }
@@ -72,10 +70,10 @@ class MALButton extends Component {
 
   async updateMAL (e) {
     e.preventDefault()
-    const { malItem, updated } = this.state
+    const { malItem, updated, loggedIn } = this.state
     const { media: { media_id: id }, collectionMedia, mal } = this.props
     // check if logged in etc.
-    if (malItem && this.isLoggedIn() && !updated) {
+    if (malItem && loggedIn && !updated) {
       // get the index, which is about the same as the episode number
       const episode = collectionMedia.indexOf(id) + 1
       // completed if this episode is the last one in the list
@@ -97,9 +95,9 @@ class MALButton extends Component {
   }
 
   render () {
-    const { available, updated, malItem } = this.state
+    const { available, updated, malItem, loggedIn } = this.state
     const { dispatch, collectionMedia, series, media, ...props } = this.props
-    return this.isLoggedIn() && available ? (
+    return loggedIn && available ? (
       <Fragment>
         <Badge
           href='#'

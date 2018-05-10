@@ -1,6 +1,6 @@
 // some functions taken from umi
 
-import { isCancel } from 'axios'
+import axios, { isCancel } from 'axios'
 import { omit } from 'lodash'
 
 import api, { LOCALE, VERSION } from '../lib/api'
@@ -97,6 +97,15 @@ export const setPlayheadTime = (time, id) => ({
   payload: {
     id,
     time
+  }
+})
+
+export const ADD_MAL_ITEM = 'ADD_MAL_ITEM'
+export const addMalItem = (id, data) => ({
+  type: ADD_MAL_ITEM,
+  payload: {
+    id,
+    data
   }
 })
 
@@ -432,6 +441,27 @@ export const getRecent = () => (dispatch, getState) => {
       resolve()
     } catch (err) {
       handleError(err, dispatch, reject)
+    }
+  })
+}
+
+export const getMalItem = (name, collectionId) => (dispatch, getState) => {
+  const state = getState()
+
+  if (state.Data.mal[collectionId]) return Promise.resolve(state.Data.mal[collectionId])
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await axios.get(`/.netlify/functions/mal_search?name=${name}`)
+      const { data: { error, success, data } } = resp
+      if (resp.data.error) throw resp
+
+      if (!error && success) {
+        dispatch(addMalItem(collectionId, data))
+        resolve(data)
+      }
+    } catch (err) {
+      reject(err)
     }
   })
 }

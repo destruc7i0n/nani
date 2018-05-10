@@ -79,4 +79,8 @@
     .video-overlay-left, .video-overlay-right {
         width: 10% !important;
     }
+
+    .video-resuming {
+        padding: .5rem !important;
+    }
 }

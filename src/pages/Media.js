@@ -224,7 +224,7 @@ class Media extends Component {
                     {' '}
                     Open on Crunchyroll
                   </Badge>
-                  <MALButton id={mediaObj.series_id} media={mediaObj} className='mr-md-2 mb-1' />
+                  <MALButton id={mediaObj.collection_id} media={mediaObj} className='mr-md-2 mb-1' />
                   <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
                 </h5>
                 <p>{mediaObj.description}</p>

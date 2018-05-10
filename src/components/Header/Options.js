@@ -36,7 +36,7 @@ class Options extends Component {
     const { dispatch } = this.props
     try {
       await dispatch(loginMal(username, password))
-      this.setState({ error: '' })
+      this.setState({ error: '', mal: { username: '', password: '' } })
     } catch (err) {
       console.error(err)
       this.setState({ error: (err.response && err.response.data && err.response.data.error) || 'Something went wrong.' })
