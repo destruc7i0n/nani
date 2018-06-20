@@ -16,6 +16,7 @@ import faListOl from '@fortawesome/fontawesome-free-solid/faListOl'
 import faFastForward from '@fortawesome/fontawesome-free-solid/faFastForward'
 import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
 import faCaretLeft from '@fortawesome/fontawesome-free-solid/faCaretLeft'
+import faExclamationTriangle from '@fortawesome/fontawesome-free-solid/faExclamationTriangle'
 
 import Video from '../components/Video/Video'
 import Collection from '../components/Collections/Collection'
@@ -173,6 +174,17 @@ class Media extends Component {
                         <div className='video-center-overlay text-white'>
                           <Loading />
                         </div>
+                        {
+                          streamData.stream_data && streamData.stream_data.streams.length === 0
+                            ? <div className='video-overlay'>
+                              <div className='video-resuming'>
+                                <FontAwesomeIcon icon={faExclamationTriangle} />
+                                {' '}
+                                No video streams found!
+                              </div>
+                            </div>
+                            : null
+                        }
                       </Fragment>
                       // loaded video
                       : <Fragment>

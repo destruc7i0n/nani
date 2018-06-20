@@ -56,6 +56,7 @@ class Options extends Component {
           <ModalHeader toggle={this.toggle}>Options</ModalHeader>
           <ModalBody>
             {error && <Alert color='danger'>{error}</Alert>}
+            <Alert color='warning'>Currently broken due to MAL shutting down their API.</Alert>
             <h4 className='border-bottom pb-2 mb-3'>MyAnimeList</h4>
             {
               !loggedIn
