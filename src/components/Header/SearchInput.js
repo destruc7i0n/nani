@@ -20,7 +20,6 @@ class SearchInput extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchIds: [],
       value: '',
       selectedIndex: 0,
       focused: true
@@ -31,13 +30,6 @@ class SearchInput extends Component {
     this.search = this.search.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleClickOutside = this.handleClickOutside.bind(this)
-  }
-
-  static getDerivedStateFromProps (nextProps) {
-    const { searchIds } = nextProps
-    return {
-      searchIds: searchIds.splice(0, 5)
-    }
   }
 
   componentDidMount () {
@@ -55,8 +47,8 @@ class SearchInput extends Component {
   }
 
   resetSearch () {
-    const { searchIds, focused } = this.state
-    const { dispatch } = this.props
+    const { focused } = this.state
+    const { searchIds, dispatch } = this.props
 
     // if search results
     if (searchIds.length > 0) {
@@ -87,8 +79,8 @@ class SearchInput extends Component {
   }
 
   handleKeyDown (event) {
-    let { selectedIndex, value, searchIds } = this.state
-    const { history } = this.props
+    let { selectedIndex, value } = this.state
+    const { searchIds, history } = this.props
     const { key } = event
 
     if (key === 'ArrowUp') { // up
@@ -133,8 +125,8 @@ class SearchInput extends Component {
   }
 
   render () {
-    let { value, searchIds, selectedIndex, focused } = this.state
-    let { series } = this.props
+    let { value, selectedIndex, focused } = this.state
+    let { searchIds, series } = this.props
 
     return (
       <Manager>
@@ -190,7 +182,7 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
-      searchIds: store.Data.searchIds,
+      searchIds: (store.Data.searchIds || []).splice(0, 5),
       series: store.Data.series
     }
   }),
