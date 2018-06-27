@@ -41,7 +41,9 @@ class Dashboard extends Component {
 
     const queueIds = queue
       .map((item) => item.most_likely_media.media_id)
+      .filter((id) => !uncompletedHistory.includes(id))
 
+    // make sure that everything is loaded
     const continueIds = [...uncompletedHistory, ...queueIds]
     // grab all the series from the queue
     const queueSeries = queue
@@ -60,7 +62,7 @@ class Dashboard extends Component {
         <Helmet defer={false}>
           <title>Dashboard</title>
         </Helmet>
-        <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded && continueIds.length === 0} loadingCardsCount={4} />
+        <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded} loadingCardsCount={4} />
         <SeriesCardCollection
           title='Watchlist'
           link='/queue'
