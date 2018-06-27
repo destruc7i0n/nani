@@ -16,6 +16,7 @@ class Collection extends Component {
       mediaIds = [],
       media = {},
       loading = false,
+      loadingCardsCount = 10,
       size = 'sm',
       ...attr
     } = this.props
@@ -29,11 +30,15 @@ class Collection extends Component {
         : LoadingMediaCardLarge
     return (
       <Fragment>
-        {showTitle && title && <TitleTag className='border-bottom pb-3 mb-4'>{title}</TitleTag>}
+        {showTitle && title && <TitleTag className='border-bottom pb-3 mb-4'>
+          <div className='d-flex justify-content-between'>
+            {title}
+          </div>
+        </TitleTag>}
         <div className='row'>
           {
             loading
-              ? [...Array(10).keys()].map((index) => <LoadingTag width={width} key={`loadingMediaCard-${index}`} />)
+              ? [...Array(loadingCardsCount).keys()].map((index) => <LoadingTag width={width} key={`loadingMediaCard-${index}`} />)
               : mediaIds.length !== 0
                 ? mediaIds.map((mediaId) => <Tag width={width} media={media[mediaId]} key={`mediaCard-${mediaId}`} {...attr} />)
                 : <div className='col-12 text-center'>

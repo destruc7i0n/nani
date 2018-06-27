@@ -6,8 +6,7 @@ import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress, Button } from
 
 import Img from 'react-image'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faInfo from '@fortawesome/fontawesome-free-solid/faInfo'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Loading from '../../Loading/Loading'
 import QueueButton from '../../Buttons/QueueButton'
@@ -67,7 +66,7 @@ class MediaCardLarge extends Component {
 
                         <div className='mt-auto'>
                           <Button tag={Link} to={`/series/${media.series_id}`} size='sm' className='mr-1' color='primary'>
-                            <FontAwesomeIcon icon={faInfo} />
+                            <FontAwesomeIcon icon='info' />
                             {' '}
                             Show Info
                           </Button>

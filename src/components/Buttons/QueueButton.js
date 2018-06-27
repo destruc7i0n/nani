@@ -6,9 +6,7 @@ import { Button, Badge } from 'reactstrap'
 
 import classNames from 'classnames'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faPlus from '@fortawesome/fontawesome-free-solid/faPlus'
-import faMinus from '@fortawesome/fontawesome-free-solid/faMinus'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class QueueButton extends Component {
   constructor (props) {
@@ -73,8 +71,8 @@ class QueueButton extends Component {
           }, 'mw-100 text-truncate')
         } {...attrs}>
         {inQueue
-          ? <Fragment><FontAwesomeIcon icon={faMinus} /> Remove from Queue</Fragment>
-          : <Fragment><FontAwesomeIcon icon={faPlus} /> Add to Queue</Fragment>}
+          ? <Fragment><FontAwesomeIcon icon='minus' /> Remove from Queue</Fragment>
+          : <Fragment><FontAwesomeIcon icon='plus' /> Add to Queue</Fragment>}
       </Tag>
     )
   }

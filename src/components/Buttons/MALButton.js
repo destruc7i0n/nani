@@ -6,9 +6,7 @@ import axios from 'axios'
 
 import { Badge } from 'reactstrap'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle'
-import faTimesCircle from '@fortawesome/fontawesome-free-solid/faTimesCircle'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class MALButton extends Component {
   constructor (props) {
@@ -107,7 +105,7 @@ class MALButton extends Component {
         >
           MAL:
           &nbsp;
-          <FontAwesomeIcon icon={updated ? faCheckCircle : faTimesCircle} />
+          <FontAwesomeIcon icon={updated ? 'check-circle' : 'times-circle'} />
         </Badge>
         <Badge
           href={`https://myanimelist.net/anime/${malItem.id}`}

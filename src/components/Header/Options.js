@@ -4,8 +4,7 @@ import { loginMal, removeMal } from '../../actions'
 
 import { Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Col, Label, Input, Alert } from 'reactstrap'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faCog from '@fortawesome/fontawesome-free-solid/faCog'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class Options extends Component {
   constructor (props) {
@@ -50,7 +49,7 @@ class Options extends Component {
     return (
       <Fragment>
         <Button onClick={this.toggle} className='w-100'>
-          <FontAwesomeIcon icon={faCog} />
+          <FontAwesomeIcon icon='cog' />
         </Button>
         <Modal isOpen={open} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Options</ModalHeader>

@@ -7,9 +7,7 @@ import { Badge, Button } from 'reactstrap'
 
 import Img from 'react-image'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faStar from '@fortawesome/fontawesome-free-solid/faStar'
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { startCase } from 'lodash'
 
@@ -93,7 +91,7 @@ class Series extends Component {
                 <Button className='text-truncate' block color='light' href={
                   `https://myanimelist.net/search/all?q=${series[id].name}`
                 } target='_blank' rel='noopener noreferrer'>
-                  <FontAwesomeIcon icon={faSearch} />
+                  <FontAwesomeIcon icon='search' />
                   {' '}
                   Find on MyAnimeList
                 </Button>
@@ -104,7 +102,7 @@ class Series extends Component {
                 <div className='font-weight-bold pb-2'>
                   {series[id].rating / 10} / 10
                   {' '}
-                  <FontAwesomeIcon icon={faStar} className='text-warning mr-1' />
+                  <FontAwesomeIcon icon='star' className='text-warning mr-1' />
                   {
                     series[id].genres.map((genre, index) =>
                       <Badge color='info' key={`genre-${index}`} className='mr-1'>

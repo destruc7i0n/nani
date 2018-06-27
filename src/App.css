@@ -1,3 +1,5 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+
 /* makes the page not move when scrollable */
 html { overflow-y: scroll; }
 

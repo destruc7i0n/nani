@@ -8,15 +8,7 @@ import { Badge } from 'reactstrap'
 
 import Img from 'react-image'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faTv from '@fortawesome/fontawesome-free-solid/faTv'
-import faClock from '@fortawesome/fontawesome-free-solid/faClock'
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
-import faListOl from '@fortawesome/fontawesome-free-solid/faListOl'
-import faFastForward from '@fortawesome/fontawesome-free-solid/faFastForward'
-import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
-import faCaretLeft from '@fortawesome/fontawesome-free-solid/faCaretLeft'
-import faExclamationTriangle from '@fortawesome/fontawesome-free-solid/faExclamationTriangle'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Video from '../components/Video/Video'
 import Collection from '../components/Collections/Collection'
@@ -152,7 +144,7 @@ class Media extends Component {
                       className='position-absolute video-overlay-left text-muted'
                       to={`/series/${mediaObj.collection_id}/${prevEpisode}`}
                     >
-                      <FontAwesomeIcon icon={faCaretLeft} size='3x' />
+                      <FontAwesomeIcon icon='caret-left' size='3x' />
                     </Link>
                   ) : null}
                   {nextEpisode ? (
@@ -160,7 +152,7 @@ class Media extends Component {
                       className='position-absolute video-overlay-right text-muted'
                       to={`/series/${mediaObj.collection_id}/${nextEpisode}`}
                     >
-                      <FontAwesomeIcon icon={faCaretRight} size='3x' />
+                      <FontAwesomeIcon icon='caret-right' size='3x' />
                     </Link>
                   ) : null}
                   <div className='player-width position-relative'>
@@ -178,7 +170,7 @@ class Media extends Component {
                           streamData.stream_data && streamData.stream_data.streams.length === 0
                             ? <div className='video-overlay'>
                               <div className='video-resuming'>
-                                <FontAwesomeIcon icon={faExclamationTriangle} />
+                                <FontAwesomeIcon icon='exclamation-triangle' />
                                 {' '}
                                 No video streams found!
                               </div>
@@ -199,7 +191,7 @@ class Media extends Component {
                           timeLeftToWatch && timeLeftToWatch >= 30 && !videoPlayed
                             ? <div className='video-overlay'>
                               <div className='video-resuming'>
-                                <FontAwesomeIcon icon={faFastForward} />
+                                <FontAwesomeIcon icon='fast-forward' />
                                 {' '}
                                 Resuming from {formatTime(mediaObj.playhead)}
                               </div>
@@ -213,26 +205,26 @@ class Media extends Component {
                 <h3>{mediaObj.name}</h3>
                 <h5 className='d-flex flex-column flex-md-row flex-wrap'>
                   <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white mb-1 text-truncate mr-md-2'>
-                    <FontAwesomeIcon icon={faTv} />
+                    <FontAwesomeIcon icon='tv' />
                     {' '}
                     {mediaObj.collection_name || 'Loading...'}
                   </Badge>
                   {mediaObj.episode_number
                     ? <Badge color='secondary' className='mr-md-2 mb-1 badge-outline'>
-                      <FontAwesomeIcon icon={faListOl} />
+                      <FontAwesomeIcon icon='list-ol' />
                       {' '}
                       Episode {mediaObj.episode_number}
                     </Badge>
                     : null}
                   <Badge color='info' className='mr-md-2 mb-1 badge-outline'>
-                    <FontAwesomeIcon icon={faClock} />
+                    <FontAwesomeIcon icon='clock' />
                     {' '}
                     {formatTime(mediaObj.duration)}
                   </Badge>
                   <Badge color='secondary' className='mr-md-2 mb-1' tag='a' target='_blank' rel='noopener noreferrer' href={`
                       http://www.crunchyroll.com/media-${mediaObj.media_id}
                     `}>
-                    <FontAwesomeIcon icon={faSearch} />
+                    <FontAwesomeIcon icon='search' />
                     {' '}
                     Open on Crunchyroll
                   </Badge>

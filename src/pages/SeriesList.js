@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { getSeriesList } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import SeriesCard from '../components/Cards/Series/SeriesCard'
-import LoadingSeriesCard from '../components/Loading/LoadingSeriesCard'
+import SeriesCardCollection from '../components/Collections/SeriesCardCollection'
 
 class SeriesList extends Component {
   async componentDidMount () {
@@ -29,14 +28,7 @@ class SeriesList extends Component {
         <Helmet defer={false}>
           <title>{`${titles[type]} List`}</title>
         </Helmet>
-        <h3 className='border-bottom pb-3 mb-4'>{titles[type]}</h3>
-        <div className='row'>
-          {
-            loaded
-              ? list.list.map((item, index) => <SeriesCard data={item} key={`seriesCard-${index}`} />)
-              : [...Array(25).keys()].map((index) => <LoadingSeriesCard key={`loadingSeriesCard-${index}`} />)
-          }
-        </div>
+        <SeriesCardCollection title={titles[type]} loading={!loaded} series={list.list} />
       </Fragment>
     )
   }

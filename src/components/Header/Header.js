@@ -19,15 +19,7 @@ import {
   UncontrolledDropdown
 } from 'reactstrap'
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faCertificate from '@fortawesome/fontawesome-free-solid/faCertificate'
-import faClosedCaptioning from '@fortawesome/fontawesome-free-solid/faClosedCaptioning'
-import faHistory from '@fortawesome/fontawesome-free-solid/faHistory'
-import faList from '@fortawesome/fontawesome-free-solid/faList'
-import faStepForward from '@fortawesome/fontawesome-free-solid/faStepForward'
-import faUser from '@fortawesome/fontawesome-free-solid/faUser'
-import faClock from '@fortawesome/fontawesome-free-solid/faClock'
-import faCalendarAlt from '@fortawesome/fontawesome-free-solid/faCalendarAlt'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import SearchInput from './SearchInput'
 import Options from './Options'
@@ -61,44 +53,44 @@ class Header extends Component {
             <Nav className='mr-auto' navbar>
               <NavItem>
                 <NavLink tag={Link} to='/queue'>
-                  <FontAwesomeIcon icon={faList} className='d-md-none d-lg-inline-block' />
+                  <FontAwesomeIcon icon='list' className='d-md-none d-lg-inline-block' />
                   {' '}
                   Queue
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/history'>
-                  <FontAwesomeIcon icon={faHistory} className='d-md-none d-lg-inline-block' />
+                  <FontAwesomeIcon icon='history' className='d-md-none d-lg-inline-block' />
                   {' '}
                   History
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to='/recent'>
-                  <FontAwesomeIcon icon={faClock} className='d-md-none d-lg-inline-block' />
+                  <FontAwesomeIcon icon='clock' className='d-md-none d-lg-inline-block' />
                   {' '}
                   Recent
                 </NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  <FontAwesomeIcon icon={faStepForward} className='d-md-none d-lg-inline-block' />
+                  <FontAwesomeIcon icon='step-forward' className='d-md-none d-lg-inline-block' />
                   {' '}
                   Series List
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem tag={Link} to='/list/simulcast'>
-                    <FontAwesomeIcon icon={faClosedCaptioning} />
+                    <FontAwesomeIcon icon='closed-captioning' />
                     {' '}
                     Simulcasts
                   </DropdownItem>
                   <DropdownItem tag={Link} to='/list/popular'>
-                    <FontAwesomeIcon icon={faCertificate} />
+                    <FontAwesomeIcon icon='certificate' />
                     {' '}
                     Popular Anime
                   </DropdownItem>
                   <DropdownItem tag={Link} to='/list/newest'>
-                    <FontAwesomeIcon icon={faCalendarAlt} />
+                    <FontAwesomeIcon icon='calendar-alt' />
                     {' '}
                     Newest Anime
                   </DropdownItem>
@@ -111,7 +103,7 @@ class Header extends Component {
               </NavItem>
               <UncontrolledButtonDropdown inNavbar>
                 <DropdownToggle caret className='ml-md-2 mr-md-2 w-100'>
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon='user' />
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem header>{Auth.username}</DropdownItem>
