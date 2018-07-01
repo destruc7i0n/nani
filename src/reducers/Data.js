@@ -35,10 +35,7 @@ export default function Data (state = {
     data: []
   },
   queue: [],
-  list: {
-    type: '',
-    list: []
-  },
+  list: {},
   recent: [],
   mal: {},
 
@@ -71,7 +68,10 @@ export default function Data (state = {
     case SET_LIST:
       return {
         ...state,
-        list: action.payload
+        list: {
+          ...state.list,
+          [action.payload.type]: action.payload
+        }
       }
     case SET_RECENT:
       return {

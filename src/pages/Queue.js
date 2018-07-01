@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import { getQueue } from '../actions'
 import { Helmet } from 'react-helmet'
 
+import { parse } from 'query-string'
+
 import Collection from '../components/Collections/Collection'
+import SeriesCardCollection from '../components/Collections/SeriesCardCollection'
 
 class Queue extends Component {
   constructor (props) {
@@ -26,13 +29,27 @@ class Queue extends Component {
   render () {
     const { loaded } = this.state
     const { queue } = this.props
+    const { type: viewType = 'episodes' } = parse(this.props.location.search)
+
     const queueIds = queue.map((item) => item.most_likely_media.media_id)
+    const queueSeries = queue.map((item) => item.series)
     return (
       <Fragment>
         <Helmet defer={false}>
           <title>Queue</title>
         </Helmet>
-        <Collection title='Queue' size='lg' mediaIds={queueIds} loading={!loaded && queueIds.length === 0} />
+        {
+          viewType === 'watchlist'
+            ? <SeriesCardCollection
+              title='Queue'
+              series={queueSeries}
+              loading={!loaded && queueSeries.length === 0} />
+            : <Collection
+              title='Queue'
+              size='lg'
+              mediaIds={queueIds}
+              loading={!loaded && queueIds.length === 0} />
+        }
       </Fragment>
     )
   }

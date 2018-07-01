@@ -17,7 +17,7 @@ class SeriesList extends Component {
 
   render () {
     const { list, type } = this.props
-    const loaded = list && list.type === type
+    const loaded = list && list[type]
     const titles = {
       simulcast: 'Simulcasts',
       popular: 'Popular Anime',
@@ -28,7 +28,7 @@ class SeriesList extends Component {
         <Helmet defer={false}>
           <title>{`${titles[type]} List`}</title>
         </Helmet>
-        <SeriesCardCollection title={titles[type]} loading={!loaded} series={list.list} />
+        <SeriesCardCollection title={titles[type]} loading={!loaded} series={loaded && list[type].list} />
       </Fragment>
     )
   }

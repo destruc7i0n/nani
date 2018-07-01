@@ -10,6 +10,7 @@ class SeriesCardCollection extends Component {
   render () {
     const {
       title = '',
+      showTitle = true,
       series = [],
       loading = false,
       link = false,
@@ -17,12 +18,12 @@ class SeriesCardCollection extends Component {
     } = this.props
     return (
       <Fragment>
-        <h3 className='border-bottom pb-3 mb-4'>
+        {showTitle && title && <h3 className='border-bottom pb-3 mb-4'>
           <div className='d-flex justify-content-between'>
             {title}
             {link && <Button tag={Link} to={link} color='secondary' size='sm'>View All</Button>}
           </div>
-        </h3>
+        </h3>}
         <div className='row'>
           {
             loading

@@ -17,6 +17,7 @@
     "lodash": "^4.17.10",
     "netlify-lambda": "0.4.0",
     "popura": "^1.2.5",
+    "query-string": "^6.1.0",
     "react": "^16.4.1",
     "react-content-loader": "^3.1.2",
     "react-debounce-input": "^3.2.0",

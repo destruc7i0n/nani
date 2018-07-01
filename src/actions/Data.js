@@ -374,6 +374,8 @@ export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
     filter
   }
 
+  if (state.Data.list[filter]) return Promise.resolve()
+
   return new Promise(async (resolve, reject) => {
     try {
       const resp = await api({route: 'list_series', params})

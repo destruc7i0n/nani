@@ -54,8 +54,8 @@ class Dashboard extends Component {
     const recentlyUpdated = recent.slice(0, 6)
 
     // grab the most popular shows
-    const mostPopular = list && list.type === 'popular'
-      ? list.list.slice(0, 6)
+    const mostPopular = list && list['popular']
+      ? list['popular'].list.slice(0, 6)
       : []
     return (
       <Fragment>
@@ -65,7 +65,7 @@ class Dashboard extends Component {
         <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded} loadingCardsCount={4} />
         <SeriesCardCollection
           title='Watchlist'
-          link='/queue'
+          link='/queue?type=watchlist'
           series={queueSeries}
           loading={!loaded && queueSeries.length === 0}
           loadingCardsCount={6} />
