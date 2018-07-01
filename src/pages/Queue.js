@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { getQueue } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import { parse } from 'query-string'
+import { parse } from 'qs'
 
 import Collection from '../components/Collections/Collection'
 import SeriesCardCollection from '../components/Collections/SeriesCardCollection'
@@ -29,7 +29,7 @@ class Queue extends Component {
   render () {
     const { loaded } = this.state
     const { queue } = this.props
-    const { type: viewType = 'episodes' } = parse(this.props.location.search)
+    const { type: viewType = 'episodes' } = parse(this.props.location.search.slice(1))
 
     const queueIds = queue.map((item) => item.most_likely_media.media_id)
     const queueSeries = queue.map((item) => item.series)
