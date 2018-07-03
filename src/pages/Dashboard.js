@@ -43,8 +43,8 @@ class Dashboard extends Component {
       .map((item) => item.most_likely_media.media_id)
       .filter((id) => !uncompletedHistory.includes(id))
 
-    // make sure that everything is loaded
-    const continueIds = [...uncompletedHistory, ...queueIds]
+    // combine the lists and only take the first 4
+    const continueIds = [...uncompletedHistory, ...queueIds].slice(0, 4)
     // grab all the series from the queue
     const queueSeries = queue
       .map((item) => item.series)
@@ -71,7 +71,7 @@ class Dashboard extends Component {
           loadingCardsCount={6} />
         <SeriesCardCollection
           title='Recently Updated'
-          link='/list/newest'
+          link='/recent'
           series={recentlyUpdated}
           loading={recentlyUpdated.length === 0}
           loadingCardsCount={6} />

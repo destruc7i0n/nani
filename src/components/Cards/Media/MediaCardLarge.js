@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Loading from '../../Loading/Loading'
 import QueueButton from '../../Buttons/QueueButton'
+import WatchedButton from '../../Buttons/WatchedButton'
 import ImageLoader from '../../Loading/ImageLoader'
 
 import withProxy from '../../../lib/withProxy'
@@ -68,9 +69,10 @@ class MediaCardLarge extends Component {
                           <Button tag={Link} to={`/series/${media.series_id}`} size='sm' className='mr-1' color='primary'>
                             <FontAwesomeIcon icon='info' />
                             {' '}
-                            Show Info
+                            Series Info
                           </Button>
-                          <QueueButton id={media.series_id} size='sm' />
+                          <QueueButton id={media.series_id} size='sm' className='mr-1' />
+                          <WatchedButton media={media} size='sm' refreshQueue />
                         </div>
                       </CardBody>
                     </div>
