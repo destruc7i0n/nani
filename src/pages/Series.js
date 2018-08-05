@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { getSeriesInfo, getCollectionsForSeries } from '../actions'
+import { getSeriesInfo, getCollectionsForSeries, getAniListItem } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import { Badge, Button } from 'reactstrap'
+import { Badge, Alert } from 'reactstrap'
 
 import Img from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { startCase } from 'lodash'
+import moment from 'moment'
 
 import SeriesCollection from '../components/Collections/SeriesCollection'
 import Loading from '../components/Loading/Loading'
@@ -67,16 +68,40 @@ class Series extends Component {
 
   render () {
     const { error } = this.state
-    const { match: { params: { id } }, series, seriesCollections, collections } = this.props
-    const loaded = series[id] && seriesCollections[id]
-    const imgFullURL = series[id] && series[id].portrait_image && series[id].portrait_image.full_url
+    const {
+      dispatch,
+      match: {params: {id}},
+      series: {[id]: series},
+      seriesCollections: {[id]: seriesCollection},
+      collections,
+      anilist: {token},
+      anilistCollections
+    } = this.props
+    const loaded = series && seriesCollection
+    const imgFullURL = series && series.portrait_image && series.portrait_image.full_url
+
+    // the latest collection would probably be the last one in the list...
+    const latestCollectionId = loaded && seriesCollection[seriesCollection.length - 1]
+    const latestCollection = latestCollectionId && collections[latestCollectionId]
+
+    // load the latest collection
+    if (token && latestCollection) {
+      dispatch(getAniListItem(latestCollection.name, latestCollectionId))
+    }
+
+    // check if the collection has been loaded
+    let anilistItem = null
+    if (anilistCollections) {
+      anilistItem = anilistCollections[latestCollectionId]
+    }
+
     return (
       <div className='row'>
         <Helmet defer={false}>
-          <title>{ loaded ? series[id].name : 'Loading...' }</title>
+          <title>{ loaded ? series.name : 'Loading...' }</title>
         </Helmet>
         { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
-        {!loaded
+        { !loaded
           ? (
             <Loading />
           )
@@ -86,37 +111,37 @@ class Series extends Component {
                 <Img loader={<ImageLoader height={300} />} src={imgFullURL ? [
                   withProxy(imgFullURL),
                   imgFullURL
-                ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series[id].name} className='img-thumbnail' />
+                ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-thumbnail' />
                 <QueueButton id={id} block className='mt-2' />
-                <Button className='text-truncate' block color='light' href={
-                  `https://myanimelist.net/search/all?q=${series[id].name}`
-                } target='_blank' rel='noopener noreferrer'>
-                  <FontAwesomeIcon icon='search' />
-                  {' '}
-                  Find on MyAnimeList
-                </Button>
               </div>
               <div className='col-sm-8 col-lg-9'>
-                <h1>{series[id].name}</h1>
-                <p>{series[id].description}</p>
+                <h1>{series.name}</h1>
+                <p>{series.description}</p>
+                { anilistItem && anilistItem.nextAiringEpisode
+                  ? <Alert>
+                    <Badge color='primary'>AniList</Badge>
+                    {' '}The next episode of {anilistItem.title.english || anilistItem.title.romaji} is to be released
+                    {' '}{moment.unix(anilistItem.nextAiringEpisode.airingAt).fromNow()}.
+                  </Alert>
+                  : null }
                 <div className='font-weight-bold pb-2'>
-                  {series[id].rating / 10} / 10
+                  {series.rating / 10} / 10
                   {' '}
                   <FontAwesomeIcon icon='star' className='text-warning mr-1' />
                   {
-                    series[id].genres.map((genre, index) =>
+                    series.genres.map((genre, index) =>
                       <Badge color='info' key={`genre-${index}`} className='mr-1'>
                         {startCase(genre)}
                       </Badge>
                     )
                   }
                 </div>
-                {seriesCollections[id].map((collectionId, index) =>
+                {seriesCollection.map((collectionId, index) =>
                   <SeriesCollection
                     key={`seriesCollection-${collectionId}`}
                     index={index}
                     id={collectionId}
-                    showTitle={seriesCollections[id].length > 1}
+                    showTitle={seriesCollection.length > 1}
                     title={collections[collectionId].name} />)}
               </div>
             </Fragment>
@@ -133,6 +158,8 @@ export default connect((store) => {
     series: store.Data.series,
     seriesCollections: store.Data.seriesCollections,
     collections: store.Data.collections,
-    collectionMedia: store.Data.collectionMedia
+
+    anilist: store.Auth.anilist,
+    anilistCollections: store.Data.anilist
   }
 })(Series)

@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Video from '../components/Video/Video'
 import Collection from '../components/Collections/Collection'
 import MALButton from '../components/Buttons/MALButton'
+import AniListButton from '../components/Buttons/AniListButton'
 import QueueButton from '../components/Buttons/QueueButton'
 import Loading from '../components/Loading/Loading'
 
@@ -117,10 +118,8 @@ class Media extends Component {
       seconds = seconds < 10 ? `0${seconds}` : seconds
       return `${minutes}:${seconds}`
     }
-    // the amount of time not watched
-    const timeLeftToWatch = mediaObj && mediaObj.playhead !== 0 // only if played
-      ? mediaObj.duration - mediaObj.playhead // get the amount of time left to watch in seconds
-      : 0 // otherwise, 0
+    // if finished watching the episode, more than 90% done
+    const finishedWatching = mediaObj && (mediaObj.playhead / mediaObj.duration < 0.9) && mediaObj.playhead !== 0
     // grab the image url
     const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
     return (
@@ -188,7 +187,7 @@ class Media extends Component {
                         />
                         {
                           // only show if more than 30 seconds, not 0 and not played yet
-                          timeLeftToWatch && timeLeftToWatch >= 30 && !videoPlayed
+                          finishedWatching && !videoPlayed
                             ? <div className='video-overlay'>
                               <div className='video-resuming'>
                                 <FontAwesomeIcon icon='fast-forward' />
@@ -228,7 +227,12 @@ class Media extends Component {
                     {' '}
                     Open on Crunchyroll
                   </Badge>
-                  <MALButton id={mediaObj.collection_id} media={mediaObj} className='mr-md-2 mb-1' />
+                  {currentCollection
+                    ? <Fragment>
+                      <MALButton id={mediaObj.collection_id} media={mediaObj} className='mr-md-2 mb-1' />
+                      <AniListButton id={mediaObj.media_id} media={mediaObj} className='mr-md-2 mb-1' />
+                    </Fragment>
+                    : null}
                   <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
                 </h5>
                 <p>{mediaObj.description}</p>

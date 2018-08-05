@@ -1,4 +1,5 @@
 import {
+  ADD_ANILIST_ITEM,
   ADD_COLLECTION,
   ADD_COLLECTION_MEDIA,
   ADD_MAL_ITEM,
@@ -38,6 +39,7 @@ export default function Data (state = {
   list: {},
   recent: [],
   mal: {},
+  anilist: {},
 
   error: false
 }, action) {
@@ -105,6 +107,14 @@ export default function Data (state = {
         ...state,
         mal: {
           ...state.mal,
+          [action.payload.id]: action.payload.data
+        }
+      }
+    case ADD_ANILIST_ITEM:
+      return {
+        ...state,
+        anilist: {
+          ...state.anilist,
           [action.payload.id]: action.payload.data
         }
       }

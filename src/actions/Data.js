@@ -109,6 +109,15 @@ export const addMalItem = (id, data) => ({
   }
 })
 
+export const ADD_ANILIST_ITEM = 'ADD_ANILIST_ITEM'
+export const addAniListItem = (id, data) => ({
+  type: ADD_ANILIST_ITEM,
+  payload: {
+    id,
+    data
+  }
+})
+
 const addIdCheckBulk = (id, obj, action) => ({
   type: action,
   // eslint-disable-next-line array-callback-return
@@ -461,6 +470,59 @@ export const getMalItem = (name, collectionId) => (dispatch, getState) => {
       if (!error && success) {
         dispatch(addMalItem(collectionId, data))
         resolve(data)
+      }
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+export const getAniListItem = (name, collectionId, force = false) => (dispatch, getState) => {
+  const state = getState()
+
+  if (state.Data.anilist[collectionId] && !force) return Promise.resolve(state.Data.anilist[collectionId])
+
+  if (!state.Auth.anilist.token) return Promise.reject(new Error('Not authenticated.'))
+
+  const { token } = state.Auth.anilist
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await axios.post('https://graphql.anilist.co', {
+        query: `
+          query ($name: String) {
+            Media (search: $name, type: ANIME) {
+              title {
+                romaji
+                english
+              },
+              id,
+              mediaListEntry {
+                progress
+              },
+              episodes,
+              nextAiringEpisode {
+                airingAt,
+                episode
+              }
+            }
+          }
+        `,
+        variables: {
+          name
+        }
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      const { data: { data: { Media } }, errors = [] } = resp
+      if (errors.length) throw errors[0].message || 'An Error Occurred'
+
+      if (!errors.length) {
+        dispatch(addAniListItem(collectionId, Media))
+        resolve(Media)
       }
     } catch (err) {
       reject(err)

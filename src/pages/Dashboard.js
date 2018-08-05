@@ -35,7 +35,7 @@ class Dashboard extends Component {
     const { queue, history, recent, list } = this.props
     // combine the uncompleted history with the current queue
     const uncompletedHistory = history
-      .filter((item) => item.media.playhead / item.media.duration < 0.9)
+      .filter((item) => item.media.playhead / item.media.duration < 0.9) // 90 percent done
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .map((item) => item.media.media_id)
 

@@ -33,6 +33,16 @@ export const updateMal = (username, token) => ({
 })
 export const removeMal = () => updateMal('', '')
 
+export const UPDATE_ANILIST = 'UPDATE_ANILIST'
+export const updateAniList = (username, token) => ({
+  type: UPDATE_ANILIST,
+  payload: {
+    username,
+    token
+  }
+})
+export const removeAniList = () => updateAniList('')
+
 export const startSession = () => (dispatch, getState) => {
   const state = getState()
   const params = {
@@ -124,6 +134,35 @@ export const loginMal = (username, password) => (dispatch) => {
         resolve()
       } else {
         reject(new Error(data.error))
+      }
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+export const checkAniListToken = (token) => (dispatch) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const data = await axios.post('https://graphql.anilist.co', {
+        query: `
+          query {
+            Viewer {
+              name
+            }
+          }
+        `
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const { data: { data: { Viewer: { name: username } = {} } = {} } = {}, errors = [] } = data
+      if (errors.length) throw errors[0].message || 'An Error Occurred'
+
+      if (!errors.length) {
+        dispatch(updateAniList(username, token))
+        resolve()
       }
     } catch (err) {
       reject(err)
