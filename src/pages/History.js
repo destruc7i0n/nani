@@ -49,7 +49,7 @@ class History extends Component {
         <Helmet defer={false}>
           <title>History</title>
         </Helmet>
-        <Collection title='History' mediaIds={historyIds} loading={loading} />
+        <Collection title='History' mediaIds={historyIds} loading={loading} loadingCardsCount={12} />
         { !loading
           ? !loadingMore
             ? <Button block onClick={() => this.loadMore()}>Load More...</Button>

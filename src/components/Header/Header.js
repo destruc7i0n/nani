@@ -101,18 +101,20 @@ class Header extends Component {
               <NavItem className='dropdown'>
                 <SearchInput />
               </NavItem>
-              <UncontrolledButtonDropdown inNavbar>
-                <DropdownToggle caret className='ml-md-2 mr-md-2 w-100'>
-                  <FontAwesomeIcon icon='user' />
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem header>{Auth.username}</DropdownItem>
-                  <DropdownItem onClick={() => dispatch(logout())}>
-                    Logout
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledButtonDropdown>
-              <NavItem>
+              <NavItem className='mt-2 mt-md-0'>
+                <UncontrolledButtonDropdown inNavbar className='w-100'>
+                  <DropdownToggle caret className='ml-md-2 mr-md-2 w-100'>
+                    <FontAwesomeIcon icon='user' />
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem header>{Auth.username}</DropdownItem>
+                    <DropdownItem onClick={() => dispatch(logout())}>
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledButtonDropdown>
+              </NavItem>
+              <NavItem className='mt-2 mt-md-0'>
                 <Options />
               </NavItem>
             </Nav>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { getSeriesInfo, getCollectionsForSeries, getAniListItem } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import { Badge, Alert } from 'reactstrap'
+import { Badge, Alert, Card, CardBody } from 'reactstrap'
 
 import Img from 'react-image'
 
@@ -18,6 +18,8 @@ import QueueButton from '../components/Buttons/QueueButton'
 import ImageLoader from '../components/Loading/ImageLoader'
 
 import withProxy from '../lib/withProxy'
+
+import './Series.css'
 
 class Series extends Component {
   constructor (props) {
@@ -78,7 +80,8 @@ class Series extends Component {
       anilistCollections
     } = this.props
     const loaded = series && seriesCollection
-    const imgFullURL = series && series.portrait_image && series.portrait_image.full_url
+    const portraitImgFullURL = series && series.portrait_image && series.portrait_image.full_url
+    const landscapeImgFullURL = series && series.landscape_image && series.landscape_image.full_url
 
     // the latest collection would probably be the last one in the list...
     const latestCollectionId = loaded && seriesCollection[seriesCollection.length - 1]
@@ -96,7 +99,7 @@ class Series extends Component {
     }
 
     return (
-      <div className='row'>
+      <Fragment>
         <Helmet defer={false}>
           <title>{ loaded ? series.name : 'Loading...' }</title>
         </Helmet>
@@ -107,47 +110,62 @@ class Series extends Component {
           )
           : (
             <Fragment>
-              <div className='col-sm-4 col-lg-3'>
-                <Img loader={<ImageLoader height={300} />} src={imgFullURL ? [
-                  withProxy(imgFullURL),
-                  imgFullURL
-                ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-thumbnail' />
-                <QueueButton id={id} block className='mt-2' />
+              <div className='series-banner' style={{
+                backgroundImage: `url(${landscapeImgFullURL})`
+              }}>
+                <div className='series-banner-overlay' />
               </div>
-              <div className='col-sm-8 col-lg-9'>
-                <h1>{series.name}</h1>
-                <p>{series.description}</p>
-                { anilistItem && anilistItem.nextAiringEpisode
-                  ? <Alert>
-                    <Badge color='primary'>AniList</Badge>
-                    {' '}The next episode of {anilistItem.title.english || anilistItem.title.romaji} is to be released
-                    {' '}{moment.unix(anilistItem.nextAiringEpisode.airingAt).fromNow()}.
-                  </Alert>
-                  : null }
-                <div className='font-weight-bold pb-2'>
-                  {series.rating / 10} / 10
-                  {' '}
-                  <FontAwesomeIcon icon='star' className='text-warning mr-1' />
-                  {
-                    series.genres.map((genre, index) =>
-                      <Badge color='info' key={`genre-${index}`} className='mr-1'>
-                        {startCase(genre)}
-                      </Badge>
-                    )
-                  }
-                </div>
-                {seriesCollection.map((collectionId, index) =>
-                  <SeriesCollection
-                    key={`seriesCollection-${collectionId}`}
-                    index={index}
-                    id={collectionId}
-                    showTitle={seriesCollection.length > 1}
-                    title={collections[collectionId].name} />)}
+              <div className='container'>
+                <Card className='border-0 over-banner'>
+                  <CardBody className='main-details-card-body'>
+                    <div className='row'>
+                      <div className='col-sm-4 col-lg-3'>
+                        <div className='sticky-poster'>
+                          <Img loader={<ImageLoader height={300} />} src={portraitImgFullURL ? [
+                            withProxy(portraitImgFullURL),
+                            portraitImgFullURL
+                          ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-thumbnail' />
+                          <QueueButton id={id} block className='mt-2' />
+                        </div>
+                      </div>
+                      <div className='col-sm-8 col-lg-9'>
+                        <h1>{series.name}</h1>
+                        <p>{series.description}</p>
+                        { anilistItem && anilistItem.nextAiringEpisode
+                          ? <Alert>
+                            <Badge color='primary'>AniList</Badge>
+                            {' '}The next episode of <strong>{anilistItem.title.english || anilistItem.title.romaji}</strong> will air
+                            {' '}{moment.unix(anilistItem.nextAiringEpisode.airingAt).fromNow()}.
+                          </Alert>
+                          : null }
+                        <div className='font-weight-bold pb-2'>
+                          {series.rating / 10} / 10
+                          {' '}
+                          <FontAwesomeIcon icon='star' className='text-warning mr-1' />
+                          {
+                            series.genres.map((genre, index) =>
+                              <Badge color='info' key={`genre-${index}`} className='mr-1'>
+                                {startCase(genre)}
+                              </Badge>
+                            )
+                          }
+                        </div>
+                        {seriesCollection.map((collectionId, index) =>
+                          <SeriesCollection
+                            key={`seriesCollection-${collectionId}`}
+                            index={index}
+                            id={collectionId}
+                            showTitle={seriesCollection.length > 1}
+                            title={collections[collectionId].name} />)}
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
               </div>
             </Fragment>
           )
         }
-      </div>
+      </Fragment>
     )
   }
 }

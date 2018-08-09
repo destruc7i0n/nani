@@ -49,7 +49,7 @@ class Recent extends Component {
             ? Object.keys(days).map((d, index) =>
               <Collection title={d} titleTag='h4' mediaIds={days[d]} key={`recentCollection-${index}`} showTime />
             )
-            : <Collection title={'Today'} titleTag='h4' loading />
+            : <Collection title={'Today'} titleTag='h4' loading loadingCardsCount={12} />
         }
       </Fragment>
     )

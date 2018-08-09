@@ -1,0 +1,40 @@
+@media (min-width: 576px) {
+    .over-banner {
+        margin-top: -100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-details-card-body {
+        padding: 0 !important;
+    }
+
+    .sticky-poster {
+        margin-top: -100px;
+    }
+}
+
+.sticky-poster {
+    position: sticky;
+    top: 70px;
+}
+
+.series-banner {
+    position: relative;
+    margin-top: -50px;
+    height: 300px;
+    overflow: hidden;
+
+    background-size: cover !important;
+    background: black no-repeat 50%;
+}
+
+.series-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: .4;
+}

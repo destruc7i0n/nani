@@ -16,7 +16,7 @@ class Collection extends Component {
       mediaIds = [],
       media = {},
       loading = false,
-      loadingCardsCount = 10,
+      loadingCardsCount = 9,
       size = 'sm',
       ...attr
     } = this.props

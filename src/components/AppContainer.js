@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { setError, startSession } from '../actions'
+import { setError, setExpiredSession, startSession } from '../actions'
 import { Helmet } from 'react-helmet'
+import { matchPath } from 'react-router'
 import { withRouter } from 'react-router-dom'
 
 import { Alert, Button } from 'reactstrap'
+import classNames from 'classnames'
 
 import Header from './Header/Header'
 import Footer from './Footer/Footer'
@@ -24,7 +26,7 @@ class AppContainer extends Component {
 
   async componentDidMount () {
     const { dispatch, history } = this.props
-    // cancel requests on chance
+    // cancel requests on page change
     this.unlisten = history.listen(() => cancelCurrentRequests())
 
     // init session
@@ -43,10 +45,14 @@ class AppContainer extends Component {
   // scroll to top
   componentDidUpdate (prevProps) {
     const {location: from} = prevProps
-    const {location: to} = this.props
+    const {dispatch, Auth, location: to} = this.props
     // check if not to same page and not from some pages
     if (from && from.pathname !== to.pathname) {
       window.scrollTo(0, 0)
+    }
+
+    if (new Date() > new Date(Auth.expires)) {
+      dispatch(setExpiredSession(Auth.username))
     }
   }
 
@@ -57,13 +63,13 @@ class AppContainer extends Component {
 
   render () {
     const { initSession } = this.state
-    const { dispatch, children, error } = this.props
+    const { dispatch, children, error, location: { pathname } } = this.props
     const loggedIn = isLoggedIn()
     return (
       <Fragment>
         <Helmet titleTemplate='%s - nani' />
         { loggedIn ? <Header /> : null }
-        <main role='main' className='container'>
+        <main role='main' className={classNames({ 'container': !matchPath(pathname, { path: '/series/:id', exact: true }) })}>
           { error
             ? <Alert color='danger' className='d-flex align-items-center' toggle={() => dispatch(setError(''))}>
               Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or or try again later.
@@ -71,8 +77,8 @@ class AppContainer extends Component {
             </Alert>
             : null }
           { initSession ? children : <Loading /> }
-          { loggedIn ? <Footer /> : null }
         </main>
+        { loggedIn ? <Footer /> : null }
       </Fragment>
     )
   }
@@ -82,7 +88,8 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
-      error: store.Data.error
+      error: store.Data.error,
+      Auth: store.Auth
     }
   })
 )(AppContainer)

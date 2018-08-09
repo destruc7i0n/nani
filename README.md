@@ -6,7 +6,7 @@ What's Crunchyroll?
 ## Images
 ![Dashboard](https://i.imgur.com/AhcLPOn.png)
 ![Queue](https://i.imgur.com/b9anAaK.png)
-![Series](https://i.imgur.com/nI5euO6.png)
+![Series](https://i.imgur.com/jXjccP3.png)
 ![Video](https://i.imgur.com/kad1azD.png)
 
 There are a few more here: https://imgur.com/a/R5cNW
