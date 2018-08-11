@@ -16,7 +16,7 @@
 
 .sticky-poster {
     position: sticky;
-    top: 70px;
+    top: 75px;
 }
 
 .series-banner {
@@ -26,7 +26,7 @@
     overflow: hidden;
 
     background-size: cover !important;
-    background: black no-repeat 50%;
+    background: no-repeat 50% 35%;
 }
 
 .series-banner-overlay {

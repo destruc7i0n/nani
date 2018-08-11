@@ -124,7 +124,7 @@ class Series extends Component {
                           <Img loader={<ImageLoader height={300} />} src={portraitImgFullURL ? [
                             withProxy(portraitImgFullURL),
                             portraitImgFullURL
-                          ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-thumbnail' />
+                          ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-fluid shadow-sm' />
                           <QueueButton id={id} block className='mt-2' />
                         </div>
                       </div>
