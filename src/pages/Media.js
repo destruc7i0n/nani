@@ -122,6 +122,8 @@ class Media extends Component {
     const finishedWatching = mediaObj && (mediaObj.playhead / mediaObj.duration < 0.9) && mediaObj.playhead !== 0
     // grab the image url
     const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
+    // no streams
+    const noStreams = streamData.stream_data && streamData.stream_data.streams.length === 0
     return (
       <Fragment>
         <Helmet defer={false}>
@@ -162,50 +164,49 @@ class Media extends Component {
                           withProxy(imgFullURL),
                           imgFullURL
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='w-100' alt={mediaObj.name} />
-                        { Auth.premium && mediaObj.premium_only
-                          ? <Fragment>
-                            <div className='video-center-overlay text-white'>
-                              <Loading />
-                            </div>
-                            {
-                              streamData.stream_data && streamData.stream_data.streams.length === 0
-                                ? <div className='video-overlay'>
-                                  <div className='video-resuming'>
-                                    <FontAwesomeIcon icon='exclamation-triangle' />
-                                    {' '}
-                                    No video streams found!
+                        {!noStreams ? <div className='video-center-overlay text-white'>
+                          <Loading />
+                        </div> : null}
+                        {
+                          loadedVideo && noStreams // if the video is loaded and there are no streams
+                            ? Auth.premium && mediaObj.premium_only // if this is a premium video and a premium user, something is wrong with Crunchyroll
+                              ? <div className='video-overlay'>
+                                <div className='video-resuming'>
+                                  <FontAwesomeIcon icon='exclamation-triangle' />
+                                  {' '}
+                                  No video streams found!
+                                </div>
+                              </div>
+                              // otherwise, the user cannot view this...
+                              : <Fragment>
+                                <div className='video-full-blur' />
+                                <div className='video-center-overlay'>
+                                  <div className='col-sm-12 text-center p-2'>
+                                    <h2>
+                                      <FontAwesomeIcon icon='crown' className='text-warning' />
+                                      <div className='text-white'>
+                                        You must be a
+                                        {' '}
+                                        <a
+                                          href='http://www.crunchyroll.com/en/premium_comparison'
+                                          target='_blank' rel='noopener noreferrer'
+                                          className='text-white'
+                                        >Crunchyroll Premium</a>
+                                        {' '}
+                                        subscriber to view this!
+                                      </div>
+                                    </h2>
+                                    <Button
+                                      size='sm'
+                                      className='ml-auto'
+                                      tag={Link}
+                                      to={{pathname: '/login', state: { prevPath: location.pathname }}}
+                                    >Login</Button>
                                   </div>
                                 </div>
-                                : null
-                            }
-                          </Fragment>
-                          : <Fragment>
-                            <div className='video-full-blur' />
-                            <div className='video-center-overlay'>
-                              <div className='col-sm-12 text-center p-2'>
-                                <h2>
-                                  <FontAwesomeIcon icon='crown' className='text-warning' />
-                                  <div className='text-white'>
-                                    You must be a
-                                    {' '}
-                                    <a
-                                      href='http://www.crunchyroll.com/en/premium_comparison'
-                                      target='_blank' rel='noopener noreferrer'
-                                      className='text-white'
-                                    >Crunchyroll Premium</a>
-                                    {' '}
-                                    subscriber to view this!
-                                  </div>
-                                </h2>
-                                <Button
-                                  size='sm'
-                                  className='ml-auto'
-                                  tag={Link}
-                                  to={{pathname: '/login', state: { prevPath: location.pathname }}}
-                                >Login</Button>
-                              </div>
-                            </div>
-                          </Fragment>}
+                              </Fragment>
+                            : null
+                        }
                       </Fragment>
                       // loaded video
                       : <Fragment>
