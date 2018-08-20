@@ -373,7 +373,7 @@ export const updateSeriesQueue = ({id, inQueue}) => (dispatch, getState) => {
   })
 }
 
-export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
+export const getSeriesList = (filter = 'simulcast', noCancel = false) => (dispatch, getState) => {
   const state = getState()
   const params = {
     session_id: state.Auth.session_id,
@@ -388,7 +388,7 @@ export const getSeriesList = (filter = 'simulcast') => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'list_series', params})
+      const resp = await api({route: 'list_series', params, noCancel})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -428,7 +428,7 @@ export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
   })
 }
 
-export const getRecent = () => (dispatch, getState) => {
+export const getRecent = (noCancel = false) => (dispatch, getState) => {
   const state = getState()
   const params = {
     session_id: state.Auth.session_id,
@@ -443,7 +443,7 @@ export const getRecent = () => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'list_series', params})
+      const resp = await api({route: 'list_series', params, noCancel})
       if (resp.data.error) throw resp
 
       const data = resp.data.data

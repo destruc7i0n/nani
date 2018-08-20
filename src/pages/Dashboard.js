@@ -25,9 +25,9 @@ class Dashboard extends Component {
       // it's loaded the necessary stuff!
       this.setState({ loaded: true })
       // we can wait on this...
-      dispatch(getRecent())
-      dispatch(getSeriesList('popular'))
-      dispatch(getSeriesList('simulcast'))
+      dispatch(getRecent(true))
+      dispatch(getSeriesList('popular', true))
+      dispatch(getSeriesList('simulcast', true))
     } catch (e) {
       console.error(e)
     }
