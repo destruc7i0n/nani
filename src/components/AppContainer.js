@@ -76,7 +76,7 @@ class AppContainer extends Component {
               <Button onClick={this.reloadPage} size='sm' className='ml-auto'>Reload</Button>
             </Alert>
             : null }
-          { Auth.premium && !isLoginPage && !isSeriesPage
+          { !Auth.premium && !isLoginPage && !isSeriesPage
             ? <Alert color='info' className='d-flex align-items-center'>
               You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll offers.
               <Button

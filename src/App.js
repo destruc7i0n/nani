@@ -84,11 +84,11 @@ class App extends Component {
       (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires))
     ) {
       await dispatch(logout(true))
-      window.location.reload()
+      window.location.href = '/login'
     }
     if (Auth.guest && Auth.username) {
-      await dispatch(logout())
-      window.location.reload()
+      await dispatch(logout(true))
+      window.location.href = '/login'
     }
   }
 
