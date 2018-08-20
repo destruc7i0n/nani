@@ -15,16 +15,19 @@ class Dashboard extends Component {
   }
 
   async componentDidMount () {
-    const { dispatch } = this.props
+    const { dispatch, guest } = this.props
     try {
       // get these immediately
-      await dispatch(getQueue())
-      await dispatch(getHistory())
+      if (!guest) {
+        await dispatch(getQueue())
+        await dispatch(getHistory())
+      }
       // it's loaded the necessary stuff!
       this.setState({ loaded: true })
       // we can wait on this...
       dispatch(getRecent())
       dispatch(getSeriesList('popular'))
+      dispatch(getSeriesList('simulcast'))
     } catch (e) {
       console.error(e)
     }
@@ -32,7 +35,10 @@ class Dashboard extends Component {
 
   render () {
     const { loaded } = this.state
-    const { queue, history, recent, list } = this.props
+    const { guest, queue, history, recent, list } = this.props
+
+    const cardCount = guest ? 12 : 6
+
     // combine the uncompleted history with the current queue
     const uncompletedHistory = history
       .filter((item) => item.media.playhead / item.media.duration < 0.9) // 90 percent done
@@ -51,36 +57,49 @@ class Dashboard extends Component {
       .slice(0, 6)
 
     // grab the recently updated shows
-    const recentlyUpdated = recent.slice(0, 6)
+    const recentlyUpdated = recent.slice(0, cardCount)
 
     // grab the most popular shows
     const mostPopular = list && list['popular']
-      ? list['popular'].list.slice(0, 6)
+      ? list['popular'].list.slice(0, cardCount)
+      : []
+
+    // grab the simulcasts
+    const simulcasts = list && list['simulcast']
+      ? list['simulcast'].list.slice(0, cardCount)
       : []
     return (
       <Fragment>
         <Helmet defer={false}>
           <title>Dashboard</title>
         </Helmet>
-        <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded} loadingCardsCount={4} />
-        <SeriesCardCollection
-          title='Watchlist'
-          link='/queue?type=watchlist'
-          series={queueSeries}
-          loading={!loaded && queueSeries.length === 0}
-          loadingCardsCount={6} />
+        {!guest ? <Fragment>
+          <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded} loadingCardsCount={4} />
+          <SeriesCardCollection
+            title='Watchlist'
+            link='/queue?type=watchlist'
+            series={queueSeries}
+            loading={!loaded && queueSeries.length === 0}
+            loadingCardsCount={6} />
+        </Fragment> : null}
         <SeriesCardCollection
           title='Recently Updated'
           link='/recent'
           series={recentlyUpdated}
           loading={recentlyUpdated.length === 0}
-          loadingCardsCount={6} />
+          loadingCardsCount={cardCount} />
         <SeriesCardCollection
           title='Most Popular'
           link='/list/popular'
           series={mostPopular}
           loading={mostPopular.length === 0}
-          loadingCardsCount={6} />
+          loadingCardsCount={cardCount} />
+        <SeriesCardCollection
+          title='Simulcasts'
+          link='/list/simulcast'
+          series={simulcasts}
+          loading={simulcasts.length === 0}
+          loadingCardsCount={cardCount} />
       </Fragment>
     )
   }
@@ -88,6 +107,8 @@ class Dashboard extends Component {
 
 export default connect((store) => {
   return {
+    guest: store.Auth.guest,
+
     queue: store.Data.queue,
     history: store.Data.history.data,
     recent: store.Data.recent,

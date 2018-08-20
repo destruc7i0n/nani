@@ -11,7 +11,6 @@ export const updateAuth = (authData) => ({
 
 export const REMOVE_AUTH = 'REMOVE_AUTH'
 export const removeAuth = () => {
-  localStorage.removeItem('auth')
   return {
     type: REMOVE_AUTH
   }
@@ -88,14 +87,14 @@ export const login = (username, password) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      if (data.user.premium.indexOf('anime') === -1) {
-        return reject(new Error('You must have a premium Crunchyroll account.'))
-      }
+
       dispatch(
         updateAuth({
           token: data.auth,
           expires: data.expires,
-          username: data.user.username
+          username: data.user.username,
+          guest: false,
+          premium: data.user.premium.indexOf('anime') !== -1
         })
       )
       // reset expired session
@@ -107,7 +106,7 @@ export const login = (username, password) => (dispatch, getState) => {
   })
 }
 
-export const logout = (didExpire) => (dispatch, getState) => {
+export const logout = (didExpire = false) => (dispatch, getState) => {
   const state = getState()
   return new Promise(async (resolve, reject) => {
     try {

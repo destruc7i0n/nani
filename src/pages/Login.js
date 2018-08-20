@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { login } from '../actions'
+import { login, updateAuth } from '../actions'
 import { Helmet } from 'react-helmet'
 
-import { Card } from 'reactstrap'
+import { Card, Button } from 'reactstrap'
 
 import Footer from '../components/Footer/Footer'
 
@@ -16,19 +16,32 @@ class Login extends Component {
       error: ''
     }
     this.handleLogin = this.handleLogin.bind(this)
+    this.loginAsGuest = this.loginAsGuest.bind(this)
   }
 
   async handleLogin (e) {
     const { username, password } = this.state
-    const { dispatch, history } = this.props
+    const { dispatch, history, location } = this.props
     e.preventDefault()
     try {
       await dispatch(login(username, password))
-      history.push('/')
+      history.push((location.state && location.state.prevPath) || '/')
     } catch (err) {
       console.error(err)
       this.setState({ error: err.data.message })
     }
+  }
+
+  async loginAsGuest () {
+    const { dispatch, history, location } = this.props
+    await dispatch(updateAuth({
+      token: '',
+      expires: 8640000000000000,
+      username: '',
+      guest: true,
+      premium: false
+    }))
+    history.push((location.state && location.state.prevPath) || '/')
   }
 
   render () {
@@ -105,13 +118,14 @@ class Login extends Component {
             placeholder='Password'
             required
             onChange={({ target: { value: password } }) => this.setState({ password })} />
-          <button className='btn btn-lg btn-primary btn-block' type='submit'>Sign in</button>
+          <Button color='primary' size='lg' block type='submit'>Login</Button>
+          <Button color='secondary' size='lg' block type='button' onClick={this.loginAsGuest}>Continue as Guest</Button>
           <Card body className='bg-light mt-2'>
             Your password is sent directly to Crunchyroll, and is never stored.
             <hr />
             This site is not endorsed by or affiliated with Crunchyroll.
           </Card>
-          <Footer />
+          <Footer wrapped={false} />
         </form>
       </div>
     )

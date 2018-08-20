@@ -19,7 +19,8 @@ const MEDIA_FIELDS = [
   'media.screenshot_image',
   'media.created',
   'media.duration',
-  'media.playhead'
+  'media.playhead',
+  'media.premium_only'
 ].join(',')
 const SERIES_FIELDS = [
   'series.series_id',
@@ -226,9 +227,9 @@ export const search = (q) => (dispatch, getState) => {
   const params = {
     session_id: state.Auth.session_id,
     classes: 'series',
-    limit: 999,
+    limit: 10,
     offset: 0,
-    media_types: 'anime|drama',
+    media_types: 'anime',
     fields: SERIES_FIELDS,
     q
   }

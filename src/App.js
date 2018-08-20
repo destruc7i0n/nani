@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { logout } from './actions'
-import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom'
 
 import { isLoggedIn } from './lib/auth'
 
@@ -42,6 +42,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
 import { faInfo } from '@fortawesome/free-solid-svg-icons/faInfo'
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch'
+import { faCrown } from '@fortawesome/free-solid-svg-icons/faCrown'
 
 import './App.css'
 
@@ -69,7 +70,8 @@ library.add(
   faPlus,
   faMinus,
   faInfo,
-  faCircleNotch
+  faCircleNotch,
+  faCrown
 )
 
 class App extends Component {
@@ -78,9 +80,15 @@ class App extends Component {
     const { dispatch, Auth } = this.props
     if (
       (Object.keys(Auth).length > 0) &&
+      !Auth.guest &&
       (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires))
     ) {
       await dispatch(logout(true))
+      window.location.reload()
+    }
+    if (Auth.guest && Auth.username) {
+      await dispatch(logout())
+      window.location.reload()
     }
   }
 
@@ -89,16 +97,16 @@ class App extends Component {
       <Router>
         <AppContainer>
           <Switch>
-            <AuthedRoute exact path='/' authed={isLoggedIn()} component={Dashboard} />
+            <Route exact path='/' component={Dashboard} />
             <AuthedRoute exact path='/login' redirect='/' authed={!isLoggedIn()} component={Login} />
             <AuthedRoute path='/queue' authed={isLoggedIn()} component={Queue} />
             <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
-            <AuthedRoute path='/recent' authed={isLoggedIn()} component={Recent} />
-            <AuthedRoute path='/series/:id/:media' authed={isLoggedIn()} component={Media} />
-            <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
-            <AuthedRoute path='/list/simulcast' authed={isLoggedIn()} component={(props) => <SeriesList type='simulcast' {...props} />} />
-            <AuthedRoute path='/list/popular' authed={isLoggedIn()} component={(props) => <SeriesList type='popular' {...props} />} />
-            <AuthedRoute path='/list/newest' authed={isLoggedIn()} component={(props) => <SeriesList type='newest' {...props} />} />
+            <Route path='/recent' component={Recent} />
+            <Route path='/series/:id/:media' component={Media} />
+            <Route path='/series/:id' component={Series} />
+            <Route path='/list/simulcast' component={(props) => <SeriesList type='simulcast' {...props} />} />
+            <Route path='/list/popular' component={(props) => <SeriesList type='popular' {...props} />} />
+            <Route path='/list/newest' component={(props) => <SeriesList type='newest' {...props} />} />
             <Redirect from='*' to='/login' />
           </Switch>
         </AppContainer>

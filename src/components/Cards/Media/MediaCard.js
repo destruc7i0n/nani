@@ -1,10 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { Badge, Card, CardBody, CardImg, CardImgOverlay, Progress } from 'reactstrap'
 
 import Img from 'react-image'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { format } from 'date-fns'
 
@@ -17,7 +19,7 @@ import './MediaCard.css'
 
 class MediaCard extends Component {
   render () {
-    const { media, width, showTime = false, series } = this.props
+    const { Auth, media, width, showTime = false, series } = this.props
     // grab the series for the media
     const mediaSeries = media && series[media.series_id] ? series[media.series_id] : {}
     const imgFullURL = media && media.screenshot_image && media.screenshot_image.full_url
@@ -55,6 +57,11 @@ class MediaCard extends Component {
                       <CardBody className='p-2 media-card-body'>
                         <Progress className='media-card-progress' value={Math.min(100, (media.playhead / media.duration) * 100)} />
                         <span className='mb-1 d-block text-truncate font-weight-bold text-dark'>
+                          {media.premium_only && !Auth.premium
+                            ? <Fragment>
+                              <FontAwesomeIcon icon='crown' className='text-warning' />{' '}
+                            </Fragment>
+                            : null}
                           {mediaSeries.name || `Episode ${media.episode_number}` }
                         </span>
                         <small className='d-block text-truncate font-italic text-secondary'>
@@ -82,6 +89,7 @@ class MediaCard extends Component {
 
 export default connect((store) => {
   return {
+    Auth: store.Auth,
     series: store.Data.series
   }
 })(MediaCard)

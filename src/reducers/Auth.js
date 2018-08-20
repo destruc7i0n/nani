@@ -10,6 +10,11 @@ const genUUID = () => {
 }
 
 const initialState = {
+  token: '',
+  expires: 8640000000000000,
+  username: '',
+  guest: true,
+  premium: false,
   mal: {username: '', token: ''},
   anilist: {username: '', token: ''},
   expiredSession: '',
@@ -34,7 +39,11 @@ export default function Auth (state = initialState, action) {
         anilist: action.payload
       }
     case REMOVE_AUTH:
-      return initialState
+      return {
+        ...initialState,
+        mal: state.mal,
+        anilist: state.anilist
+      }
     case SET_EXPIRED_SESSION:
       return {
         ...state,

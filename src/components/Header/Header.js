@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component, Fragment } from 'react'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { logout } from '../../actions'
+import { withRouter, Link } from 'react-router-dom'
 
 import {
   Collapse,
@@ -34,7 +35,7 @@ class Header extends Component {
 
   render () {
     const { collapsed } = this.state
-    const { dispatch, Auth } = this.props
+    const { dispatch, location, Auth } = this.props
     return (
       <Navbar color='dark' expand='md' dark className='mb-4' sticky='top' style={
         // a little polyfill to make the top be under the navigation bar on ios etc.
@@ -52,14 +53,14 @@ class Header extends Component {
           <Collapse isOpen={collapsed} navbar>
             <Nav className='mr-auto' navbar>
               <NavItem>
-                <NavLink tag={Link} to='/queue'>
+                <NavLink disabled={Auth.guest} tag={Link} to={'/queue'}>
                   <FontAwesomeIcon icon='list' className='d-md-none d-lg-inline-block' />
                   {' '}
                   Queue
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} to='/history'>
+                <NavLink disabled={Auth.guest} tag={Link} to={'/history'}>
                   <FontAwesomeIcon icon='history' className='d-md-none d-lg-inline-block' />
                   {' '}
                   History
@@ -107,10 +108,16 @@ class Header extends Component {
                     <FontAwesomeIcon icon='user' />
                   </DropdownToggle>
                   <DropdownMenu right>
-                    <DropdownItem header>{Auth.username}</DropdownItem>
-                    <DropdownItem onClick={() => dispatch(logout())}>
-                      Logout
-                    </DropdownItem>
+                    {Auth.guest
+                      ? <DropdownItem tag={Link} to={{pathname: '/login', state: { prevPath: location.pathname }}}>
+                        Login
+                      </DropdownItem>
+                      : <Fragment>
+                        <DropdownItem header>{Auth.username}</DropdownItem>
+                        <DropdownItem onClick={() => dispatch(logout())}>
+                          Logout
+                        </DropdownItem>
+                      </Fragment>}
                   </DropdownMenu>
                 </UncontrolledButtonDropdown>
               </NavItem>
@@ -125,8 +132,11 @@ class Header extends Component {
   }
 }
 
-export default connect((store) => {
-  return {
-    Auth: store.Auth
-  }
-})(Header)
+export default compose(
+  withRouter,
+  connect((store) => {
+    return {
+      Auth: store.Auth
+    }
+  })
+)(Header)

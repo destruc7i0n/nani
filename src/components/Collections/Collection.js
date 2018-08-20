@@ -28,6 +28,8 @@ class Collection extends Component {
       : window.matchMedia('(max-width: 576px)').matches
         ? LoadingMediaCard
         : LoadingMediaCardLarge
+    // only allow available ones
+    mediaIds = mediaIds.filter((mediaId) => media[mediaId] && media[mediaId].available)
     return (
       <Fragment>
         {showTitle && title && <TitleTag className='border-bottom pb-3 mb-4'>

@@ -9,7 +9,7 @@ const LoadingSeriesCard = () => (
     <Card className='d-inline-block w-100 box-shadow'>
       <ContentLoader
         speed={2}
-        height={300}
+        height={325}
         width={200}
         primaryColor='#f3f3f3'
         secondaryColor='#f7f7f7'

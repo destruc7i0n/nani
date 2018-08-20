@@ -42,7 +42,9 @@ class QueueButton extends Component {
   render () {
     const { inQueue } = this.state
     // grab some unnecessary props to make them not go into the tag (because of ...props)
-    const { dispatch, series, id, badge, inQueue: isInQueue, className, colored, ...props } = this.props
+    const { dispatch, Auth, series, id, badge, inQueue: isInQueue, className, colored, ...props } = this.props
+
+    if (Auth.guest) return null
 
     let Tag, attrs
     if (badge) {
@@ -82,6 +84,7 @@ export default connect((store, props) => {
   const { id } = props
   const currentSeries = store.Data.series[id]
   return {
+    Auth: store.Auth,
     inQueue: currentSeries && currentSeries.in_queue
   }
 })(QueueButton)

@@ -4,7 +4,7 @@ import { getMediaForCollection, getMediaInfo, getSeriesInfo } from '../actions'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
-import { Badge } from 'reactstrap'
+import { Badge, Button } from 'reactstrap'
 
 import Img from 'react-image'
 
@@ -95,7 +95,7 @@ class Media extends Component {
 
   render () {
     const { streamData, error, videoPlayed } = this.state
-    const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
+    const { match: { params: { media: mediaId } }, media, collectionMedia, Auth, location } = this.props
     // the current media object and the series
     const mediaObj = media[mediaId]
     // check that both of the above are loaded and no error
@@ -162,20 +162,50 @@ class Media extends Component {
                           withProxy(imgFullURL),
                           imgFullURL
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='w-100' alt={mediaObj.name} />
-                        <div className='video-center-overlay text-white'>
-                          <Loading />
-                        </div>
-                        {
-                          streamData.stream_data && streamData.stream_data.streams.length === 0
-                            ? <div className='video-overlay'>
-                              <div className='video-resuming'>
-                                <FontAwesomeIcon icon='exclamation-triangle' />
-                                {' '}
-                                No video streams found!
+                        { Auth.premium && mediaObj.premium_only
+                          ? <Fragment>
+                            <div className='video-center-overlay text-white'>
+                              <Loading />
+                            </div>
+                            {
+                              streamData.stream_data && streamData.stream_data.streams.length === 0
+                                ? <div className='video-overlay'>
+                                  <div className='video-resuming'>
+                                    <FontAwesomeIcon icon='exclamation-triangle' />
+                                    {' '}
+                                    No video streams found!
+                                  </div>
+                                </div>
+                                : null
+                            }
+                          </Fragment>
+                          : <Fragment>
+                            <div className='video-full-blur' />
+                            <div className='video-center-overlay'>
+                              <div className='col-sm-12 text-center p-2'>
+                                <h2>
+                                  <FontAwesomeIcon icon='crown' className='text-warning' />
+                                  <div className='text-white'>
+                                    You must be a
+                                    {' '}
+                                    <a
+                                      href='http://www.crunchyroll.com/en/premium_comparison'
+                                      target='_blank' rel='noopener noreferrer'
+                                      className='text-white'
+                                    >Crunchyroll Premium</a>
+                                    {' '}
+                                    subscriber to view this!
+                                  </div>
+                                </h2>
+                                <Button
+                                  size='sm'
+                                  className='ml-auto'
+                                  tag={Link}
+                                  to={{pathname: '/login', state: { prevPath: location.pathname }}}
+                                >Login</Button>
                               </div>
                             </div>
-                            : null
-                        }
+                          </Fragment>}
                       </Fragment>
                       // loaded video
                       : <Fragment>
