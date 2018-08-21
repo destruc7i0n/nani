@@ -107,7 +107,7 @@ class App extends Component {
             <Route path='/list/simulcast' component={(props) => <SeriesList type='simulcast' {...props} />} />
             <Route path='/list/popular' component={(props) => <SeriesList type='popular' {...props} />} />
             <Route path='/list/newest' component={(props) => <SeriesList type='newest' {...props} />} />
-            <Redirect from='*' to='/login' />
+            <Redirect from='*' to='/' />
           </Switch>
         </AppContainer>
       </Router>

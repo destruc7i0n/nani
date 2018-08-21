@@ -181,28 +181,37 @@ class Media extends Component {
                               : <Fragment>
                                 <div className='video-full-blur' />
                                 <div className='video-center-overlay'>
-                                  <div className='col-sm-12 text-center p-2'>
-                                    <h2>
-                                      <FontAwesomeIcon icon='crown' className='text-warning' />
-                                      <div className='text-white'>
-                                        You must be a
-                                        {' '}
-                                        <a
-                                          href='http://www.crunchyroll.com/en/premium_comparison'
-                                          target='_blank' rel='noopener noreferrer'
-                                          className='text-white'
-                                        >Crunchyroll Premium</a>
-                                        {' '}
-                                        subscriber to view this!
-                                      </div>
-                                    </h2>
-                                    <Button
-                                      size='sm'
-                                      className='ml-auto'
-                                      tag={Link}
-                                      to={{pathname: '/login', state: { prevPath: location.pathname }}}
-                                    >Login</Button>
-                                  </div>
+                                  { !Auth.premium && mediaObj.premium_only
+                                    ? <div className='col-sm-12 text-center p-2'>
+                                      <h2>
+                                        <FontAwesomeIcon icon='crown' className='text-warning' />
+                                        <div className='text-white'>
+                                          You must be a
+                                          {' '}
+                                          <a
+                                            href='http://www.crunchyroll.com/en/premium_comparison'
+                                            target='_blank' rel='noopener noreferrer'
+                                            className='text-white'
+                                          >Crunchyroll Premium</a>
+                                          {' '}
+                                          subscriber to view this!
+                                        </div>
+                                      </h2>
+                                      <Button
+                                        size='sm'
+                                        className='ml-auto'
+                                        tag={Link}
+                                        to={{pathname: '/login', state: { prevPath: location.pathname }}}
+                                      >Login</Button>
+                                    </div>
+                                    : <div className='col-sm-12 text-center p-2'>
+                                      <h2>
+                                        <FontAwesomeIcon icon='times-circle' className='text-danger' />
+                                        <div className='text-white'>
+                                          This video is not available.
+                                        </div>
+                                      </h2>
+                                    </div>}
                                 </div>
                               </Fragment>
                             : null

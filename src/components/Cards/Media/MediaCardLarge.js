@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -19,7 +19,7 @@ import './MediaCardLarge.css'
 
 class MediaCardLarge extends Component {
   render () {
-    const { media, series } = this.props
+    const { Auth, media, series } = this.props
     // grab the series for the media
     const mediaSeries = media && series[media.series_id] ? series[media.series_id] : {}
     const imgFullURL = media && media.screenshot_image && media.screenshot_image.full_url
@@ -58,6 +58,11 @@ class MediaCardLarge extends Component {
                     <div className='col-sm-7 col-md-8 d-flex flex-column pl-sm-0'>
                       <CardBody className='p-2 d-flex flex-column'>
                         <span className='mb-1 d-block text-truncate font-weight-bold text-dark'>
+                          {media.premium_only && !Auth.premium
+                            ? <Fragment>
+                              <FontAwesomeIcon icon='crown' className='text-warning' />{' '}
+                            </Fragment>
+                            : null}
                           {mediaSeries.name || `Episode ${media.episode_number}` }
                         </span>
                         <small className='d-block text-truncate font-italic text-secondary'>
@@ -89,6 +94,7 @@ class MediaCardLarge extends Component {
 
 export default connect((store) => {
   return {
+    Auth: store.Auth,
     series: store.Data.series
   }
 })(MediaCardLarge)
