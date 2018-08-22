@@ -67,7 +67,7 @@ export const startSession = () => (dispatch, getState) => {
       )
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -119,7 +119,7 @@ export const logout = (didExpire = false) => (dispatch, getState) => {
       dispatch(setHistory(0, []))
       dispatch(setQueue([]))
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }

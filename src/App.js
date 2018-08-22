@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { logout } from './actions'
-import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom'
+import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 
 import { isLoggedIn } from './lib/auth'
 
@@ -84,39 +85,38 @@ class App extends Component {
       (!Auth.token || !Auth.expires || new Date() > new Date(Auth.expires))
     ) {
       await dispatch(logout(true))
-      window.location.href = '/login'
     }
     if (Auth.guest && Auth.username) {
       await dispatch(logout(true))
-      window.location.href = '/login'
     }
   }
 
   render () {
     return (
-      <Router>
-        <AppContainer>
-          <Switch>
-            <Route exact path='/' component={Dashboard} />
-            <AuthedRoute exact path='/login' redirect='/' authed={!isLoggedIn()} component={Login} />
-            <AuthedRoute path='/queue' authed={isLoggedIn()} component={Queue} />
-            <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
-            <Route path='/recent' component={Recent} />
-            <Route path='/series/:id/:media' component={Media} />
-            <Route path='/series/:id' component={Series} />
-            <Route path='/list/simulcast' component={(props) => <SeriesList type='simulcast' {...props} />} />
-            <Route path='/list/popular' component={(props) => <SeriesList type='popular' {...props} />} />
-            <Route path='/list/newest' component={(props) => <SeriesList type='newest' {...props} />} />
-            <Redirect from='*' to='/' />
-          </Switch>
-        </AppContainer>
-      </Router>
+      <AppContainer>
+        <Switch>
+          <Route exact path='/' component={Dashboard} />
+          <AuthedRoute exact path='/login' redirect='/' authed={!isLoggedIn()} component={Login} />
+          <AuthedRoute path='/queue' authed={isLoggedIn()} component={Queue} />
+          <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
+          <Route path='/recent' component={Recent} />
+          <Route path='/series/:id/:media' component={Media} />
+          <Route path='/series/:id' component={Series} />
+          <Route path='/list/simulcast' component={(props) => <SeriesList type='simulcast' {...props} />} />
+          <Route path='/list/popular' component={(props) => <SeriesList type='popular' {...props} />} />
+          <Route path='/list/newest' component={(props) => <SeriesList type='newest' {...props} />} />
+          <Redirect from='*' to='/' />
+        </Switch>
+      </AppContainer>
     )
   }
 }
 
-export default connect((store) => {
-  return {
-    Auth: store.Auth
-  }
-})(App)
+export default compose(
+  withRouter,
+  connect((store) => {
+    return {
+      Auth: store.Auth
+    }
+  })
+)(App)

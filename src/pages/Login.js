@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { login, updateAuth } from '../actions'
+import { push } from 'connected-react-router'
 import { Helmet } from 'react-helmet'
 
 import { Card, Button } from 'reactstrap'
@@ -21,11 +22,11 @@ class Login extends Component {
 
   async handleLogin (e) {
     const { username, password } = this.state
-    const { dispatch, history, location } = this.props
+    const { dispatch, location } = this.props
     e.preventDefault()
     try {
       await dispatch(login(username, password))
-      history.push((location.state && location.state.prevPath) || '/')
+      dispatch(push((location.state && location.state.prevPath) || '/'))
     } catch (err) {
       console.error(err)
       this.setState({ error: err.data.message })
@@ -33,7 +34,7 @@ class Login extends Component {
   }
 
   async loginAsGuest () {
-    const { dispatch, history, location } = this.props
+    const { dispatch, location } = this.props
     await dispatch(updateAuth({
       token: '',
       expires: 8640000000000000,
@@ -41,7 +42,7 @@ class Login extends Component {
       guest: true,
       premium: false
     }))
-    history.push((location.state && location.state.prevPath) || '/')
+    dispatch(push((location.state && location.state.prevPath) || '/'))
   }
 
   render () {
@@ -100,7 +101,9 @@ class Login extends Component {
           <h1 className='h3 mb-1 font-weight-normal'>nani?!</h1>
           <p className='font-italic font-weight-light'>What's Crunchyroll?</p>
           {error ? <p className='text-danger'>{error}</p> : null}
-          {expiredSession ? <p className='text-danger'>Your session expired.</p> : null}
+          {expiredSession
+            ? <p className='text-danger'>Your session expired.</p>
+            : null}
           <label htmlFor='inputUsername' className='sr-only'>Username</label>
           <input
             type='text'

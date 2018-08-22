@@ -5,6 +5,9 @@ import { omit } from 'lodash'
 
 import api, { LOCALE, VERSION } from '../lib/api'
 
+import { logout, startSession } from './Auth'
+import { push } from 'connected-react-router'
+
 const MEDIA_FIELDS = [
   'media.media_id',
   'media.available',
@@ -35,10 +38,27 @@ const SERIES_FIELDS = [
   'series.year'
 ].join(',')
 
-export const handleError = (err, dispatch, reject) => {
+export const handleError = async (err, dispatch, reject) => {
   if (!isCancel(err)) {
-    dispatch(setError(true))
-    reject(err)
+    const { data } = err
+    switch (data.code) {
+      case 'bad_session': { // when the session has expired?
+        // create a new session
+        await dispatch(startSession())
+        break
+      }
+      case 'bad_request': { // when removed from the devices and the like
+        await dispatch(logout(true))
+        dispatch(setError(data.code))
+        dispatch(push('/login')) // go to login page
+        break
+      }
+      default: {
+        dispatch(setError(true))
+        reject(err)
+        break
+      }
+    }
   } else {
     console.error('Cancelled request.')
   }
@@ -179,7 +199,7 @@ export const getQueue = (force) => (dispatch, getState) => {
       dispatch(addMediaBulk(data.map((d) => d.last_watched_media)))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -217,7 +237,7 @@ export const getHistory = ({limit = 24, offset = 0} = {}, append = false) => (di
       dispatch(addMediaBulk(data.map((d) => d.media)))
       resolve(data)
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -244,7 +264,7 @@ export const search = (q) => (dispatch, getState) => {
       dispatch(setSearchIds(data.map((d) => d.series_id)))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -268,7 +288,7 @@ export const getSeriesInfo = (id) => (dispatch, getState) => {
       dispatch(addSeries(data))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -294,7 +314,7 @@ export const getCollectionsForSeries = (id) => (dispatch, getState) => {
       dispatch(addSeriesCollection({id, arr: data.map((d) => d.collection_id)}))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -368,7 +388,7 @@ export const updateSeriesQueue = ({id, inQueue}) => (dispatch, getState) => {
       dispatch(updateSeriesQueueData(id, !inQueue))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -395,7 +415,7 @@ export const getSeriesList = (filter = 'simulcast', noCancel = false) => (dispat
       dispatch(setList(filter, data))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -423,7 +443,7 @@ export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
       dispatch(setPlayheadTime(time, id))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }
@@ -452,7 +472,7 @@ export const getRecent = (noCancel = false) => (dispatch, getState) => {
       dispatch(setRecent(data))
       resolve()
     } catch (err) {
-      handleError(err, dispatch, reject)
+      await handleError(err, dispatch, reject)
     }
   })
 }

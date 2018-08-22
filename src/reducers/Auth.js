@@ -1,7 +1,7 @@
 import uuid from 'uuid/v4'
 import { UPDATE_AUTH, SET_EXPIRED_SESSION, REMOVE_AUTH, UPDATE_MAL, UPDATE_ANILIST } from '../actions'
 
-// make UUIDs noticable
+// make UUIDs noticeable
 const genUUID = () => {
   let id = uuid()
   const parts = id.split('-')
@@ -41,6 +41,8 @@ export default function Auth (state = initialState, action) {
     case REMOVE_AUTH:
       return {
         ...initialState,
+        expiredSession: state.expiredSession,
+        uuid: state.uuid,
         mal: state.mal,
         anilist: state.anilist
       }

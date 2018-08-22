@@ -1,6 +1,8 @@
 import { applyMiddleware, createStore } from 'redux'
 import localForage from 'localforage'
-import { persistCombineReducers, persistStore } from 'redux-persist'
+import { createBrowserHistory } from 'history'
+import { persistCombineReducers, persistStore, createMigrate } from 'redux-persist'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
 
 import thunk from 'redux-thunk'
 
@@ -14,17 +16,36 @@ export default function configureStore (preloadedState) {
     middleware.push(logger)
   }
 
-  // only persist auth
-  const persistorConfig = {
-    storage: localForage,
-    key: 'nani',
-    whitelist: ['Auth']
+  // migrations for store changes
+  const migrations = {
+    1: (state) => {
+      // placeholder until there is the need for an actual one
+      return {
+        ...state
+      }
+    }
   }
 
-  const middlewareEnhancer = applyMiddleware(...middleware)
+  // only persist auth
+  const persistorConfig = {
+    version: 1,
+    storage: localForage,
+    key: 'nani',
+    whitelist: ['Auth'],
+    migrate: createMigrate(migrations, { debug: false })
+  }
+
+  const history = createBrowserHistory()
 
   const reducer = persistCombineReducers(persistorConfig, reducers)
-  const store = createStore(reducer, preloadedState, middlewareEnhancer)
+  const store = createStore(
+    connectRouter(history)(reducer),
+    preloadedState,
+    applyMiddleware(
+      routerMiddleware(history),
+      ...middleware
+    )
+  )
   const persistor = persistStore(store)
-  return { store, persistor }
+  return { store, persistor, history }
 }

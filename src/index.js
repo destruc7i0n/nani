@@ -6,13 +6,16 @@ import registerServiceWorker from './registerServiceWorker'
 import configureStore from './store/configureStore'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/es/integration/react'
+import { ConnectedRouter } from 'connected-react-router'
 
-export const { store, persistor } = configureStore()
+export const { store, persistor, history } = configureStore()
 
 render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <App />
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
     </PersistGate>
   </Provider>,
   document.getElementById('root'))

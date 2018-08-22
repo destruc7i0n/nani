@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { search, setSearchIds } from '../../actions'
+import { push } from 'connected-react-router'
 
 import { Manager, Target, Popper } from 'react-popper'
 import { DebounceInput } from 'react-debounce-input'
@@ -80,7 +81,7 @@ class SearchInput extends Component {
 
   handleKeyDown (event) {
     let { selectedIndex, value } = this.state
-    const { searchIds, history } = this.props
+    const { dispatch, searchIds } = this.props
     const { key } = event
 
     if (key === 'ArrowUp') { // up
@@ -105,7 +106,7 @@ class SearchInput extends Component {
       const resultId = searchIds[selectedIndex]
       // add to the history the page and redirect
       if (resultId) {
-        history.push(`/series/${resultId}`)
+        dispatch(push(`/series/${resultId}`))
         selectedIndex = 0
         this.setState({ selectedIndex })
       }

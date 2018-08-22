@@ -65,6 +65,7 @@ class AppContainer extends Component {
     const { dispatch, Auth, children, error, location: { pathname } } = this.props
     const isLoginPage = matchPath(pathname, { path: '/login', exact: true })
     const isSeriesPage = matchPath(pathname, { path: '/series/:id', exact: true })
+
     return (
       <Fragment>
         <Helmet titleTemplate='%s - nani' />
@@ -72,8 +73,19 @@ class AppContainer extends Component {
         <main role='main' className={classNames({ 'container': !isSeriesPage })}>
           { error && !isSeriesPage
             ? <Alert color='danger' className='d-flex align-items-center' toggle={() => dispatch(setError(''))}>
-              Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or or try again later.
-              <Button onClick={this.reloadPage} size='sm' className='ml-auto'>Reload</Button>
+              {{
+                'true': (
+                  <Fragment>
+                    Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.
+                    <Button onClick={this.reloadPage} size='sm' className='ml-auto'>Reload</Button>
+                  </Fragment>
+                ),
+                'bad_request': (
+                  <Fragment>
+                    Your session with Crunchyroll has ended. Please login.
+                  </Fragment>
+                )
+              }[(error || true).toString()]}
             </Alert>
             : null }
           { !Auth.premium && !isLoginPage && !isSeriesPage
