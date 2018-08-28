@@ -7,6 +7,7 @@ import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import { isLoggedIn } from './lib/auth'
 
 import AppContainer from './components/AppContainer'
+import Loading from './components/Loading/Loading'
 
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -105,6 +106,7 @@ class App extends Component {
           <Route path='/list/simulcast' component={(props) => <SeriesList type='simulcast' {...props} />} />
           <Route path='/list/popular' component={(props) => <SeriesList type='popular' {...props} />} />
           <Route path='/list/newest' component={(props) => <SeriesList type='newest' {...props} />} />
+          <Route path='/empty' component={() => <Loading />} />
           <Redirect from='*' to='/' />
         </Switch>
       </AppContainer>

@@ -111,7 +111,10 @@ class Series extends Component {
           : (
             <Fragment>
               <div className='series-banner' style={{
-                backgroundImage: `url(${landscapeImgFullURL})`
+                background: [
+                  `url(${withProxy(landscapeImgFullURL)}) top left / cover no-repeat`,
+                  `url(${landscapeImgFullURL}) top left / cover no-repeat`
+                ].join(', ')
               }}>
                 <div className='series-banner-overlay' />
               </div>
