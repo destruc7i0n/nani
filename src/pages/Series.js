@@ -74,10 +74,11 @@ class Series extends Component {
       dispatch,
       match: {params: {id}},
       series: {[id]: series},
-      seriesCollections: {[id]: seriesCollection},
+      seriesCollections: {[id]: seriesCollection = []},
       collections,
       anilist: {token},
-      anilistCollections
+      anilistCollections,
+      hash
     } = this.props
     const loaded = series && seriesCollection
     const portraitImgFullURL = series && series.portrait_image && series.portrait_image.full_url
@@ -96,6 +97,21 @@ class Series extends Component {
     let anilistItem = null
     if (anilistCollections) {
       anilistItem = anilistCollections[latestCollectionId]
+    }
+
+    let loadedCollection = ''
+    if (seriesCollection.length) {
+      loadedCollection = seriesCollection[0]
+
+      // check if the hash is valid, then load it
+      if (hash) {
+        if (hash.startsWith('#collection_')) {
+          const collection = hash.replace('#collection_', '')
+          if (seriesCollection.includes(collection)) {
+            loadedCollection = collection
+          }
+        }
+      }
     }
 
     return (
@@ -153,13 +169,14 @@ class Series extends Component {
                             )
                           }
                         </div>
-                        {seriesCollection.map((collectionId, index) =>
+                        {seriesCollection.map((collectionId) =>
                           <SeriesCollection
                             key={`seriesCollection-${collectionId}`}
-                            index={index}
+                            defaultLoaded={collectionId === loadedCollection}
                             id={collectionId}
                             showTitle={seriesCollection.length > 1}
-                            title={collections[collectionId].name} />)}
+                            title={collections[collectionId].name} />
+                        )}
                       </div>
                     </div>
                   </CardBody>
@@ -181,6 +198,8 @@ export default connect((store) => {
     collections: store.Data.collections,
 
     anilist: store.Auth.anilist,
-    anilistCollections: store.Data.anilist
+    anilistCollections: store.Data.anilist,
+
+    hash: store.router.location.hash
   }
 })(Series)

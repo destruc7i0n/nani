@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getMediaForCollection } from '../../actions'
+import { push } from 'connected-react-router'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -11,16 +12,24 @@ class SeriesCollection extends Component {
     super(props)
     this.state = {
       loaded: false,
-      expanded: props.index === 0
+      expanded: false
     }
     this.load = this.load.bind(this)
     this.toggleExpanded = this.toggleExpanded.bind(this)
   }
 
   async componentDidMount () {
-    const { index } = this.props
-    if (index === 0) {
+    const { loaded } = this.state
+    const { dispatch, defaultLoaded, id, hash } = this.props
+    if (defaultLoaded && !loaded) {
       await this.load()
+      if (hash) {
+        // scroll to the hash
+        setTimeout(() => document.getElementById(hash).scrollIntoView({ behavior: 'smooth' }), 0)
+      } else {
+        dispatch(push(`#collection_${id}`))
+      }
+      this.setState({ expanded: true })
     }
   }
 
@@ -32,10 +41,15 @@ class SeriesCollection extends Component {
 
   async toggleExpanded () {
     const { loaded, expanded } = this.state
+    const { dispatch, id } = this.props
     this.setState({ expanded: !expanded })
     // load if not loaded
     if (!loaded) {
       await this.load()
+    }
+    // set the hash if not expanded yet
+    if (!expanded) {
+      dispatch(push(`#collection_${id}`))
     }
   }
 
@@ -45,10 +59,10 @@ class SeriesCollection extends Component {
     return (
       <div className='mt-4'>
         <h4 className='border-bottom pb-3 mb-4' style={{ cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleExpanded}>
-          <div className='d-flex justify-content-between'>
+          <a id={`#collection_${id}`} className='d-flex justify-content-between'>
             {title}
             <FontAwesomeIcon icon={expanded ? 'caret-down' : 'caret-left'} className='align-self-center ml-1' />
-          </div>
+          </a>
         </h4>
         {
           expanded
@@ -66,6 +80,8 @@ class SeriesCollection extends Component {
 
 export default connect((store) => {
   return {
-    collectionMedia: store.Data.collectionMedia
+    collectionMedia: store.Data.collectionMedia,
+
+    hash: store.router.location.hash
   }
 })(SeriesCollection)

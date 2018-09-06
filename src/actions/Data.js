@@ -185,7 +185,7 @@ export const getQueue = (force) => (dispatch, getState) => {
   const state = getState()
   const params = {
     session_id: state.Auth.session_id,
-    media_types: 'anime|drama',
+    media_types: 'anime',
     fields: [MEDIA_FIELDS, SERIES_FIELDS].join(',')
   }
 
@@ -214,7 +214,7 @@ export const getHistory = ({limit = 24, offset = 0} = {}, append = false) => (di
   offset = append ? state.Data.history.offset + limit : offset
   const params = {
     session_id: state.Auth.session_id,
-    media_types: 'anime|drama',
+    media_types: 'anime',
     fields: [MEDIA_FIELDS, SERIES_FIELDS].join(','),
     limit,
     offset

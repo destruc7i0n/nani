@@ -243,7 +243,12 @@ class Media extends Component {
                 </div>
                 <h3>{mediaObj.name}</h3>
                 <h5 className='d-flex flex-column flex-md-row flex-wrap'>
-                  <Badge color='success' tag={Link} to={`/series/${mediaObj.series_id}`} className='text-white mb-1 text-truncate mr-md-2'>
+                  <Badge
+                    color='success'
+                    tag={Link}
+                    to={`/series/${mediaObj.series_id}#collection_${mediaObj.collection_id}`}
+                    className='text-white mb-1 text-truncate mr-md-2'
+                  >
                     <FontAwesomeIcon icon='tv' />
                     {' '}
                     {mediaObj.collection_name || 'Loading...'}
