@@ -8,7 +8,7 @@ import Img from 'react-image'
 import QueueButton from '../../Buttons/QueueButton'
 import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy from '../../../lib/withProxy'
+import withProxy, { replaceHttps } from '../../../lib/withProxy'
 
 class SeriesCard extends Component {
   render () {
@@ -27,7 +27,7 @@ class SeriesCard extends Component {
               loader={<ImageLoader height={250} />}
               src={imgFullURL ? [
                 withProxy(imgFullURL),
-                imgFullURL
+                replaceHttps(imgFullURL)
               ] : 'https://via.placeholder.com/640x960?text=No+Image'}
               alt={data.name} />
             <CardImgOverlay className='p-1'>

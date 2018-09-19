@@ -8,7 +8,7 @@ import ChromecastPlugin from '../../lib/clappr-chromecast-plugin'
 import ResponsiveContainer from '../../lib/clappr-responsive-container-plugin'
 import PlaybackRatePlugin from '../../lib/clappr-playback-rate-plugin'
 
-import withProxy from '../../lib/withProxy'
+import withProxy, { replaceHttps } from '../../lib/withProxy'
 
 import './Video.css'
 
@@ -55,7 +55,7 @@ class Video extends Component {
           // if the first image doesn't work, it'll fall back to the second
           custom: [
             `url(${media.screenshot_image && withProxy(media.screenshot_image.full_url)}) top left / cover no-repeat`,
-            `url(${media.screenshot_image && media.screenshot_image.full_url}) top left / cover no-repeat`
+            `url(${media.screenshot_image && replaceHttps(media.screenshot_image.full_url)}) top left / cover no-repeat`
           ].join(', ')
         },
         plugins: {

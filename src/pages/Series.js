@@ -17,7 +17,7 @@ import Loading from '../components/Loading/Loading'
 import QueueButton from '../components/Buttons/QueueButton'
 import ImageLoader from '../components/Loading/ImageLoader'
 
-import withProxy from '../lib/withProxy'
+import withProxy, { replaceHttps } from '../lib/withProxy'
 
 import './Series.css'
 
@@ -129,7 +129,7 @@ class Series extends Component {
               <div className='series-banner' style={{
                 background: [
                   `url(${withProxy(landscapeImgFullURL)}) top left / cover no-repeat`,
-                  `url(${landscapeImgFullURL}) top left / cover no-repeat`
+                  `url(${replaceHttps(landscapeImgFullURL)}) top left / cover no-repeat`
                 ].join(', ')
               }}>
                 <div className='series-banner-overlay' />
@@ -142,7 +142,7 @@ class Series extends Component {
                         <div className='sticky-poster'>
                           <Img loader={<ImageLoader height={300} />} src={portraitImgFullURL ? [
                             withProxy(portraitImgFullURL),
-                            portraitImgFullURL
+                            replaceHttps(portraitImgFullURL)
                           ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-fluid shadow-sm' />
                           <QueueButton id={id} block className='mt-2' />
                         </div>

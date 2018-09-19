@@ -19,7 +19,7 @@ import Loading from '../components/Loading/Loading'
 
 import api from '../lib/api'
 import { isCancel } from 'axios'
-import withProxy from '../lib/withProxy'
+import withProxy, { replaceHttps } from '../lib/withProxy'
 
 import './Media.css'
 
@@ -162,7 +162,7 @@ class Media extends Component {
                       ? <Fragment>
                         <Img src={imgFullURL ? [
                           withProxy(imgFullURL),
-                          imgFullURL
+                          replaceHttps(imgFullURL)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='w-100' alt={mediaObj.name} />
                         {!noStreams ? <div className='video-center-overlay text-white'>
                           <Loading />

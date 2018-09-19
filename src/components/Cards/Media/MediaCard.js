@@ -13,7 +13,7 @@ import { format } from 'date-fns'
 import Loading from '../../Loading/Loading'
 import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy from '../../../lib/withProxy'
+import withProxy, { replaceHttps } from '../../../lib/withProxy'
 
 import './MediaCard.css'
 
@@ -41,7 +41,7 @@ class MediaCard extends Component {
                         loader={<ImageLoader height={125} />}
                         src={imgFullURL ? [
                           withProxy(imgFullURL),
-                          imgFullURL
+                          replaceHttps(imgFullURL)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
                       <CardImgOverlay className='p-1 pl-4'>

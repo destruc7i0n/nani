@@ -13,7 +13,7 @@ import QueueButton from '../../Buttons/QueueButton'
 import WatchedButton from '../../Buttons/WatchedButton'
 import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy from '../../../lib/withProxy'
+import withProxy, { replaceHttps } from '../../../lib/withProxy'
 
 import './MediaCardLarge.css'
 
@@ -42,7 +42,7 @@ class MediaCardLarge extends Component {
                         loader={<ImageLoader />}
                         src={imgFullURL ? [
                           withProxy(imgFullURL),
-                          imgFullURL
+                          replaceHttps(imgFullURL)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
                       <CardImgOverlay className='pl-4 pr-4 pb-3 p-2 d-flex flex-row flex-wrap align-items-start'>

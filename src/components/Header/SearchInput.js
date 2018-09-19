@@ -13,7 +13,7 @@ import Img from 'react-image'
 
 import classNames from 'classnames'
 
-import withProxy from '../../lib/withProxy'
+import withProxy, { replaceHttps } from '../../lib/withProxy'
 
 import './SearchInput.css'
 
@@ -165,7 +165,7 @@ class SearchInput extends Component {
                   <Img
                     src={[
                       series[id] && series[id].landscape_image && withProxy(series[id].landscape_image.small_url),
-                      series[id] && series[id].landscape_image && series[id].landscape_image.small_url
+                      series[id] && series[id].landscape_image && replaceHttps(series[id].landscape_image.small_url)
                     ]}
                     className='img-fluid pr-1'
                     alt={series[id].name} />
