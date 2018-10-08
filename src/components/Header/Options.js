@@ -1,6 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { checkAniListToken, loginMal, removeAniList, removeMal } from '../../actions'
+import {
+  checkAniListToken,
+  getLanguages,
+  loginMal,
+  removeAniList,
+  removeMal,
+  setLanguage,
+  toggleAutoplay
+} from '../../actions'
 
 import {
   Button,
@@ -40,6 +48,11 @@ class Options extends Component {
     this.authAniList = this.authAniList.bind(this)
   }
 
+  componentDidMount () {
+    const { dispatch } = this.props
+    dispatch(getLanguages())
+  }
+
   toggle () {
     this.setState({
       open: !this.state.open
@@ -76,7 +89,7 @@ class Options extends Component {
 
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
@@ -87,6 +100,25 @@ class Options extends Component {
         <Modal isOpen={open} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Options</ModalHeader>
           <ModalBody>
+            <h3>Preferences</h3>
+            <div className='row'>
+              <Label for='language' sm={6}>Content Language</Label>
+              <div className='col-sm-6'>
+                <select className='custom-select' id='language' value={language} onChange={({ target: { value } }) => dispatch(setLanguage(value))}>
+                  {languages.map((language) => <option value={language.id}>{language.text}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className='row'>
+              <Label for='autoplay' sm={6}>Autoplay video?</Label>
+              <div className='col-sm-6'>
+                <input type='checkbox' id='autoplay' checked={autoplay} onChange={() => dispatch(toggleAutoplay())} />
+              </div>
+            </div>
+
+            <br/>
+
+            <h3>Integrations</h3>
             {error && <Alert color='danger'>{error}</Alert>}
             <Card className='mb-3'>
               <CardBody>
@@ -205,6 +237,9 @@ class Options extends Component {
 
 export default connect((store) => {
   return {
+    autoplay: store.Options.autoplay,
+    language: store.Options.language,
+    languages: store.Data.languages,
     mal: store.Auth.mal,
     anilist: store.Auth.anilist
   }

@@ -16,7 +16,7 @@ export default function api (opts) {
     url: `https://api.crunchyroll.com/${opts.route}.${opts.version || '0'}.json`,
     params: !opts.data ? {
       ...opts.params,
-      locale: LOCALE,
+      locale: opts.locale || LOCALE,
       version: VERSION,
       connectivity_type: CONNECTIVITY_TYPE
     } : null,

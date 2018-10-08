@@ -20,7 +20,7 @@ class Dashboard extends Component {
       // get these immediately
       if (!guest) {
         await dispatch(getQueue())
-        await dispatch(getHistory())
+        await dispatch(getHistory({}, false, false))
       }
       // it's loaded the necessary stuff!
       this.setState({ loaded: true })

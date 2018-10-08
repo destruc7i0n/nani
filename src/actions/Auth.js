@@ -10,11 +10,9 @@ export const updateAuth = (authData) => ({
 })
 
 export const REMOVE_AUTH = 'REMOVE_AUTH'
-export const removeAuth = () => {
-  return {
-    type: REMOVE_AUTH
-  }
-}
+export const removeAuth = () => ({
+  type: REMOVE_AUTH
+})
 
 export const SET_EXPIRED_SESSION = 'SET_EXPIRED_SESSION'
 export const setExpiredSession = (payload) => ({
@@ -56,7 +54,7 @@ export const startSession = () => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'start_session', params, noCancel: true})
+      const resp = await api({route: 'start_session', params, locale: state.Options.language, noCancel: true})
       const data = resp.data.data
       dispatch(
         updateAuth({
