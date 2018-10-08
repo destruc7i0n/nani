@@ -3,7 +3,7 @@
 import axios, { isCancel } from 'axios'
 import { omit } from 'lodash'
 
-import api, { LOCALE, VERSION } from '../lib/api'
+import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 
 import { logout, startSession } from './Auth'
 import { push, replace } from 'connected-react-router'
@@ -125,6 +125,12 @@ export const setPlayheadTime = (time, id) => ({
   }
 })
 
+export const SET_LANGUAGES = 'SET_LANGUAGES'
+export const setLanguages = (languages) => ({
+  type: SET_LANGUAGES,
+  payload: languages
+})
+
 export const ADD_MAL_ITEM = 'ADD_MAL_ITEM'
 export const addMalItem = (id, data) => ({
   type: ADD_MAL_ITEM,
@@ -193,7 +199,7 @@ export const getQueue = (force) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'queue', params, noCancel: true})
+      const resp = await api({route: 'queue', params, locale: state.Options.language, noCancel: true})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -208,7 +214,7 @@ export const getQueue = (force) => (dispatch, getState) => {
   })
 }
 
-export const getHistory = ({limit = 24, offset = 0} = {}, append = false) => (dispatch, getState) => {
+export const getHistory = ({limit = 24, offset = 0} = {}, append = false, force = false) => (dispatch, getState) => {
   const state = getState()
   // handle appending offset
   offset = append ? state.Data.history.offset + limit : offset
@@ -220,9 +226,11 @@ export const getHistory = ({limit = 24, offset = 0} = {}, append = false) => (di
     offset
   }
 
+  if (state.Data.history && state.Data.history.data.length > 0 && !force) return Promise.resolve()
+
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'recently_watched', params, noCancel: true})
+      const resp = await api({route: 'recently_watched', params, locale: state.Options.language, noCancel: true})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -260,7 +268,7 @@ export const search = (q) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'autocomplete', params})
+      const resp = await api({route: 'autocomplete', params, locale: state.Options.language})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -285,7 +293,7 @@ export const getSeriesInfo = (id) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'info', params})
+      const resp = await api({route: 'info', params, locale: state.Options.language})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -310,7 +318,7 @@ export const getCollectionsForSeries = (id) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'list_collections', params})
+      const resp = await api({route: 'list_collections', params, locale: state.Options.language})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -338,7 +346,7 @@ export const getMediaForCollection = (id) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'list_media', params})
+      const resp = await api({route: 'list_media', params, locale: state.Options.language})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -363,7 +371,7 @@ export const getMediaInfo = (id) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'info', params})
+      const resp = await api({route: 'info', params, locale: state.Options.language})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -385,7 +393,7 @@ export const updateSeriesQueue = ({id, inQueue}) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({method: 'post', route: inQueue ? 'remove_from_queue' : 'add_to_queue', data: form, noCancel: true})
+      const resp = await api({method: 'post', route: inQueue ? 'remove_from_queue' : 'add_to_queue', data: form, locale: state.Options.language, noCancel: true})
       if (resp.data.error) throw resp
 
       dispatch(getQueue(true))
@@ -412,7 +420,7 @@ export const getSeriesList = (filter = 'simulcast', noCancel = false) => (dispat
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'list_series', params, noCancel})
+      const resp = await api({route: 'list_series', params, locale: state.Options.language, noCancel})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
@@ -439,7 +447,8 @@ export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
       const resp = await api({
         method: 'post',
         route: 'log',
-        data: form
+        data: form,
+        locale: state.Options.language
       })
       if (resp.data.error) throw resp
 
@@ -467,13 +476,35 @@ export const getRecent = (noCancel = false) => (dispatch, getState) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await api({route: 'list_series', params, noCancel})
+      const resp = await api({route: 'list_series', params, locale: state.Options.language, noCancel})
       if (resp.data.error) throw resp
 
       const data = resp.data.data
       dispatch(addMediaBulk(data.map((d) => d.most_recent_media)))
       dispatch(addSeriesBulk(data.map((d) => omit(d, 'most_recent_media'))))
       dispatch(setRecent(data))
+      resolve()
+    } catch (err) {
+      await handleError(err, dispatch, state, reject)
+    }
+  })
+}
+
+export const getLanguages = () => (dispatch, getState) => {
+  const state = getState()
+  const params = {
+    access_token: ACCESS_TOKEN,
+    device_type: DEVICE_TYPE,
+    device_id: state.Auth.uuid
+  }
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await api({route: 'list_locales', version: '1', params})
+      if (resp.data.error) throw resp
+
+      const data = resp.data.data
+      dispatch(setLanguages(data.locales.map((locale) => ({ text: locale.label, id: locale.locale_id }))))
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)

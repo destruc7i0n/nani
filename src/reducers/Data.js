@@ -8,6 +8,7 @@ import {
   ADD_SERIES_COLLECTION,
   SET_ERROR,
   SET_HISTORY,
+  SET_LANGUAGES,
   SET_LIST,
   SET_PLAYHEAD_TIME,
   SET_QUEUE,
@@ -38,6 +39,7 @@ export default function Data (state = {
   queue: [],
   list: {},
   recent: [],
+  languages: [],
   mal: {},
   anilist: {},
 
@@ -101,6 +103,11 @@ export default function Data (state = {
             playhead: action.payload.time
           }
         }
+      }
+    case SET_LANGUAGES:
+      return {
+        ...state,
+        languages: action.payload
       }
     case ADD_MAL_ITEM:
       return {

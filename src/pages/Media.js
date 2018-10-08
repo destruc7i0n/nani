@@ -65,7 +65,7 @@ class Media extends Component {
 
   async loadVideo () {
     const { mediaId } = this.state
-    const { dispatch, Auth } = this.props
+    const { dispatch, Auth, language } = this.props
     try {
       const media = await dispatch(getMediaInfo(mediaId))
       // only if available
@@ -76,7 +76,8 @@ class Media extends Component {
         // grab the media stream URL
         const video = await api({
           route: 'info',
-          params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'}
+          params: {session_id: Auth.session_id, media_id: mediaId, fields: 'media.stream_data,media.media_id'},
+          locale: language
         })
         this.setState({
           streamData: video.data.data
@@ -95,7 +96,7 @@ class Media extends Component {
 
   render () {
     const { streamData, error, videoPlayed } = this.state
-    const { match: { params: { media: mediaId } }, media, collectionMedia, Auth, location } = this.props
+    const { match: { params: { media: mediaId } }, media, collectionMedia, Auth, autoplay, location } = this.props
     // the current media object and the series
     const mediaObj = media[mediaId]
     // check that both of the above are loaded and no error
@@ -221,6 +222,7 @@ class Media extends Component {
                       : <Fragment>
                         <Video
                           streamUrl={streamData.stream_data.streams[0].url}
+                          autoplay={autoplay}
                           playCallback={() => this.setState({ videoPlayed: true })}
                           key={mediaId}
                           id={mediaId}
@@ -309,6 +311,8 @@ class Media extends Component {
 export default connect((store) => {
   return {
     Auth: store.Auth,
+    language: store.Options.language,
+    autoplay: store.Options.autoplay,
     media: store.Data.media,
     collectionMedia: store.Data.collectionMedia
   }

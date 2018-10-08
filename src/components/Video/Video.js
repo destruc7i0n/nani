@@ -43,7 +43,7 @@ class Video extends Component {
   }
 
   change () {
-    const { streamUrl, media, playCallback = () => null } = this.props
+    const { streamUrl, media, autoplay = false, playCallback = () => null } = this.props
     if (streamUrl && media) {
       if (this.player) {
         this.destroyPlayer()
@@ -51,6 +51,7 @@ class Video extends Component {
       this.player = new Clappr.Player({
         parent: this.playerRef,
         source: streamUrl,
+        autoPlay: autoplay,
         poster: {
           // if the first image doesn't work, it'll fall back to the second
           custom: [

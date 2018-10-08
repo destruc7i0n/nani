@@ -31,7 +31,7 @@ export default function configureStore (preloadedState) {
     version: 1,
     storage: localForage,
     key: 'nani',
-    whitelist: ['Auth'],
+    whitelist: ['Auth', 'Options'],
     migrate: createMigrate(migrations, { debug: false })
   }
 
