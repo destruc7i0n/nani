@@ -81,10 +81,10 @@ class QueueButton extends Component {
 }
 
 export default connect((store, props) => {
-  const { id } = props
+  const { id, inQueue } = props
   const currentSeries = store.Data.series[id]
   return {
     Auth: store.Auth,
-    inQueue: currentSeries && currentSeries.in_queue
+    inQueue: inQueue || (currentSeries && currentSeries.in_queue)
   }
 })(QueueButton)
