@@ -226,7 +226,7 @@ export const getHistory = ({limit = 24, offset = 0} = {}, append = false, force 
     offset
   }
 
-  if (state.Data.history && state.Data.history.data.length > 0 && !force) return Promise.resolve()
+  if (state.Data.history && state.Data.history.data.length > 0 && !force && !append) return Promise.resolve()
 
   return new Promise(async (resolve, reject) => {
     try {
