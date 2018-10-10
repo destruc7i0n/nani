@@ -16,6 +16,7 @@ class History extends Component {
       loadingMore: false
     }
     this.loadMore = this.loadMore.bind(this)
+    this.scrollManager = this.scrollManager.bind(this)
   }
 
   async componentDidMount () {
@@ -25,6 +26,22 @@ class History extends Component {
       this.setState({ loaded: true })
     } catch (err) {
       console.error(err)
+    }
+
+    window.addEventListener('scroll', this.scrollManager, false)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.scrollManager, false)
+  }
+
+  scrollManager () {
+    // at the bottom of the page and not currently loading anything
+    if (
+      ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) &&
+      !this.state.loadingMore
+    ) {
+      this.loadMore()
     }
   }
 
