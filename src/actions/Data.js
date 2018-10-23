@@ -410,7 +410,7 @@ export const getSeriesList = (filter = 'simulcast', noCancel = false) => (dispat
   const params = {
     session_id: state.Auth.session_id,
     media_type: 'anime',
-    fields: 'series.series_id,series.in_queue,series.name,series.description,series.portrait_image',
+    fields: 'series.series_id,series.in_queue,series.name,series.media_count,series.portrait_image',
     limit: 54,
     offset: 0,
     filter

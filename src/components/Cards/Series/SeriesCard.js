@@ -37,7 +37,7 @@ class SeriesCard extends Component {
               <span className='mb-1 d-block font-weight-bold text-dark text-truncate'>
                 {data.name}
               </span>
-              <small className='d-block text-truncate font-italic text-secondary'>{data.description}</small>
+              <small className='d-block text-truncate text-secondary'>{data.media_count || 0} Videos</small>
             </CardBody>
           </Link>
         </Card>

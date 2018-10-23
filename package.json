@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
-    "@fortawesome/fontawesome-svg-core": "^1.2.5",
-    "@fortawesome/free-solid-svg-icons": "^5.4.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.6",
+    "@fortawesome/free-solid-svg-icons": "^5.4.1",
     "@fortawesome/react-fontawesome": "^0.1.3",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
-    "clappr": "^0.2.98",
+    "clappr": "^0.2.100",
     "classnames": "^2.2.6",
     "connected-react-router": "^4.5.0",
     "date-fns": "^1.29.0",
@@ -30,10 +30,10 @@
     "react-popper": "0.10.4",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5",
+    "react-scripts": "2.0.5",
     "react-transition-group": "^2.5.0",
     "reactstrap": "^6.5.0",
-    "redux": "^4.0.0",
+    "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
@@ -48,9 +48,15 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start:lambda": "netlify-lambda serve src/lambda",
     "build:lambda": "netlify-lambda build src/lambda"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
