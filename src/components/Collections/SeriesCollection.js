@@ -59,6 +59,7 @@ class SeriesCollection extends Component {
     return (
       <div className='mt-4'>
         <h4 className='border-bottom pb-3 mb-4' style={{ cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleExpanded}>
+          {/* eslint-disable-next-line */}
           <a id={`#collection_${id}`} className='d-flex justify-content-between'>
             {title}
             <FontAwesomeIcon icon={expanded ? 'caret-down' : 'caret-left'} className='align-self-center ml-1' />

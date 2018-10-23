@@ -106,8 +106,18 @@ export const login = (username, password) => (dispatch, getState) => {
 
 export const logout = (didExpire = false) => (dispatch, getState) => {
   const state = getState()
+  const form = new FormData()
+  form.append('session_id', state.Auth.session_id)
+  form.append('locale', LOCALE)
+  form.append('version', VERSION)
+
   return new Promise(async (resolve, reject) => {
     try {
+      // attempt to perform a clean logout
+      if (!state.Auth.guest) {
+        await api({method: 'post', route: 'logout', data: form})
+      }
+
       if (didExpire) {
         dispatch(setExpiredSession(state.Auth.username))
       }
