@@ -8,3 +8,8 @@ export const TOGGLE_AUTOPLAY = 'TOGGLE_AUTOPLAY'
 export const toggleAutoplay = () => ({
   type: TOGGLE_AUTOPLAY
 })
+
+export const HIDE_ABOUT = 'HIDE_ABOUT'
+export const hideAbout = () => ({
+  type: HIDE_ABOUT
+})
