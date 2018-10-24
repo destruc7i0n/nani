@@ -17,7 +17,7 @@ class AboutAlert extends Component {
 
           It is 100%{' '}
           <a href='https://github.com/destruc7i0n/nani' target='_blank' rel='noopener noreferrer'>open source</a>
-          , and communicates directly with Crunchyroll, and no data is ever stored.
+          , and communicates directly with Crunchyroll - no data is ever stored.
         </p>
       </Alert>
     )
