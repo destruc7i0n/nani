@@ -17,7 +17,7 @@ class SeriesCard extends Component {
     return (
       <div className='col-6 col-sm-4 col-md-4 col-lg-2 d-flex pb-4'>
         <Card
-          className='d-inline-block mw-100 box-shadow'
+          className='d-inline-block w-100 box-shadow'
           style={{ cursor: 'pointer' }}
         >
           <Link to={`/series/${data.series_id}`} style={{ textDecoration: 'none' }}>

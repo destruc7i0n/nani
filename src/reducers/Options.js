@@ -1,8 +1,9 @@
-import { SET_LANGUAGE, TOGGLE_AUTOPLAY } from '../actions'
+import { HIDE_ABOUT, SET_LANGUAGE, TOGGLE_AUTOPLAY } from '../actions'
 
 export default function Options (state = {
   language: 'enUS',
-  autoplay: false
+  autoplay: false,
+  aboutVisible: true
 }, action) {
   switch (action.type) {
     case SET_LANGUAGE:
@@ -14,6 +15,11 @@ export default function Options (state = {
       return {
         ...state,
         autoplay: !state.autoplay
+      }
+    case HIDE_ABOUT:
+      return {
+        ...state,
+        aboutVisible: false
       }
     default:
       return state

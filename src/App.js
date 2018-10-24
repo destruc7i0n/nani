@@ -103,9 +103,7 @@ class App extends Component {
           <Route path='/recent' component={Recent} />
           <Route path='/series/:id/:media' component={Media} />
           <Route path='/series/:id' component={Series} />
-          <Route path='/list/simulcast' component={(props) => <SeriesList type='simulcast' {...props} />} />
-          <Route path='/list/popular' component={(props) => <SeriesList type='popular' {...props} />} />
-          <Route path='/list/newest' component={(props) => <SeriesList type='newest' {...props} />} />
+          <Route path='/list/:type(simulcast|popular|newest)' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
           <Route path='/empty' component={() => <Loading />} />
           <Redirect from='*' to='/' />
         </Switch>

@@ -12,6 +12,7 @@ import classNames from 'classnames'
 import Header from './Header/Header'
 import Footer from './Footer/Footer'
 import Loading from './Loading/Loading'
+import AboutAlert from './Alerts/AboutAlert'
 
 import { cancelCurrentRequests } from '../lib/api'
 
@@ -88,6 +89,7 @@ class AppContainer extends Component {
               }[(error || true).toString()]}
             </Alert>
             : null }
+          <AboutAlert />
           { !Auth.premium && !isLoginPage && !isSeriesPage
             ? <Alert color='info' className='d-flex align-items-center'>
               You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll offers.
