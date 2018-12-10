@@ -18,6 +18,7 @@ class Collection extends Component {
       loading = false,
       loadingCardsCount = 9,
       size = 'sm',
+      order = 'old',
       ...attr
     } = this.props
     const width = 12 / perPage
@@ -30,6 +31,10 @@ class Collection extends Component {
         : LoadingMediaCardLarge
     // only allow available ones
     mediaIds = mediaIds.filter((mediaId) => media[mediaId] && media[mediaId].available)
+
+    if (order === 'new') {
+      mediaIds = mediaIds.reverse()
+    }
     return (
       <Fragment>
         {showTitle && title && <TitleTag className='border-bottom pb-3 mb-4'>

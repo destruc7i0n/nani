@@ -37,9 +37,12 @@ export default function configureStore (preloadedState) {
 
   const history = createBrowserHistory()
 
-  const reducer = persistCombineReducers(persistorConfig, reducers)
+  const createReducer = (history) => persistCombineReducers(persistorConfig, {
+    router: connectRouter(history),
+    ...reducers
+  })
   const store = createStore(
-    connectRouter(history)(reducer),
+    createReducer(history),
     preloadedState,
     applyMiddleware(
       routerMiddleware(history),

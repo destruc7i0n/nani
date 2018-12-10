@@ -7,7 +7,8 @@ import {
   removeAniList,
   removeMal,
   setLanguage,
-  toggleAutoplay
+  toggleAutoplay,
+  toggleOrderControls
 } from '../../actions'
 
 import {
@@ -89,7 +90,7 @@ class Options extends Component {
 
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
@@ -113,6 +114,12 @@ class Options extends Component {
               <Label for='autoplay' sm={6}>Autoplay video?</Label>
               <div className='col-sm-6'>
                 <input type='checkbox' id='autoplay' checked={autoplay} onChange={() => dispatch(toggleAutoplay())} />
+              </div>
+            </div>
+            <div className='row'>
+              <Label for='autoplay' sm={6}>Show episode order controls?</Label>
+              <div className='col-sm-6'>
+                <input type='checkbox' id='orderControls' checked={orderControls} onChange={() => dispatch(toggleOrderControls())} />
               </div>
             </div>
 
@@ -237,6 +244,7 @@ class Options extends Component {
 
 export default connect((store) => {
   return {
+    orderControls: store.Options.orderControls,
     autoplay: store.Options.autoplay,
     language: store.Options.language,
     languages: store.Data.languages,
