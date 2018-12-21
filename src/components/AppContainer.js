@@ -92,7 +92,7 @@ class AppContainer extends Component {
           { !isLoginPage && !isSeriesPage ? <AboutAlert /> : null }
           { !Auth.premium && !isLoginPage && !isSeriesPage
             ? <Alert color='info' className='d-flex align-items-center'>
-              You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll offers.
+              You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll has to offer.
               <Button
                 size='sm'
                 className='ml-auto'

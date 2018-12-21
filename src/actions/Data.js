@@ -42,26 +42,30 @@ export const handleError = async (err, dispatch, state, reject) => {
   const path = state.router.location.pathname || '/'
   if (!isCancel(err)) {
     const { data } = err
-    switch (data.code) {
-      case 'bad_session': { // when the session has expired?
-        // create a new session
-        await dispatch(startSession())
-        // move to an empty page and then back
-        await dispatch(push('/empty'))
-        await dispatch(replace(path))
-        break
+    if (data) {
+      switch (data.code) {
+        case 'bad_session': { // when the session has expired?
+          // create a new session
+          await dispatch(startSession())
+          // move to an empty page and then back
+          await dispatch(push('/empty'))
+          await dispatch(replace(path))
+          break
+        }
+        case 'bad_request': { // when removed from the devices and the like
+          await dispatch(logout(true))
+          dispatch(setError(data.code))
+          dispatch(push('/login')) // go to login page
+          break
+        }
+        default: {
+          dispatch(setError(true))
+          reject(err)
+          break
+        }
       }
-      case 'bad_request': { // when removed from the devices and the like
-        await dispatch(logout(true))
-        dispatch(setError(data.code))
-        dispatch(push('/login')) // go to login page
-        break
-      }
-      default: {
-        dispatch(setError(true))
-        reject(err)
-        break
-      }
+    } else {
+      dispatch(setError(true))
     }
   } else {
     console.error('Cancelled request.')

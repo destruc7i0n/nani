@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore } from 'redux'
+import { applyMiddleware, createStore, compose } from 'redux'
 import localForage from 'localforage'
 import { createBrowserHistory } from 'history'
 import { persistCombineReducers, persistStore, createMigrate } from 'redux-persist'
@@ -10,11 +10,6 @@ import reducers from '../reducers'
 
 export default function configureStore (preloadedState) {
   const middleware = [thunk]
-  if (process.env.NODE_ENV === 'development') {
-    const { logger } = require('redux-logger')
-
-    middleware.push(logger)
-  }
 
   // migrations for store changes
   const migrations = {
@@ -41,12 +36,17 @@ export default function configureStore (preloadedState) {
     router: connectRouter(history),
     ...reducers
   })
+
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
   const store = createStore(
     createReducer(history),
     preloadedState,
-    applyMiddleware(
-      routerMiddleware(history),
-      ...middleware
+    composeEnhancers(
+      applyMiddleware(
+        routerMiddleware(history),
+        ...middleware
+      )
     )
   )
   const persistor = persistStore(store)
