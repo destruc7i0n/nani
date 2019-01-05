@@ -25,6 +25,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SearchInput from './SearchInput'
 import Options from './Options'
 
+import './Header.css'
+
 class Header extends Component {
   constructor (props) {
     super(props)

@@ -7,9 +7,11 @@ import {
   removeAniList,
   removeMal,
   setLanguage,
+  setTheme,
   toggleAutoplay,
   toggleOrderControls
 } from '../../actions'
+import { Helmet } from 'react-helmet'
 
 import {
   Button,
@@ -28,6 +30,8 @@ import {
 } from 'reactstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import './Options.css'
 
 class Options extends Component {
   constructor (props) {
@@ -90,11 +94,15 @@ class Options extends Component {
 
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
       <Fragment>
+        <Helmet>
+          <body className={theme} />
+        </Helmet>
+
         <Button onClick={this.toggle} className='w-100'>
           <FontAwesomeIcon icon='cog' />
         </Button>
@@ -102,6 +110,15 @@ class Options extends Component {
           <ModalHeader toggle={this.toggle}>Options</ModalHeader>
           <ModalBody>
             <h3>Preferences</h3>
+            <div className='preferences row'>
+              <Label for='language' sm={6}>Theme</Label>
+              <div className='col-sm-6'>
+                <select className='custom-select' id='theme' value={theme} onChange={({ target: { value } }) => dispatch(setTheme(value))}>
+                  <option value='light'>Light</option>
+                  <option value='dark'>Dark</option>
+                </select>
+              </div>
+            </div>
             <div className='row'>
               <Label for='language' sm={6}>Content Language</Label>
               <div className='col-sm-6'>
@@ -247,6 +264,7 @@ export default connect((store) => {
     orderControls: store.Options.orderControls,
     autoplay: store.Options.autoplay,
     language: store.Options.language,
+    theme: store.Options.theme,
     languages: store.Data.languages,
     mal: store.Auth.mal,
     anilist: store.Auth.anilist

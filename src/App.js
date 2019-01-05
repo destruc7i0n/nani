@@ -47,6 +47,8 @@ import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch'
 import { faCrown } from '@fortawesome/free-solid-svg-icons/faCrown'
 
 import './App.css'
+import './themes/light.scss'
+import './themes/dark.scss'
 
 library.add(
   faTv,

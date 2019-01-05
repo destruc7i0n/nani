@@ -15,12 +15,20 @@ class Dashboard extends Component {
   }
 
   async componentDidMount () {
-    const { dispatch, guest } = this.props
+    const { dispatch, guest, queue, history } = this.props
     try {
-      // get these immediately
       if (!guest) {
-        await dispatch(getQueue())
-        await dispatch(getHistory({}, false, false))
+        let tasks = [
+          dispatch(getQueue(true)),
+          dispatch(getHistory({}, false, true))
+        ]
+        // if there's no data, show the loaders and load
+        if (!queue.length || !history.length) {
+          await Promise.all(tasks)
+        } else {
+          // otherwise, get it in the background to not show loaders all the time
+          Promise.all(tasks)
+        }
       }
       // it's loaded the necessary stuff!
       this.setState({ loaded: true })

@@ -19,6 +19,7 @@ class Collection extends Component {
       loadingCardsCount = 9,
       size = 'sm',
       order = 'old',
+      theme = 'light',
       ...attr
     } = this.props
     const width = 12 / perPage
@@ -45,7 +46,7 @@ class Collection extends Component {
         <div className='row'>
           {
             loading
-              ? [...Array(loadingCardsCount).keys()].map((index) => <LoadingTag width={width} key={`loadingMediaCard-${index}`} />)
+              ? [...Array(loadingCardsCount).keys()].map((index) => <LoadingTag width={width} theme={theme} key={`loadingMediaCard-${index}`} />)
               : mediaIds.length !== 0
                 ? mediaIds.map((mediaId) => <Tag width={width} media={media[mediaId]} key={`mediaCard-${mediaId}`} {...attr} />)
                 : <div className='col-12 text-center'>
@@ -60,6 +61,7 @@ class Collection extends Component {
 
 export default connect((store) => {
   return {
-    media: store.Data.media
+    media: store.Data.media,
+    theme: store.Options.theme
   }
 })(Collection)

@@ -157,7 +157,7 @@ class Series extends Component {
                             {' '}{moment.unix(anilistItem.nextAiringEpisode.airingAt).fromNow()}.
                           </Alert>
                           : null }
-                        <div className='font-weight-bold pb-2'>
+                        <div className='rating font-weight-bold pb-2'>
                           {series.rating / 10} / 10
                           {' '}
                           <FontAwesomeIcon icon='star' className='text-warning mr-1' />

@@ -18,3 +18,9 @@ export const TOGGLE_ORDER_CONTROLS = 'TOGGLE_ORDER_CONTROLS'
 export const toggleOrderControls = () => ({
   type: TOGGLE_ORDER_CONTROLS
 })
+
+export const SET_THEME = 'SET_THEME'
+export const setTheme = (theme) => ({
+  type: SET_THEME,
+  payload: theme
+})

@@ -4,15 +4,15 @@ import { Card } from 'reactstrap'
 
 import ContentLoader from 'react-content-loader'
 
-const LoadingMediaCard = () => (
+const LoadingMediaCard = ({ theme = 'light' }) => (
   <div className='col-12 col-sm-12 d-flex pb-4'>
     <Card className='d-inline-block w-100 box-shadow'>
       <ContentLoader
         speed={2}
         height={200}
         width={1000}
-        primaryColor='#f3f3f3'
-        secondaryColor='#f7f7f7'
+        primaryColor={theme === 'light' ? '#f3f3f3' : '#38393a'}
+        secondaryColor={theme === 'light' ? '#f7f7f7' : '#3e3f3f'}
       >
         {/* image */}
         <rect x='0' y='0' rx='0' ry='0' width='330' height='200' />

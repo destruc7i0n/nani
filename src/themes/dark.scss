@@ -1,0 +1,94 @@
+body.dark {
+  background-color: #242628;
+  color: #cecece;
+
+  h1, h3, h4 {
+    color: #ffffff;
+  }
+
+  .modal-content {
+    background-color: #242628;
+
+    .modal-header {
+      border-bottom: 1px solid #3e3f40;
+    }
+
+    .modal-title, .close {
+      color: #ffffff;
+    }
+  }
+
+  .main-details-card-body {
+    background-color: #2a2b2c !important;
+    border-radius: .25rem;
+  }
+
+  .card {
+    background-color: #212223 !important;
+    border: 1px solid #1a1b1c;
+  }
+
+  .dropdown-menu {
+    background-color: #212223 !important;
+
+    .dropdown-item {
+      color: #ffffff !important;
+    }
+
+    .dropdown-item.active {
+      background-color: #3e3f40 !important;
+    }
+
+    .dropdown-item:hover {
+      background-color: #3e3f40 !important;
+    }
+  }
+
+  .progress {
+    background-color: #3e3f40 !important;
+  }
+
+  .border-bottom {
+    border-bottom: 1px solid #454647 !important;
+  }
+
+  .text-dark {
+    color: #ffffff !important;
+  }
+
+  .text-danger {
+    color: #e74c3c !important;
+  }
+
+  .rating {
+    color: #ffffff;
+  }
+
+  .btn-light, .bg-light, .badge-light {
+    color: #ffffff;
+    background-color: #38393a !important;
+    border-color: #38393a !important;
+  }
+
+  .badge-secondary.badge-outline {
+    border: 1.5px solid #6c757d;
+    color: #6c757d;
+  }
+
+  .badge-outline {
+    border: 1.5px solid !important;
+  }
+
+  .btn-light:hover, .video-overlay-left:hover, .video-overlay-right:hover {
+    background-color: #454647 !important;
+  }
+
+  .box-shadow:hover, .box-shadow:focus {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  }
+
+  .footer {
+    background-color: #2a2b2c !important;
+    border-color: #2a2b2c !important;;
+  }
+}

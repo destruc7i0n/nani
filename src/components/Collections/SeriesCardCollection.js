@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { Button } from 'reactstrap'
@@ -14,6 +15,7 @@ class SeriesCardCollection extends Component {
       series = [],
       loading = false,
       link = false,
+      theme = 'light',
       loadingCardsCount = 25
     } = this.props
     return (
@@ -27,7 +29,7 @@ class SeriesCardCollection extends Component {
         <div className='row'>
           {
             loading
-              ? [...Array(loadingCardsCount).keys()].map((index) => <LoadingSeriesCard key={`loadingSeriesCard-${index}`} />)
+              ? [...Array(loadingCardsCount).keys()].map((index) => <LoadingSeriesCard theme={theme} key={`loadingSeriesCard-${index}`} />)
               : series.map((item, index) => <SeriesCard data={item} key={`seriesCard-${index}`} />)
           }
         </div>
@@ -36,4 +38,8 @@ class SeriesCardCollection extends Component {
   }
 }
 
-export default SeriesCardCollection
+export default connect((store) => {
+  return {
+    theme: store.Options.theme
+  }
+})(SeriesCardCollection)
