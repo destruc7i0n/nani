@@ -39,12 +39,7 @@ class Header extends Component {
     const { collapsed } = this.state
     const { dispatch, location, Auth } = this.props
     return (
-      <Navbar color='dark' expand='md' dark className='mb-4' sticky='top' style={
-        // a little polyfill to make the top be under the navigation bar on ios etc.
-        window.navigator.standalone
-          ? {paddingTop: '15pt'}
-          : {}
-      }>
+      <Navbar color='dark' expand='md' dark className='mb-4' sticky='top'>
         <Container>
           <NavbarBrand tag={Link} to='/'>
             <div className='logo d-md-none d-lg-inline-block' style={{ width: '2rem', height: '2rem' }} />
