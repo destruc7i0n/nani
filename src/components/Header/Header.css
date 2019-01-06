@@ -1,4 +1,10 @@
 .navbar.bg-dark {
-    padding-top: env(safe-area-inset-top);
     background-color: #1e2124 !important;
+}
+
+/* handle ios without breaking desktop */
+@supports (padding-top: max(0px)) {
+    .navbar.bg-dark {
+        padding-top: max(0.5rem, env(safe-area-inset-top));
+    }
 }
