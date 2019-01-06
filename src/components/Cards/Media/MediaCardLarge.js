@@ -70,8 +70,8 @@ class MediaCardLarge extends Component {
                         </small>
                         <p className='text-muted mt-2'>{media.description}</p>
 
-                        <div className='mt-auto'>
-                          <Button tag={Link} to={`/series/${media.series_id}`} size='sm' className='mr-1' color='primary'>
+                        <div className='mt-auto d-flex flex-row'>
+                          <Button tag={Link} to={`/series/${media.series_id}`} size='sm' className='mr-1 text-truncate' color='primary'>
                             <FontAwesomeIcon icon='info' />
                             {' '}
                             Series Info

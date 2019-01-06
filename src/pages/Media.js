@@ -200,6 +200,7 @@ class Media extends Component {
                                       </h2>
                                       <Button
                                         size='sm'
+                                        color='primary'
                                         className='ml-auto'
                                         tag={Link}
                                         to={{pathname: '/login', state: { prevPath: location.pathname }}}

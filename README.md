@@ -13,12 +13,11 @@ There are a few more here: https://imgur.com/a/R5cNW
 
 ## Features
 - Fast, modern, and responsive interface
-- Stream\* and search anime
+- Dark theme
+- Stream and search anime
 - Manage your queue
 - MyAnimeList & AniList updating support
 - Much more...
-
-<sub>* Streaming will not work on many newer shows in the browser. Use the desktop app.</sub>
 
 ## Development
 To run in development, run

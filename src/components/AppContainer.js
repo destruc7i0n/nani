@@ -63,13 +63,15 @@ class AppContainer extends Component {
 
   render () {
     const { initSession } = this.state
-    const { dispatch, Auth, children, error, location: { pathname } } = this.props
+    const { dispatch, Auth, theme, children, error, location: { pathname } } = this.props
     const isLoginPage = matchPath(pathname, { path: '/login', exact: true })
     const isSeriesPage = matchPath(pathname, { path: '/series/:id', exact: true })
 
     return (
       <Fragment>
-        <Helmet titleTemplate='%s - nani' />
+        <Helmet titleTemplate='%s - nani'>
+          <body className={theme} />
+        </Helmet>
         { !isLoginPage ? <Header /> : null }
         <main role='main' className={classNames({ 'container': !isSeriesPage })}>
           { error && !isSeriesPage
@@ -95,6 +97,7 @@ class AppContainer extends Component {
               You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll has to offer.
               <Button
                 size='sm'
+                color='primary'
                 className='ml-auto'
                 tag={Link}
                 to={{pathname: '/login', state: { prevPath: pathname }}}
@@ -113,6 +116,7 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
+      theme: store.Options.theme,
       error: store.Data.error,
       Auth: store.Auth
     }

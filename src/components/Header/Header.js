@@ -42,7 +42,7 @@ class Header extends Component {
       <Navbar color='dark' expand='md' dark className='mb-4' sticky='top' style={
         // a little polyfill to make the top be under the navigation bar on ios etc.
         window.navigator.standalone
-          ? {paddingTop: '15pt'}
+          ? {paddingTop: 'env(safe-area-inset-top)'}
           : {}
       }>
         <Container>

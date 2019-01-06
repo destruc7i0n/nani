@@ -21,6 +21,10 @@ body.dark {
   .main-details-card-body {
     background-color: #2a2b2c !important;
     border-radius: .25rem;
+
+    @media (max-width: 576px) {
+      background-color: #242628 !important;
+    }
   }
 
   .card {

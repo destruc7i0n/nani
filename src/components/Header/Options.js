@@ -11,7 +11,6 @@ import {
   toggleAutoplay,
   toggleOrderControls
 } from '../../actions'
-import { Helmet } from 'react-helmet'
 
 import {
   Button,
@@ -99,10 +98,6 @@ class Options extends Component {
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
       <Fragment>
-        <Helmet>
-          <body className={theme} />
-        </Helmet>
-
         <Button onClick={this.toggle} className='w-100'>
           <FontAwesomeIcon icon='cog' />
         </Button>
