@@ -1,10 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { login, updateAuth } from '../actions'
 import { push } from 'connected-react-router'
 import { Helmet } from 'react-helmet'
 
 import { Card, Button } from 'reactstrap'
+
+import api from '../lib/api'
 
 import Footer from '../components/Footer/Footer'
 
@@ -14,16 +16,24 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
-      error: ''
+      error: '',
+      mode: 'login'
     }
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
     this.loginAsGuest = this.loginAsGuest.bind(this)
   }
 
-  async handleLogin (e) {
+  async handleSubmit (e) {
+    const { mode } = this.state
+    e.preventDefault()
+    if (mode === 'login') await this.handleLogin()
+    if (mode === 'forgot') await this.forgotPassword()
+  }
+
+  async handleLogin () {
     const { username, password } = this.state
     const { dispatch, location } = this.props
-    e.preventDefault()
     try {
       await dispatch(login(username, password))
       dispatch(push((location.state && location.state.prevPath) || '/'))
@@ -45,8 +55,23 @@ class Login extends Component {
     dispatch(push((location.state && location.state.prevPath) || '/'))
   }
 
+  async forgotPassword () {
+    const { username } = this.state
+    const { Auth, language } = this.props
+    const response = await api({
+      route: 'forgot_password',
+      params: {session_id: Auth.session_id, email: username},
+      locale: language
+    })
+    if (!response.error) {
+      this.setState({ mode: 'login', error: 'Successfully reset password. Please check your email.' })
+    } else {
+      this.setState({ error: response.error })
+    }
+  }
+
   render () {
-    const { error } = this.state
+    const { error, mode } = this.state
     const { expiredSession } = this.props
     return (
       <div className='text-center'>
@@ -90,13 +115,18 @@ class Login extends Component {
               border-bottom-left-radius: 0;
             }
             .form-signin input[type="password"] {
-              margin-bottom: 10px;
               border-top-left-radius: 0;
               border-top-right-radius: 0;
             }
+            .form-signin .border-radius {
+              border-radius: 0.25rem !important;
+            }
+            .credentials {
+              margin-bottom: 10px;
+            }
           `}</style>
         </Helmet>
-        <form className='form-signin' onSubmit={this.handleLogin}>
+        <form className='form-signin' onSubmit={this.handleSubmit}>
           <div className='logo' style={{ width: '8rem', height: '8rem' }} />
           <h1 className='h3 mb-1 font-weight-normal'>nani?!</h1>
           <p className='font-italic font-weight-light'>What's Crunchyroll?</p>
@@ -105,24 +135,42 @@ class Login extends Component {
             ? <p className='text-danger'>Your session expired.</p>
             : null}
           <label htmlFor='inputUsername' className='sr-only'>Username</label>
-          <input
-            type='text'
-            id='inputUsername'
-            className='form-control'
-            placeholder='Username / Email'
-            required
-            autoFocus
-            onChange={({ target: { value: username } }) => this.setState({ username })} />
-          <label htmlFor='inputPassword' className='sr-only'>Password</label>
-          <input
-            type='password'
-            id='inputPassword'
-            className='form-control'
-            placeholder='Password'
-            required
-            onChange={({ target: { value: password } }) => this.setState({ password })} />
-          <Button color='primary' size='lg' block type='submit'>Login</Button>
+          <div className='credentials'>
+            {mode === 'login'
+              ? <Fragment>
+                <input
+                  type='text'
+                  id='inputUsername'
+                  className='form-control'
+                  placeholder='Username / Email'
+                  required
+                  autoFocus
+                  onChange={({ target: { value: username } }) => this.setState({ username })} />
+                <label htmlFor='inputPassword' className='sr-only'>Password</label>
+                <input
+                  type='password'
+                  id='inputPassword'
+                  className='form-control'
+                  placeholder='Password'
+                  required
+                  onChange={({ target: { value: password } }) => this.setState({ password })} />
+              </Fragment>
+              : <input
+                type='text'
+                id='inputEmail'
+                className='form-control border-radius'
+                placeholder='Email'
+                required
+                autoFocus
+                onChange={({ target: { value: username } }) => this.setState({ username })} />}
+          </div>
+          <Button color='primary' size='lg' block type='submit'>
+            {mode === 'login' ? 'Login' : 'Reset Password'}
+          </Button>
           <Button color='secondary' size='lg' block type='button' onClick={this.loginAsGuest}>Continue as Guest</Button>
+          {mode === 'login'
+            ? <Button color='link' size='sm' block type='button' onClick={() => this.setState({ mode: 'forgot' })}>Forgot Password</Button>
+            : null}
           <Card body className='bg-light mt-2'>
             Your password is sent directly to Crunchyroll, and is never stored.
             <hr />
@@ -138,6 +186,7 @@ class Login extends Component {
 export default connect((store) => {
   return {
     Auth: store.Auth,
+    language: store.Options.language,
     expiredSession: store.Auth.expiredSession
   }
 })(Login)

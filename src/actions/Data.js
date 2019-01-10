@@ -135,6 +135,12 @@ export const setLanguages = (languages) => ({
   payload: languages
 })
 
+export const SET_CATEGORIES = 'SET_CATEGORIES'
+export const setCategories = (categories) => ({
+  type: SET_CATEGORIES,
+  payload: categories
+})
+
 export const ADD_MAL_ITEM = 'ADD_MAL_ITEM'
 export const addMalItem = (id, data) => ({
   type: ADD_MAL_ITEM,
@@ -420,6 +426,8 @@ export const getSeriesList = (filter = 'simulcast', noCancel = false) => (dispat
     filter
   }
 
+  filter = filter.replace('tag:', '')
+
   if (state.Data.list[filter]) return Promise.resolve()
 
   return new Promise(async (resolve, reject) => {
@@ -510,6 +518,29 @@ export const getLanguages = () => (dispatch, getState) => {
       const data = resp.data.data
       dispatch(setLanguages(data.locales.map((locale) => ({ text: locale.label, id: locale.locale_id }))))
       resolve()
+    } catch (err) {
+      await handleError(err, dispatch, state, reject)
+    }
+  })
+}
+
+export const getCategories = () => (dispatch, getState) => {
+  const state = getState()
+  const params = {
+    session_id: state.Auth.session_id,
+    media_type: 'anime'
+  }
+
+  if (Object.keys(state.Data.categories).length) return Promise.resolve(state.Data.categories)
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await api({route: 'categories', version: '0', params})
+      if (resp.data.error) throw resp
+
+      const data = resp.data.data
+      dispatch(setCategories(data))
+      resolve(data)
     } catch (err) {
       await handleError(err, dispatch, state, reject)
     }

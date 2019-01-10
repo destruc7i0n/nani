@@ -92,6 +92,11 @@ class Header extends Component {
                     {' '}
                     Newest Anime
                   </DropdownItem>
+                  <DropdownItem tag={Link} to='/categories'>
+                    <FontAwesomeIcon icon='list' />
+                    {' '}
+                    Categories
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

@@ -6,6 +6,7 @@ import {
   ADD_MEDIA,
   ADD_SERIES,
   ADD_SERIES_COLLECTION,
+  SET_CATEGORIES,
   SET_ERROR,
   SET_HISTORY,
   SET_LANGUAGES,
@@ -40,6 +41,7 @@ export default function Data (state = {
   list: {},
   recent: [],
   languages: [],
+  categories: {},
   mal: {},
   anilist: {},
 
@@ -108,6 +110,11 @@ export default function Data (state = {
       return {
         ...state,
         languages: action.payload
+      }
+    case SET_CATEGORIES:
+      return {
+        ...state,
+        categories: action.payload
       }
     case ADD_MAL_ITEM:
       return {

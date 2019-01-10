@@ -18,6 +18,7 @@ import Queue from './pages/Queue'
 import History from './pages/History'
 import Recent from './pages/Recent'
 import SeriesList from './pages/SeriesList'
+import Categories from './pages/Categories'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTv } from '@fortawesome/free-solid-svg-icons/faTv'
@@ -105,7 +106,8 @@ class App extends Component {
           <Route path='/recent' component={Recent} />
           <Route path='/series/:id/:media' component={Media} />
           <Route path='/series/:id' component={Series} />
-          <Route path='/list/:type(simulcast|popular|newest)' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
+          <Route path='/list/:type' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
+          <Route path='/categories' component={Categories} />
           <Route path='/empty' component={() => <Loading />} />
           <Redirect from='*' to='/' />
         </Switch>
