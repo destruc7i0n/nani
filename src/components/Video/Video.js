@@ -56,7 +56,9 @@ class Video extends Component {
           // if the first image doesn't work, it'll fall back to the second
           custom: [
             `url(${media.screenshot_image && withProxy(media.screenshot_image.full_url)}) top left / cover no-repeat`,
-            `url(${media.screenshot_image && replaceHttps(media.screenshot_image.full_url)}) top left / cover no-repeat`
+            `url(${media.screenshot_image && replaceHttps(media.screenshot_image.full_url)}) top left / cover no-repeat`,
+            // absolute final option
+            `url(https://via.placeholder.com/640x360?text=No+Image) top left / cover no-repeat`
           ].join(', ')
         },
         plugins: {

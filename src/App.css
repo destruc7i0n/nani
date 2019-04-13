@@ -4,7 +4,10 @@
 html { overflow-y: scroll; }
 
 /* overrides modal adding padding */
-body { padding-right: 0 !important; }
+body {
+    padding-right: 0 !important;
+    overflow: hidden;
+}
 
 .logo {
     display: inline-block;

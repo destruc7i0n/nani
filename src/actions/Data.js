@@ -5,6 +5,8 @@ import { omit } from 'lodash'
 
 import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 
+import { batch } from 'react-redux'
+
 import { logout, startSession } from './Auth'
 import { push, replace } from 'connected-react-router'
 
@@ -213,10 +215,12 @@ export const getQueue = (force) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      dispatch(setQueue(data))
-      dispatch(addSeriesBulk(data.map((d) => d.series)))
-      dispatch(addMediaBulk(data.map((d) => d.most_likely_media)))
-      dispatch(addMediaBulk(data.map((d) => d.last_watched_media)))
+      batch(() => {
+        dispatch(setQueue(data))
+        dispatch(addSeriesBulk(data.map((d) => d.series)))
+        dispatch(addMediaBulk(data.map((d) => d.most_likely_media)))
+        dispatch(addMediaBulk(data.map((d) => d.last_watched_media)))
+      })
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)
@@ -254,9 +258,11 @@ export const getHistory = ({limit = 24, offset = 0} = {}, append = false, force 
           ...data
         ]))
       }
-      dispatch(addSeriesBulk(data.map((d) => d.series)))
-      dispatch(addCollectionBulk(data.map((d) => d.collection)))
-      dispatch(addMediaBulk(data.map((d) => d.media)))
+      batch(() => {
+        dispatch(addSeriesBulk(data.map((d) => d.series)))
+        dispatch(addCollectionBulk(data.map((d) => d.collection)))
+        dispatch(addMediaBulk(data.map((d) => d.media)))
+      })
       resolve(data)
     } catch (err) {
       await handleError(err, dispatch, state, reject)
@@ -282,8 +288,10 @@ export const search = (q) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      dispatch(addSeriesBulk(data.map((d) => d)))
-      dispatch(setSearchIds(data.map((d) => d.series_id)))
+      batch(() => {
+        dispatch(addSeriesBulk(data.map((d) => d)))
+        dispatch(setSearchIds(data.map((d) => d.series_id)))
+      })
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)
@@ -332,8 +340,10 @@ export const getCollectionsForSeries = (id) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      dispatch(addCollectionBulk(data.map((d) => d)))
-      dispatch(addSeriesCollection({id, arr: data.map((d) => d.collection_id)}))
+      batch(() => {
+        dispatch(addCollectionBulk(data.map((d) => d)))
+        dispatch(addSeriesCollection({id, arr: data.map((d) => d.collection_id)}))
+      })
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)
@@ -360,8 +370,10 @@ export const getMediaForCollection = (id) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      dispatch(addMediaBulk(data.map((d) => d)))
-      dispatch(addCollectionMedia({id, arr: data.map((d) => d.media_id)}))
+      batch(() => {
+        dispatch(addMediaBulk(data.map((d) => d)))
+        dispatch(addCollectionMedia({id, arr: data.map((d) => d.media_id)}))
+      })
       resolve()
     } catch (err) {
       reject(err)
@@ -406,8 +418,10 @@ export const updateSeriesQueue = ({id, inQueue}) => (dispatch, getState) => {
       const resp = await api({method: 'post', route: inQueue ? 'remove_from_queue' : 'add_to_queue', data: form, locale: state.Options.language, noCancel: true})
       if (resp.data.error) throw resp
 
-      dispatch(getQueue(true))
-      dispatch(updateSeriesQueueData(id, !inQueue))
+      batch(() => {
+        dispatch(getQueue(true))
+        dispatch(updateSeriesQueueData(id, !inQueue))
+      })
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)
@@ -492,9 +506,11 @@ export const getRecent = (noCancel = false) => (dispatch, getState) => {
       if (resp.data.error) throw resp
 
       const data = resp.data.data
-      dispatch(addMediaBulk(data.map((d) => d.most_recent_media)))
-      dispatch(addSeriesBulk(data.map((d) => omit(d, 'most_recent_media'))))
-      dispatch(setRecent(data))
+      batch(() => {
+        dispatch(addMediaBulk(data.map((d) => d.most_recent_media)))
+        dispatch(addSeriesBulk(data.map((d) => omit(d, 'most_recent_media'))))
+        dispatch(setRecent(data))
+      })
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)

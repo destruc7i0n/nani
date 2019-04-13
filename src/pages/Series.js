@@ -169,8 +169,9 @@ class Series extends Component {
                             )
                           }
                         </div>
-                        {seriesCollection.map((collectionId) =>
+                        {seriesCollection.map((collectionId, index) =>
                           <SeriesCollection
+                            index={index}
                             key={`seriesCollection-${collectionId}`}
                             defaultLoaded={collectionId === loadedCollection}
                             id={collectionId}

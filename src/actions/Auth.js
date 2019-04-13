@@ -1,6 +1,8 @@
 import axios from 'axios'
 import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 
+import { batch } from 'react-redux'
+
 import { handleError, setHistory, setQueue } from './Data'
 
 export const UPDATE_AUTH = 'UPDATE_AUTH'
@@ -121,11 +123,13 @@ export const logout = (didExpire = false) => (dispatch, getState) => {
       if (didExpire) {
         dispatch(setExpiredSession(state.Auth.username))
       }
-      dispatch(removeAuth())
-      await dispatch(startSession())
-      resolve()
-      dispatch(setHistory(0, []))
-      dispatch(setQueue([]))
+      batch(async () => {
+        dispatch(removeAuth())
+        await dispatch(startSession())
+        resolve()
+        dispatch(setHistory(0, []))
+        dispatch(setQueue([]))
+      })
     } catch (err) {
       await handleError(err, dispatch, state, reject)
     }

@@ -28,6 +28,8 @@ import { faListOl } from '@fortawesome/free-solid-svg-icons/faListOl'
 import { faFastForward } from '@fortawesome/free-solid-svg-icons/faFastForward'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons/faCaretLeft'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle'
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
@@ -59,6 +61,8 @@ library.add(
   faFastForward,
   faCaretRight,
   faCaretLeft,
+  faChevronRight,
+  faChevronLeft,
   faCaretDown,
   faExclamationTriangle,
   faStar,

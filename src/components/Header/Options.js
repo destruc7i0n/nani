@@ -9,6 +9,7 @@ import {
   setLanguage,
   setTheme,
   toggleAutoplay,
+  toggleAutoTheme,
   toggleOrderControls
 } from '../../actions'
 
@@ -50,11 +51,14 @@ class Options extends Component {
     this.toggle = this.toggle.bind(this)
     this.authMal = this.authMal.bind(this)
     this.authAniList = this.authAniList.bind(this)
+    this.listenForColourTheme = this.listenForColourTheme.bind(this)
   }
 
   componentDidMount () {
     const { dispatch } = this.props
     dispatch(getLanguages())
+
+    this.listenForColourTheme()
   }
 
   toggle () {
@@ -91,9 +95,25 @@ class Options extends Component {
     }
   }
 
+  listenForColourTheme () {
+    const { dispatch, autoTheme } = this.props
+
+    const themeSet = (theme) => dispatch(setTheme(theme))
+
+    // if either is supported, set to initial and listen
+    const dark = window.matchMedia('(prefers-color-scheme: dark)')
+    const light = window.matchMedia('(prefers-color-scheme: light)')
+    if ((dark.matches || light.matches) && autoTheme) {
+      themeSet(light.matches ? 'light' : 'dark')
+      light.addListener((e) => {
+        this.props.autoTheme && themeSet(e.matches ? 'light' : 'dark')
+      })
+    }
+  }
+
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
@@ -107,7 +127,7 @@ class Options extends Component {
             <h3>Preferences</h3>
             <div className='preferences row'>
               <Label for='language' sm={6}>Theme</Label>
-              <div className='col-sm-6'>
+              <div className='col-sm-6 d-flex align-items-center'>
                 <select className='custom-select' id='theme' value={theme} onChange={({ target: { value } }) => dispatch(setTheme(value))}>
                   <option value='light'>Light</option>
                   <option value='dark'>Dark</option>
@@ -115,8 +135,17 @@ class Options extends Component {
               </div>
             </div>
             <div className='row'>
+              <Label for='autoplay' sm={6}>
+                Automatically change theme?
+                <small>Based on computer colour theme, if possible.</small>
+              </Label>
+              <div className='col-sm-6 d-flex align-items-center'>
+                <input type='checkbox' id='autoTheme' checked={autoTheme} onChange={() => dispatch(toggleAutoTheme())} />
+              </div>
+            </div>
+            <div className='row'>
               <Label for='language' sm={6}>Content Language</Label>
-              <div className='col-sm-6'>
+              <div className='col-sm-6 d-flex align-items-center'>
                 <select className='custom-select' id='language' value={language} onChange={({ target: { value } }) => dispatch(setLanguage(value))}>
                   {languages.map((language) => <option value={language.id}>{language.text}</option>)}
                 </select>
@@ -124,13 +153,13 @@ class Options extends Component {
             </div>
             <div className='row'>
               <Label for='autoplay' sm={6}>Autoplay video?</Label>
-              <div className='col-sm-6'>
+              <div className='col-sm-6 d-flex align-items-center'>
                 <input type='checkbox' id='autoplay' checked={autoplay} onChange={() => dispatch(toggleAutoplay())} />
               </div>
             </div>
             <div className='row'>
               <Label for='autoplay' sm={6}>Show episode order controls?</Label>
-              <div className='col-sm-6'>
+              <div className='col-sm-6 d-flex align-items-center'>
                 <input type='checkbox' id='orderControls' checked={orderControls} onChange={() => dispatch(toggleOrderControls())} />
               </div>
             </div>
@@ -260,6 +289,7 @@ export default connect((store) => {
     autoplay: store.Options.autoplay,
     language: store.Options.language,
     theme: store.Options.theme,
+    autoTheme: store.Options.autoThemeChange,
     languages: store.Data.languages,
     mal: store.Auth.mal,
     anilist: store.Auth.anilist
