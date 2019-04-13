@@ -37,6 +37,9 @@ class Media extends Component {
     }
     this.loadVideo = this.loadVideo.bind(this)
     this.getVideoData = this.getVideoData.bind(this)
+
+    this.keyboardShortcuts = this.keyboardShortcuts.bind(this)
+    this.keyboardListener = null
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
@@ -56,6 +59,11 @@ class Media extends Component {
 
   async componentDidMount () {
     await this.loadVideo()
+    this.keyboardShortcuts()
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('keydown', this.keyboardListener)
   }
 
   async componentDidUpdate (prevProps, prevState) {
@@ -65,6 +73,27 @@ class Media extends Component {
     if (nextMedia !== prevMedia) {
       await this.loadVideo()
     }
+  }
+
+  keyboardShortcuts () {
+    const { history } = this.props
+
+    this.keyboardListener = (event) => {
+      const { currentMedia, nextMedia, prevMedia } = this.state
+
+      switch (event.which) {
+        case 37: // left
+          if (prevMedia) history.push(`/series/${currentMedia.collection_id}/${prevMedia.media_id}`)
+          break
+        case 39: // right
+          if (nextMedia) history.push(`/series/${currentMedia.collection_id}/${nextMedia.media_id}`)
+          break
+        default:
+          break
+      }
+    }
+
+    document.addEventListener('keydown', this.keyboardListener)
   }
 
   async loadVideo () {
