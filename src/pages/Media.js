@@ -63,7 +63,7 @@ class Media extends Component {
   }
 
   componentWillUnmount () {
-    document.removeEventListener('keydown', this.keyboardListener)
+    document.body.removeEventListener('keydown', this.keyboardListener)
   }
 
   async componentDidUpdate (prevProps, prevState) {
@@ -81,6 +81,8 @@ class Media extends Component {
     this.keyboardListener = (event) => {
       const { currentMedia, nextMedia, prevMedia } = this.state
 
+      if (['INPUT', 'DIV'].includes(event.target.tagName.toUpperCase())) return
+
       switch (event.which) {
         case 37: // left
           if (prevMedia) history.push(`/series/${currentMedia.collection_id}/${prevMedia.media_id}`)
@@ -93,7 +95,7 @@ class Media extends Component {
       }
     }
 
-    document.addEventListener('keydown', this.keyboardListener)
+    document.body.addEventListener('keydown', this.keyboardListener)
   }
 
   async loadVideo () {
