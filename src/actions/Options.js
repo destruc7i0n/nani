@@ -24,3 +24,8 @@ export const setTheme = (theme) => ({
   type: SET_THEME,
   payload: theme
 })
+
+export const TOGGLE_AUTO_THEME = 'TOGGLE_AUTO_THEME'
+export const toggleAutoTheme = () => ({
+  type: TOGGLE_AUTO_THEME
+})

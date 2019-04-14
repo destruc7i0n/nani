@@ -1,7 +1,3 @@
-.player-background {
-    border-radius: 1rem;
-}
-
 .badge.badge-outline {
     background-color: transparent;
 }
@@ -30,6 +26,17 @@
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 3;
+}
+
+.video-center-overlay h2 {
+    font-size: 2.5vw;
+}
+
+@media (max-width: 768px) {
+    .video-center-overlay h2 {
+        font-size: 4vw;
+    }
 }
 
 .video-full-blur {
@@ -39,33 +46,74 @@
     background-color: rgba(0,0,0,.6);
     top: 0;
     left: 0;
+    z-index: 2;
 }
 
-.video-overlay-left, .video-overlay-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    position: absolute;
-    width: 5%;
+.video-image-preview {
+    width: 100%;
     height: 100%;
-    transition: background-color 0.5s linear;
+    background-color: #111;
+    object-fit: cover;
+    object-position: left top;
 }
 
-.video-overlay-left {
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    left: 0;
+.video-image-left, .video-image-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
 }
 
-.video-overlay-right {
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    right: 0;
+.video-image-left a, .video-image-right a {
+    display: flex;
+    min-height: 75%;
+    width: 100%;
+    overflow: hidden;
 }
 
-.video-overlay-left:hover, .video-overlay-right:hover {
-    background-color: #e9ecef;
+.video-image-left img, .video-image-right img {
+    width: 100%;
+    height: auto;
+    filter: blur(5px);
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .video-image-left a, .video-image-right a {
+        max-height: 90%;
+    }
+
+    .video-image-left img, .video-image-right img {
+        filter: blur(2px);
+    }
+}
+
+.video-image-left {
+    left: -10vw;
+}
+
+.video-image-right {
+    right: -10vw;
+}
+
+.video-image-overlay-left, .video-image-overlay-right {
+    top: 0;
+    bottom: 0;
+    background-color: #111;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    font-size: 3rem;
+    transition: all 0.2s linear;
+}
+
+.video-image-overlay-left:hover, .video-image-overlay-right:hover {
+    opacity: 0.3;
 }
 
 .video-resuming {
@@ -77,19 +125,22 @@
 }
 
 .player-width {
-    width: 90% !important;
+    width: 100% !important;
+    box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .2);
+}
+
+.embed-responsive-item {
+    z-index: 2;
 }
 
 @media (max-width: 768px) {
     .player-width {
+        width: 90% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .player-width {
         width: 80% !important;
-    }
-
-    .video-overlay-left, .video-overlay-right {
-        width: 10% !important;
-    }
-
-    .video-resuming {
-        padding: .5rem !important;
     }
 }

@@ -30,9 +30,16 @@ class Media extends Component {
       mediaId: '',
       streamData: {},
       error: '',
-      videoPlayed: false
+      videoPlayed: false,
+      currentMedia: null,
+      nextMedia: null,
+      prevMedia: null,
     }
     this.loadVideo = this.loadVideo.bind(this)
+    this.getVideoData = this.getVideoData.bind(this)
+
+    this.keyboardShortcuts = this.keyboardShortcuts.bind(this)
+    this.keyboardListener = null
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
@@ -52,6 +59,11 @@ class Media extends Component {
 
   async componentDidMount () {
     await this.loadVideo()
+    this.keyboardShortcuts()
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('keydown', this.keyboardListener)
   }
 
   async componentDidUpdate (prevProps, prevState) {
@@ -61,6 +73,27 @@ class Media extends Component {
     if (nextMedia !== prevMedia) {
       await this.loadVideo()
     }
+  }
+
+  keyboardShortcuts () {
+    const { history } = this.props
+
+    this.keyboardListener = (event) => {
+      const { currentMedia, nextMedia, prevMedia } = this.state
+
+      switch (event.which) {
+        case 37: // left
+          if (prevMedia) history.push(`/series/${currentMedia.collection_id}/${prevMedia.media_id}`)
+          break
+        case 39: // right
+          if (nextMedia) history.push(`/series/${currentMedia.collection_id}/${nextMedia.media_id}`)
+          break
+        default:
+          break
+      }
+    }
+
+    document.addEventListener('keydown', this.keyboardListener)
   }
 
   async loadVideo () {
@@ -73,6 +106,10 @@ class Media extends Component {
         await dispatch(getMediaForCollection(media.collection_id))
         // preload the series info
         await dispatch(getSeriesInfo(media.series_id))
+
+        // load ui stuff
+        this.getVideoData()
+
         // grab the media stream URL
         const video = await api({
           route: 'info',
@@ -94,24 +131,60 @@ class Media extends Component {
     }
   }
 
-  render () {
-    const { streamData, error, videoPlayed } = this.state
-    const { match: { params: { media: mediaId } }, media, collectionMedia, Auth, autoplay, location } = this.props
+  getVideoData () {
+    const { match: { params: { media: mediaId } }, media, collectionMedia } = this.props
+
     // the current media object and the series
     const mediaObj = media[mediaId]
-    // check that both of the above are loaded and no error
-    const loadedDetails = mediaObj && !error
-    // check that the video URL exists
-    const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
     // the current collection
     const currentCollection = mediaObj && collectionMedia[mediaObj.collection_id]
+
+    // grab the ids for the next or previous episode
+    const nextEpisodeId = currentCollection && currentCollection[currentCollection.indexOf(mediaObj.media_id) + 1]
+    const prevEpisodeId = currentCollection && currentCollection[currentCollection.indexOf(mediaObj.media_id) - 1]
+    const nextEpisodeMedia = nextEpisodeId && media[nextEpisodeId]
+    const prevEpisodeMedia = prevEpisodeId && media[prevEpisodeId]
+    const nextEpisodeImgURL = nextEpisodeId && nextEpisodeMedia.screenshot_image && nextEpisodeMedia.screenshot_image.full_url
+    const prevEpisodeImgURL = prevEpisodeMedia && prevEpisodeMedia.screenshot_image && prevEpisodeMedia.screenshot_image.full_url
+
+    const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
+
+    this.setState({
+      currentMedia: {
+        ...mediaObj,
+        img: imgFullURL,
+      },
+      nextMedia: nextEpisodeId ? {
+        ...nextEpisodeMedia,
+        img: nextEpisodeImgURL
+      } : null,
+      prevMedia: prevEpisodeId ? {
+        ...prevEpisodeMedia,
+        img: prevEpisodeImgURL
+      } : null,
+    })
+  }
+
+  render () {
+    const { streamData, error, videoPlayed, currentMedia, nextMedia, prevMedia } = this.state
+    const { match: { params: { media: mediaId } }, collectionMedia, Auth, autoplay, location } = this.props
+    // the current media object and the series
+    const mediaObj = currentMedia
+
+    // check that both of the above are loaded and no error
+    const loadedDetails = mediaObj && !error
+
+    // check that the video URL exists
+    const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
+
+    // the current collection
+    const currentCollection = mediaObj && collectionMedia[mediaObj.collection_id]
+
     // remove episodes that are before the one currently being watched
     const nextEpisodes = mediaObj && currentCollection
       ? currentCollection.filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
-    // grab the ids for the next or previous episode
-    const nextEpisode = currentCollection && currentCollection[currentCollection.indexOf(mediaObj.media_id) + 1]
-    const prevEpisode = currentCollection && currentCollection[currentCollection.indexOf(mediaObj.media_id) - 1]
+
     // small function to format time
     const formatTime = (secs) => {
       const minutes = Math.floor(secs / 60)
@@ -119,12 +192,13 @@ class Media extends Component {
       seconds = seconds < 10 ? `0${seconds}` : seconds
       return `${minutes}:${seconds}`
     }
+
     // if finished watching the episode, more than 90% done
     const finishedWatching = mediaObj && (mediaObj.playhead / mediaObj.duration < 0.9) && mediaObj.playhead !== 0
-    // grab the image url
-    const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
+
     // no streams
     const noStreams = streamData.stream_data && streamData.stream_data.streams.length === 0
+
     return (
       <Fragment>
         <Helmet defer={false}>
@@ -140,31 +214,43 @@ class Media extends Component {
             )
             : (
               <div className='col-sm-12'>
-                <div className='d-flex mb-4 mt-2 bg-light player-background justify-content-center position-relative'>
-                  {prevEpisode ? (
-                    <Link
-                      className='position-absolute video-overlay-left text-muted'
-                      to={`/series/${mediaObj.collection_id}/${prevEpisode}`}
-                    >
-                      <FontAwesomeIcon icon='caret-left' size='3x' />
-                    </Link>
+                <div className='d-flex mb-4 mt-2 justify-content-center position-relative'>
+                  {prevMedia ? (
+                    <div className='position-absolute video-image-left'>
+                      <Link
+                        className='position-relative'
+                        to={`/series/${mediaObj.collection_id}/${prevMedia.media_id}`}
+                      >
+                        <div className='position-absolute video-image-overlay-left' />
+                        <Img src={prevMedia.img ? [
+                          withProxy(prevMedia.img),
+                          replaceHttps(prevMedia.img)
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={prevMedia.name} />
+                      </Link>
+                    </div>
                   ) : null}
-                  {nextEpisode ? (
-                    <Link
-                      className='position-absolute video-overlay-right text-muted'
-                      to={`/series/${mediaObj.collection_id}/${nextEpisode}`}
-                    >
-                      <FontAwesomeIcon icon='caret-right' size='3x' />
-                    </Link>
+                  {nextMedia ? (
+                    <div className='position-absolute video-image-right'>
+                      <Link
+                        className='position-relative'
+                        to={`/series/${mediaObj.collection_id}/${nextMedia.media_id}`}
+                      >
+                        <div className='position-absolute video-image-overlay-right' />
+                        <Img src={nextMedia.img ? [
+                          withProxy(nextMedia.img),
+                          replaceHttps(nextMedia.img)
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={nextMedia.name} />
+                      </Link>
+                    </div>
                   ) : null}
-                  <div className='player-width position-relative'>
+                  <div className='player-width position-relative embed-responsive embed-responsive-16by9'>
                     {!loadedVideo || !streamData.stream_data.streams.length
                       // loading video
                       ? <Fragment>
-                        <Img src={imgFullURL ? [
-                          withProxy(imgFullURL),
-                          replaceHttps(imgFullURL)
-                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='w-100' alt={mediaObj.name} />
+                        <Img src={currentMedia.img ? [
+                          withProxy(currentMedia.img),
+                          replaceHttps(currentMedia.img)
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='embed-responsive-item video-image-preview' alt={mediaObj.name} />
                         {!noStreams ? <div className='video-center-overlay text-white'>
                           <Loading />
                         </div> : null}
@@ -220,7 +306,7 @@ class Media extends Component {
                         }
                       </Fragment>
                       // loaded video
-                      : <Fragment>
+                      : <div className='embed-responsive-item'>
                         <Video
                           streamUrl={streamData.stream_data.streams[0].url}
                           autoplay={autoplay}
@@ -240,7 +326,7 @@ class Media extends Component {
                             </div>
                             : null
                         }
-                      </Fragment>
+                      </div>
                     }
                   </div>
                 </div>
