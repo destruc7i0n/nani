@@ -81,13 +81,11 @@ class Media extends Component {
     this.keyboardListener = (event) => {
       const { currentMedia, nextMedia, prevMedia } = this.state
 
-      if (event.target.tagName !== 'BODY') return
-
       switch (event.which) {
-        case 37: // left
+        case 188: // "," left
           if (prevMedia) history.push(`/series/${currentMedia.collection_id}/${prevMedia.media_id}`)
           break
-        case 39: // right
+        case 190: // "." right
           if (nextMedia) history.push(`/series/${currentMedia.collection_id}/${nextMedia.media_id}`)
           break
         default:
