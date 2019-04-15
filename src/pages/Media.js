@@ -81,7 +81,7 @@ class Media extends Component {
     this.keyboardListener = (event) => {
       const { currentMedia, nextMedia, prevMedia } = this.state
 
-      if (['INPUT', 'DIV'].includes(event.target.tagName.toUpperCase())) return
+      if (event.target.tagName !== 'BODY') return
 
       switch (event.which) {
         case 37: // left
