@@ -57,7 +57,7 @@ class SeriesCollection extends Component {
     const { loaded, expanded, order } = this.state
     const { title, collectionMedia, id, orderControls, perPage = 3, index = -1 } = this.props
     return (
-      <div>
+      <div className='mt-4'>
         <h4 className='border-bottom pb-3' style={{ cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleExpanded}>
           {/* eslint-disable-next-line */}
           <a id={`#collection_${id}`} className='d-flex justify-content-between'>

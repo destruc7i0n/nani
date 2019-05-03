@@ -16,6 +16,7 @@ import MALButton from '../components/Buttons/MALButton'
 import AniListButton from '../components/Buttons/AniListButton'
 import QueueButton from '../components/Buttons/QueueButton'
 import Loading from '../components/Loading/Loading'
+import LoadingMediaPage from '../components/Loading/LoadingMediaPage'
 
 import api from '../lib/api'
 import { isCancel } from 'axios'
@@ -181,7 +182,7 @@ class Media extends Component {
         <div className='row'>
           { !loadedDetails
             ? (
-              <Loading />
+              <LoadingMediaPage />
             )
             : (
               <div className='col-sm-12'>

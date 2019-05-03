@@ -14,9 +14,9 @@ import moment from 'moment'
 
 import Collection from '../components/Collections/Collection'
 import SeriesCollection from '../components/Collections/SeriesCollection'
-import Loading from '../components/Loading/Loading'
 import QueueButton from '../components/Buttons/QueueButton'
 import ImageLoader from '../components/Loading/ImageLoader'
+import LoadingSeriesPage from '../components/Loading/LoadingSeriesPage'
 
 import withProxy, { replaceHttps } from '../lib/withProxy'
 
@@ -123,7 +123,7 @@ class Series extends Component {
         { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
         { !loaded
           ? (
-            <Loading />
+            <LoadingSeriesPage />
           )
           : (
             <Fragment>
@@ -170,20 +170,22 @@ class Series extends Component {
                             )
                           }
                         </div>
-                        <div className='mt-4'>
-                          {seriesCollection.map((collectionId, index) =>
-                            <SeriesCollection
-                              index={index}
-                              key={`seriesCollection-${collectionId}`}
-                              defaultLoaded={collectionId === loadedCollection}
-                              id={collectionId}
-                              showTitle={seriesCollection.length > 1}
-                              title={collections[collectionId].name} />
-                          )}
-                          {!seriesCollection.length
-                            ? <Collection loading perPage={3} showTitle titleTag='h4' title={series.name} />
-                            : null}
-                        </div>
+                        {seriesCollection.map((collectionId, index) =>
+                          <SeriesCollection
+                            index={index}
+                            key={`seriesCollection-${collectionId}`}
+                            defaultLoaded={collectionId === loadedCollection}
+                            id={collectionId}
+                            showTitle={seriesCollection.length > 1}
+                            title={collections[collectionId].name} />
+                        )}
+                        {!seriesCollection.length
+                          ? (
+                            <div className='mt-4'>
+                              <Collection loading perPage={3} showTitle titleTag='h4' title={series.name} />
+                            </div>
+                          )
+                          : null}
                       </div>
                     </div>
                   </CardBody>
