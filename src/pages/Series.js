@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { startCase } from 'lodash'
 import moment from 'moment'
 
+import Collection from '../components/Collections/Collection'
 import SeriesCollection from '../components/Collections/SeriesCollection'
 import Loading from '../components/Loading/Loading'
 import QueueButton from '../components/Buttons/QueueButton'
@@ -169,15 +170,20 @@ class Series extends Component {
                             )
                           }
                         </div>
-                        {seriesCollection.map((collectionId, index) =>
-                          <SeriesCollection
-                            index={index}
-                            key={`seriesCollection-${collectionId}`}
-                            defaultLoaded={collectionId === loadedCollection}
-                            id={collectionId}
-                            showTitle={seriesCollection.length > 1}
-                            title={collections[collectionId].name} />
-                        )}
+                        <div className='mt-4'>
+                          {seriesCollection.map((collectionId, index) =>
+                            <SeriesCollection
+                              index={index}
+                              key={`seriesCollection-${collectionId}`}
+                              defaultLoaded={collectionId === loadedCollection}
+                              id={collectionId}
+                              showTitle={seriesCollection.length > 1}
+                              title={collections[collectionId].name} />
+                          )}
+                          {!seriesCollection.length
+                            ? <Collection loading perPage={3} showTitle titleTag='h4' title={series.name} />
+                            : null}
+                        </div>
                       </div>
                     </div>
                   </CardBody>

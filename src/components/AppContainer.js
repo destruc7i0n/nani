@@ -25,13 +25,16 @@ class AppContainer extends Component {
   }
 
   async componentDidMount () {
-    const { dispatch, history } = this.props
+    const { dispatch, Auth, history } = this.props
     // cancel requests on page change
     this.unlisten = history.listen(() => cancelCurrentRequests())
 
     // init session
     try {
-      await dispatch(startSession())
+      // only request a new session if new session or expires
+      if (!Auth.session_id || (Auth.session_id && Auth.expires && new Date() > new Date(Auth.expires))) {
+        await dispatch(startSession())
+      }
       this.setState({ initSession: true })
     } catch (e) {
       console.error(e)
@@ -46,8 +49,11 @@ class AppContainer extends Component {
   componentDidUpdate (prevProps) {
     const {location: from} = prevProps
     const {dispatch, Auth, location: to} = this.props
+
+    const isMediaPage = (url) => matchPath(url, { path: '/series/:id/:media', exact: true })
+
     // check if not to same page and not from some pages
-    if (from && from.pathname !== to.pathname) {
+    if (from && from.pathname !== to.pathname && !isMediaPage(from.pathname)) {
       window.scrollTo(0, 0)
     }
 

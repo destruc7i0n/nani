@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { updatePlaybackTime } from '../../actions'
 
 import Clappr from 'clappr'
-import LevelSelector from '../../lib/clappr-level-selector'
-import ChromecastPlugin from '../../lib/clappr-chromecast-plugin'
+import LevelSelector from 'level-selector'
+import ChromecastPlugin from 'clappr-chromecast-plugin'
 import ResponsiveContainer from '../../lib/clappr-responsive-container-plugin'
-import PlaybackRatePlugin from '../../lib/clappr-playback-rate-plugin'
+import PlaybackRatePlugin from 'clappr-playback-rate-plugin'
 
 import withProxy, { replaceHttps } from '../../lib/withProxy'
 
@@ -20,6 +20,8 @@ class Video extends Component {
     // if already seeked
     this.seeked = false
     this.logTime = this.logTime.bind(this)
+
+    this.playerRef = React.createRef()
   }
 
   // ignore updates!
@@ -48,8 +50,9 @@ class Video extends Component {
       if (this.player) {
         this.destroyPlayer()
       }
+      console.log(media)
       this.player = new Clappr.Player({
-        parent: this.playerRef,
+        parent: this.playerRef.current,
         source: streamUrl,
         autoPlay: autoplay,
         poster: {
@@ -62,7 +65,12 @@ class Video extends Component {
           ].join(', ')
         },
         plugins: {
-          core: [LevelSelector, ChromecastPlugin, ResponsiveContainer, PlaybackRatePlugin]
+          core: [Clappr.MediaControl, LevelSelector, ChromecastPlugin, ResponsiveContainer, PlaybackRatePlugin]
+        },
+        playback: {
+          hlsjsConfig: {
+            enableWorker: false
+          }
         },
         levelSelectorConfig: {
           title: 'Quality',
@@ -76,9 +84,11 @@ class Video extends Component {
         },
         chromecast: {
           media: {
-            type: ChromecastPlugin.TvSeries,
+            type: ChromecastPlugin.TvShow,
             title: media.name,
-            subtitle: media.description
+            subtitle: media.description,
+            seriesTitle: media.collection_name,
+            episode: media.episode_number || null
           }
         },
         playbackRateConfig: {
@@ -107,6 +117,7 @@ class Video extends Component {
       this.player.on(Clappr.Events.PLAYER_ENDED, () => {
         this.logTime(media.duration)
       })
+      this.player.on(Clappr.Events.PLAYER_ERROR, (error) => console.error('Error', error))
     }
   }
 
@@ -126,7 +137,7 @@ class Video extends Component {
 
   render () {
     return (
-      <div ref={el => { this.playerRef = el }} />
+      <div ref={this.playerRef} />
     )
   }
 }

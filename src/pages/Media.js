@@ -96,7 +96,7 @@ class Media extends Component {
     } catch (err) {
       // check that it isn't an error from the request being cancelled
       if (!isCancel(err)) {
-        this.setState({ error: err.data.message || 'An error occurred.' })
+        this.setState({ error: (err && err.data && err.data.message) || 'An error occurred.' })
         console.error(err)
       }
     }
@@ -146,7 +146,7 @@ class Media extends Component {
     const loadedDetails = mediaObj && !error
 
     // check that the video URL exists
-    const loadedVideo = Object.keys(streamData).length > 0 && streamData.media_id === mediaId
+    const loadedVideo = streamData && Object.keys(streamData).length > 0 && streamData.media_id === mediaId
 
     // the current collection
     const currentCollection = mediaObj && collectionMedia[mediaObj.collection_id]
