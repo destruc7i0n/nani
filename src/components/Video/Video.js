@@ -30,6 +30,11 @@ class Video extends Component {
   }
 
   componentDidMount () {
+    window.logTime = async (time) => {
+      await this.props.dispatch(updatePlaybackTime(time, this.props.id))
+    }
+    window.setLogToZero = false
+
     this.change()
   }
 
@@ -50,7 +55,7 @@ class Video extends Component {
       if (this.player) {
         this.destroyPlayer()
       }
-      console.log(media)
+
       this.player = new Clappr.Player({
         parent: this.playerRef.current,
         source: streamUrl,
@@ -124,6 +129,13 @@ class Video extends Component {
   async logTime (t) {
     const { dispatch, id } = this.props
     const time = t || this.player.getCurrentTime()
+
+    // debug
+    if (window.setLogToZero) {
+      await dispatch(updatePlaybackTime(0, id))
+      return
+    }
+
     // log time only if it's greater than what is saved
     if (time !== 0 && time > this.loggedTime && process.env.NODE_ENV === 'production') {
       try {
