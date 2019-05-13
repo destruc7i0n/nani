@@ -55,7 +55,7 @@ class SeriesCollection extends Component {
 
   render () {
     const { loaded, expanded, order } = this.state
-    const { title, collectionMedia, id, orderControls, perPage = 3, index = -1 } = this.props
+    const { title, collectionMedia, id, orderControls, perPage = 3, defaultLoaded } = this.props
     return (
       <div className='mt-4'>
         <h4 className='border-bottom pb-3' style={{ cursor: 'pointer', userSelect: 'none' }} onClick={this.toggleExpanded}>
@@ -90,8 +90,7 @@ class SeriesCollection extends Component {
                   showTitle={false} />
               </Fragment>
             )
-            // show a loader when it's the first item for effect
-            : !loaded && index === 0 ? (
+            : !loaded && defaultLoaded ? (
                 <Collection
                   loading={true}
                   perPage={perPage}
