@@ -9,3 +9,14 @@
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
+
+.rounded-top-left {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0 !important;
+}
+
+@media (max-width: 576px) {
+    .rounded-top-left {
+        border-top-right-radius: 0.25rem !important;
+    }
+}

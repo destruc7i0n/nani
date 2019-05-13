@@ -38,7 +38,7 @@ class MediaCardLarge extends Component {
                       <CardImg
                         tag={Img}
                         top
-                        className='media-card-img'
+                        className='media-card-img rounded-top-left'
                         loader={<ImageLoader />}
                         src={imgFullURL ? [
                           withProxy(imgFullURL),

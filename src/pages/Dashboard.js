@@ -43,7 +43,7 @@ class Dashboard extends Component {
 
   render () {
     const { loaded } = this.state
-    const { guest, queue, history, recent, list } = this.props
+    const { guest, queue, history, recent, list, continueCount = 4 } = this.props
 
     const cardCount = guest ? 12 : 6
 
@@ -57,8 +57,8 @@ class Dashboard extends Component {
       .map((item) => item.most_likely_media.media_id)
       .filter((id) => !uncompletedHistory.includes(id))
 
-    // combine the lists and only take the first 4
-    const continueIds = [...uncompletedHistory, ...queueIds].slice(0, 4)
+    // combine the lists and only take the first few
+    const continueIds = [...uncompletedHistory, ...queueIds].slice(0, continueCount)
     // grab all the series from the queue
     const queueSeries = queue
       .map((item) => item.series)
@@ -120,6 +120,8 @@ export default connect((store) => {
     queue: store.Data.queue,
     history: store.Data.history.data,
     recent: store.Data.recent,
-    list: store.Data.list
+    list: store.Data.list,
+
+    continueCount: store.Options.homepageContinueCount
   }
 })(Dashboard)

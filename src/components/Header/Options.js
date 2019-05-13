@@ -6,6 +6,7 @@ import {
   loginMal,
   removeAniList,
   removeMal,
+  setHomepageContinueCount,
   setLanguage,
   setTheme,
   toggleAutoplay,
@@ -113,7 +114,7 @@ class Options extends Component {
 
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, continueCount, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
@@ -161,6 +162,17 @@ class Options extends Component {
               <Label for='autoplay' sm={6}>Show episode order controls?</Label>
               <div className='col-sm-6 d-flex align-items-center'>
                 <input type='checkbox' id='orderControls' checked={orderControls} onChange={() => dispatch(toggleOrderControls())} />
+              </div>
+            </div>
+            <div className='row'>
+              <Label for='autoplay' sm={10}>Dashboard "Continue Watching" episode card count:</Label>
+              <div className='col-sm-2 d-flex align-items-center justify-content-end'>
+                <select onChange={({ target: { value } }) => dispatch(setHomepageContinueCount(value))} value={continueCount}>
+                  <option value={4}>4</option>
+                  <option value={8}>8</option>
+                  <option value={12}>12</option>
+                  <option value={16}>16</option>
+                </select>
               </div>
             </div>
 
@@ -290,6 +302,7 @@ export default connect((store) => {
     language: store.Options.language,
     theme: store.Options.theme,
     autoTheme: store.Options.autoThemeChange,
+    continueCount: store.Options.homepageContinueCount,
     languages: store.Data.languages,
     mal: store.Auth.mal,
     anilist: store.Auth.anilist

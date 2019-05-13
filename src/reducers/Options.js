@@ -1,4 +1,12 @@
-import { HIDE_ABOUT, SET_LANGUAGE, TOGGLE_AUTOPLAY, TOGGLE_ORDER_CONTROLS, SET_THEME, TOGGLE_AUTO_THEME } from '../actions'
+import {
+  HIDE_ABOUT,
+  SET_LANGUAGE,
+  TOGGLE_AUTOPLAY,
+  TOGGLE_ORDER_CONTROLS,
+  SET_THEME,
+  TOGGLE_AUTO_THEME,
+  SET_HOMEPAGE_CONTINUE_COUNT
+} from '../actions'
 
 export default function Options (state = {
   language: 'enUS',
@@ -7,6 +15,7 @@ export default function Options (state = {
   orderControls: true,
   theme: 'dark',
   autoThemeChange: true,
+  homepageContinueCount: 4
 }, action) {
   switch (action.type) {
     case SET_LANGUAGE:
@@ -38,6 +47,11 @@ export default function Options (state = {
       return {
         ...state,
         autoThemeChange: !state.autoThemeChange
+      }
+    case SET_HOMEPAGE_CONTINUE_COUNT:
+      return {
+        ...state,
+        homepageContinueCount: action.payload
       }
     default:
       return state
