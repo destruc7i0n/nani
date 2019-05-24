@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getMangaChapterPages, getMangaChapters, getMangaSeries } from '../actions'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
+import { push } from 'connected-react-router'
 
 import { Button } from 'reactstrap'
 
@@ -36,14 +37,20 @@ class MangaSeries extends Component {
   }
 
   async componentDidMount () {
-    const { dispatch, match: { params: { id } }, } = this.props
+    const { dispatch, match: { params: { id, chapter } }, } = this.props
 
     try {
       await dispatch(getMangaSeries(id))
 
       const { chapters } = await dispatch(getMangaChapters(id))
 
-      this.setState({ loading: false, chapters, currentChapter: 0 })
+      // init the first chapter
+      let currentChapter = 0
+      if (chapter) {
+        currentChapter = chapters.findIndex(({ chapter_id: chapterId }) => chapterId === chapter) || 0
+      }
+
+      this.setState({ loading: false, chapters, currentChapter })
 
       await this.getPages()
     } catch (e) {
@@ -74,6 +81,9 @@ class MangaSeries extends Component {
 
     const chapter = chapters[currentChapter]
     if (!chapter) return
+
+    // update url
+    dispatch(push(`/manga/series/${chapter.series_id}/${chapter.chapter_id}`))
 
     const { pages } = await dispatch(getMangaChapterPages(chapter.chapter_id))
 
@@ -132,6 +142,7 @@ class MangaSeries extends Component {
 
     if ((type === '+' && currentPage + 1 <= numPages) || (type === '-' && currentPage - 1 >= 0)) {
       this.setState({
+        // eslint-disable-next-line no-eval
         currentPage: eval(`currentPage ${type} 1`) // he he
       })
     }
@@ -153,7 +164,12 @@ class MangaSeries extends Component {
         <div className='col-8'>
           <select className='w-100 h-100' value={currentChapter} onChange={({ target: { value } }) => this.setState({ currentChapter: value })}>
             {chapters.map((chapter, index) => (
-              <option value={index}>{chapter.locale.enUS.name}</option>
+              // try to handle the names of the chapter to be informative...
+              <option value={index}>
+                {chapter.locale.enUS.name.toLowerCase().includes('chapter')
+                  ? chapter.locale.enUS.name
+                  : `Chapter ${Number(chapter.number)}: ${chapter.locale.enUS.name}`}
+              </option>
             ))}
           </select>
         </div>
