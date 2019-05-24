@@ -376,7 +376,7 @@ export const getMediaForCollection = (id) => (dispatch, getState) => {
       })
       resolve()
     } catch (err) {
-      reject(err)
+      await handleError(err, dispatch, state, reject)
     }
   })
 }
@@ -400,7 +400,7 @@ export const getMediaInfo = (id) => (dispatch, getState) => {
       dispatch(addMedia(data))
       resolve(data)
     } catch (err) {
-      reject(err)
+      await handleError(err, dispatch, state, reject)
     }
   })
 }

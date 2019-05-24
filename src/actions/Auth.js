@@ -101,7 +101,7 @@ export const login = (username, password) => (dispatch, getState) => {
       dispatch(setExpiredSession(''))
       resolve()
     } catch (err) {
-      reject(err)
+      await handleError(err, dispatch, state, reject)
     }
   })
 }

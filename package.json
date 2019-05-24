@@ -60,8 +60,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.4.5",
     "http-proxy-middleware": "^0.19.1",
-    "netlify-lambda": "^1.4.7"
+    "netlify-lambda": "^1.4.13"
   }
 }
