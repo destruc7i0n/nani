@@ -60,6 +60,7 @@ export const startSession = () => (dispatch, getState) => {
       const data = resp.data.data
       dispatch(
         updateAuth({
+          user_id: (data.user && data.user.user_id) || null,
           session_id: data.session_id,
           token: data.auth,
           expires: data.expires
@@ -90,6 +91,7 @@ export const login = (username, password) => (dispatch, getState) => {
 
       dispatch(
         updateAuth({
+          user_id: data.user.user_id,
           token: data.auth,
           expires: data.expires,
           username: data.user.username,

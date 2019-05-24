@@ -18,7 +18,7 @@ import {
   UPDATE_SERIES_QUEUE
 } from '../actions'
 
-const addToObj = (state, key, data) => ({
+export const addToObj = (state, key, data) => ({
   ...state,
   [key]: {
     ...state[key],

@@ -161,7 +161,7 @@ export const addAniListItem = (id, data) => ({
   }
 })
 
-const addIdCheckBulk = (id, obj, action) => ({
+export const addIdCheckBulk = (id, obj, action) => ({
   type: action,
   // eslint-disable-next-line array-callback-return
   payload: obj.reduce((result, item) => {
@@ -174,7 +174,7 @@ const addIdCheckBulk = (id, obj, action) => ({
   }, {})
 })
 
-const addIdArr = ({ id, arr }, action) => ({
+export const addIdArr = ({ id, arr }, action) => ({
   type: action,
   payload: {
     [id]: arr

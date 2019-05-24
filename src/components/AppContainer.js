@@ -32,7 +32,7 @@ class AppContainer extends Component {
     // init session
     try {
       // only request a new session if new session or expires
-      if (!Auth.session_id || (Auth.session_id && Auth.expires && new Date() > new Date(Auth.expires))) {
+      if (!Auth.session_id || (Auth.session_id && Auth.expires && new Date() > new Date(Auth.expires)) || (!Auth.guest && !Auth.user_id)) {
         await dispatch(startSession())
       }
       this.setState({ initSession: true })

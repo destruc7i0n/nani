@@ -19,6 +19,8 @@ import History from './pages/History'
 import Recent from './pages/Recent'
 import SeriesList from './pages/SeriesList'
 import Categories from './pages/Categories'
+import MangaList from './pages/MangaList'
+import MangaSeries from './pages/MangaSeries'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTv } from '@fortawesome/free-solid-svg-icons/faTv'
@@ -48,6 +50,7 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
 import { faInfo } from '@fortawesome/free-solid-svg-icons/faInfo'
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch'
 import { faCrown } from '@fortawesome/free-solid-svg-icons/faCrown'
+import { faBook } from '@fortawesome/free-solid-svg-icons/faBook'
 
 import './App.css'
 import './themes/light.scss'
@@ -80,7 +83,8 @@ library.add(
   faMinus,
   faInfo,
   faCircleNotch,
-  faCrown
+  faCrown,
+  faBook,
 )
 
 class App extends Component {
@@ -112,6 +116,8 @@ class App extends Component {
           <Route path='/series/:id' component={Series} />
           <Route path='/list/:type' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
           <Route path='/categories' component={Categories} />
+          <AuthedRoute path='/manga/series/:id' authed={isLoggedIn()} component={MangaSeries} />
+          <AuthedRoute path='/manga' authed={isLoggedIn()} component={MangaList} />
           <Route path='/empty' component={() => <Loading />} />
           <Redirect from='*' to='/' />
         </Switch>
