@@ -192,7 +192,7 @@ class MangaSeries extends Component {
     const Navigation = ({ top }) => (
       <div className={classNames('col-12 row', { 'pb-3': top, 'pt-3': !top })}>
         <div className='col-2'>
-          <Button color='success' block size='sm' disabled={currentPage === 0} onClick={() => this.updatePage('+')}>Next Page</Button>
+          <Button color='success' block size='sm' disabled={currentPage === numPages - 1} onClick={() => this.updatePage('+')}>Next Page</Button>
         </div>
         <div className='col-8'>
           <select className='w-100 h-100' value={currentChapter} onChange={({ target: { value } }) => this.setState({ currentChapter: value })}>
@@ -207,7 +207,7 @@ class MangaSeries extends Component {
           </select>
         </div>
         <div className='col-2'>
-          <Button color='success' block size='sm' disabled={currentPage === numPages - 1} onClick={() => this.updatePage('-')}>Prev Page</Button>
+          <Button color='success' block size='sm' disabled={currentPage === 0} onClick={() => this.updatePage('-')}>Prev Page</Button>
         </div>
       </div>
     )
