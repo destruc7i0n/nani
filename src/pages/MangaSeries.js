@@ -13,6 +13,8 @@ import request from 'request-promise'
 
 import classNames from 'classnames'
 
+import api, { API_VERSION, DEVICE_TYPE } from '../lib/api_manga'
+
 import Loading from '../components/Loading/Loading'
 import LoadingBox from '../components/Loading/LoadingBox'
 
@@ -34,6 +36,8 @@ class MangaSeries extends Component {
       loading: true,
       loadingImage: false,
     }
+
+    this.trackChapterPage = this.trackChapterPage.bind(this)
   }
 
   async componentDidMount () {
@@ -50,32 +54,47 @@ class MangaSeries extends Component {
         currentChapter = chapters.findIndex(({ chapter_id: chapterId }) => chapterId === chapter) || 0
       }
 
-      this.setState({ loading: false, chapters, currentChapter })
+      let currentPage = 0
+      if (chapters[currentChapter] && chapters[currentChapter].page_logs && chapters[currentChapter].page_logs.current_page) {
+        currentPage = Number(chapters[currentChapter].page_logs.current_page) - 1
+      }
 
-      await this.getPages()
+      this.setState({ loading: false, chapters, currentChapter, currentPage })
+
+      await this.getPages(currentPage)
     } catch (e) {
       this.setState({ error: 'Something went wrong' })
     }
   }
 
   async componentDidUpdate (prevProps, prevState) {
-    const { pages } = this.state
+    const { chapters, pages } = this.state
 
     if (prevState.currentPage !== this.state.currentPage) {
       let chapterIndex = this.state.currentPage
       const currentPage = pages[chapterIndex]
 
-      this.setState({ currentPageData: currentPage })
-      await this.loadImage(currentPage.url)
+      if (currentPage) {
+        this.setState({ currentPageData: currentPage })
+        await this.loadImage(currentPage.url)
+        await this.trackChapterPage(currentPage.page_id)
+      }
     }
 
     if (prevState.currentChapter !== this.state.currentChapter) {
-      this.setState({ currentPage: 0 })
-      await this.getPages()
+      let currentChapter = chapters[this.state.currentChapter]
+
+      let currentPage = 0
+      if (currentChapter.page_logs && currentChapter.page_logs.current_page) {
+        currentPage = Number(currentChapter.page_logs.current_page) - 1
+      }
+
+      this.setState({ currentPage })
+      await this.getPages(currentPage)
     }
   }
 
-  async getPages () {
+  async getPages (currentPage) {
     const { chapters, currentChapter } = this.state
     const { dispatch } = this.props
 
@@ -99,6 +118,7 @@ class MangaSeries extends Component {
       return {
         number: page.number,
         is_spread: page.is_spread,
+        page_id: page.page_id,
         url
       }
     })
@@ -106,7 +126,7 @@ class MangaSeries extends Component {
     const pageData = await Promise.all(pageDataRequests)
 
     // load the first page
-    await this.loadImage(pageData[0].url)
+    await this.loadImage(pageData[currentPage].url)
 
     this.setState({ pages: pageData })
   }
@@ -148,6 +168,19 @@ class MangaSeries extends Component {
     }
   }
 
+  async trackChapterPage (pageId) {
+    const { userId } = this.props
+
+    const params = {
+      user_id: userId,
+      page_id: pageId,
+      device_type: DEVICE_TYPE,
+      api_ver: API_VERSION
+    }
+
+    await api({ route: 'log_chapterpage', params })
+  }
+
   render () {
     const { loading, loadingImage, chapters, pages: { length: numPages }, b64, currentPage, currentChapter, currentPageData } = this.state
     const { series: allSeries, theme, match: { params: { id } } } = this.props
@@ -159,7 +192,7 @@ class MangaSeries extends Component {
     const Navigation = ({ top }) => (
       <div className={classNames('col-12 row', { 'pb-3': top, 'pt-3': !top })}>
         <div className='col-2'>
-          <Button color='success' block size='sm' disabled={currentPage === 0} onClick={() => this.updatePage('-')}>Prev Page</Button>
+          <Button color='success' block size='sm' disabled={currentPage === 0} onClick={() => this.updatePage('+')}>Next Page</Button>
         </div>
         <div className='col-8'>
           <select className='w-100 h-100' value={currentChapter} onChange={({ target: { value } }) => this.setState({ currentChapter: value })}>
@@ -174,7 +207,7 @@ class MangaSeries extends Component {
           </select>
         </div>
         <div className='col-2'>
-          <Button color='success' block size='sm' disabled={currentPage === numPages - 1} onClick={() => this.updatePage('+')}>Next Page</Button>
+          <Button color='success' block size='sm' disabled={currentPage === numPages - 1} onClick={() => this.updatePage('-')}>Prev Page</Button>
         </div>
       </div>
     )
@@ -208,6 +241,12 @@ class MangaSeries extends Component {
                 </div>
               </div>
 
+              {numPages
+                ? <h4 className='col-12 d-flex justify-content-center pt-2'>
+                    Page: {currentPage + 1}/{numPages}
+                  </h4>
+                : null}
+
               <Navigation />
             </div>
           </Fragment>
@@ -219,6 +258,7 @@ class MangaSeries extends Component {
 
 export default connect((store) => {
   return {
+    userId: store.Auth.user_id,
     series: store.Manga.series,
     theme: store.Options.theme
   }

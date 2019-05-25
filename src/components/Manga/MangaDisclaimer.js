@@ -8,9 +8,7 @@ class MangaDisclaimer extends Component {
       <Alert color='info'>
         <h5 className='alert-heading'>Manga Information</h5>
         <p className='mb-0'>
-          This is still an in-development viewer. The pages are not saved, nor are loaded as of now.
-          <br/><br/>
-          Please post any feedback in the GitHub issues!
+          This is still an in-development viewer. Please post any feedback in the GitHub issues!
         </p>
       </Alert>
     )
