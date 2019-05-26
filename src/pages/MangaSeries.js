@@ -9,8 +9,6 @@ import { Button } from 'reactstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import request from 'request-promise'
-
 import classNames from 'classnames'
 
 import api, { API_VERSION, DEVICE_TYPE } from '../lib/api_manga'
@@ -35,6 +33,8 @@ class MangaSeries extends Component {
 
       loading: true,
       loadingImage: false,
+
+      error: ''
     }
 
     this.trackChapterPage = this.trackChapterPage.bind(this)
@@ -150,11 +150,18 @@ class MangaSeries extends Component {
 
     this.setState({ loadingImage: true })
 
-    const res = await request.get({ url: url, encoding: null })
-    const decoded = decodeImage(res)
-    const b64 = arrayBufferToBase64(decoded)
 
-    this.setState({ b64, loadingImage: false })
+    try {
+      const res = await fetch(url)
+      const buffer = await res.arrayBuffer()
+
+      const decoded = decodeImage(new Uint8Array(buffer))
+      const b64 = arrayBufferToBase64(decoded)
+
+      this.setState({ b64, loadingImage: false })
+    } catch (e) {
+      this.setState({ error: 'Could not fetch page!' })
+    }
   }
 
   updatePage (type = '+') {
@@ -182,7 +189,7 @@ class MangaSeries extends Component {
   }
 
   render () {
-    const { loading, loadingImage, chapters, pages: { length: numPages }, b64, currentPage, currentChapter, currentPageData } = this.state
+    const { loading, loadingImage, chapters, pages: { length: numPages }, b64, currentPage, currentChapter, currentPageData, error } = this.state
     const { series: allSeries, theme, match: { params: { id } } } = this.props
 
     const series = allSeries[id]
@@ -219,6 +226,8 @@ class MangaSeries extends Component {
         </Helmet>
 
         <MangaDisclaimer />
+
+        { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
 
         {loadedDetails ? (
           <Fragment>

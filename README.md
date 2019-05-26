@@ -2,6 +2,8 @@
 What's Crunchyroll?
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4d112e08-f234-4720-ac6e-5fcdc9687f4b/deploy-status)](https://nani.ninja/)
+
 
 ## Images
 ![Dashboard](https://i.imgur.com/AhcLPOn.png)
@@ -40,7 +42,7 @@ yarn build
 Install what is in the `dist` folder.
 
 ## Deployment
-This is meant to be deployed on Netlify, to take advantage of their proxy feature and functions.
+This is meant to be deployed on Netlify, to take advantage of their proxy feature and functions. A public version is available online, [here](https://nani.ninja/).
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/destruc7i0n/nani)
 
