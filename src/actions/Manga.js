@@ -15,13 +15,25 @@ export const setMangaSeries = (series) => ({
   payload: series
 })
 
-export const getMangaSeries = (seriesId = null, noCancel = false) => (dispatch, getState) => {
+export const SET_MANGA_LIST = 'SET_MANGA_LIST'
+export const setMangaList = (type, list) => ({
+  type: SET_MANGA_LIST,
+  payload: {
+    type,
+    list
+  }
+})
+
+export const getMangaSeries = (seriesId = null, filter = null, noCancel = false) => (dispatch, getState) => {
   const state = getState()
   const params = {
-    series_id: seriesId
+    content_type: 'jp_manga',
+    series_id: seriesId,
+    filter,
   }
 
   if (seriesId && state.Manga.series[seriesId]) return state.Manga.series[seriesId]
+  if (filter && state.Manga.list[filter]) return state.Manga.list[filter]
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -30,6 +42,11 @@ export const getMangaSeries = (seriesId = null, noCancel = false) => (dispatch, 
 
       const data = resp.data
       dispatch(addMangaSeriesBulk(data))
+
+      if (filter) {
+        dispatch(setMangaList(filter, data))
+      }
+
       resolve(data)
     } catch (err) {
       reject(err)
