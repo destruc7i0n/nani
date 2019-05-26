@@ -28,8 +28,7 @@ class MangaSeriesCard extends Component {
               top
               loader={<ImageLoader height={250} />}
               src={imgFullURL ? [
-                withProxy(imgFullURL, true),
-                replaceHttps(imgFullURL, true)
+                replaceHttps(imgFullURL)
               ] : 'https://via.placeholder.com/640x960?text=No+Image'}
               alt={mangaData.name} />
             <CardBody className='p-2'>
