@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { getSeriesInfo, getCollectionsForSeries, getAniListItem } from '../actions'
 import { Helmet } from 'react-helmet'
 
+import Sticky from 'react-stickynode'
+
 import { Badge, Alert, Card, CardBody } from 'reactstrap'
 
 import Img from 'react-image'
@@ -115,6 +117,8 @@ class Series extends Component {
       }
     }
 
+    const isSmallScreen = window.matchMedia('(max-width: 576px)').matches
+
     return (
       <Fragment>
         <Helmet defer={false}>
@@ -139,14 +143,14 @@ class Series extends Component {
                 <Card className='border-0 over-banner'>
                   <CardBody className='main-details-card-body'>
                     <div className='row'>
-                      <div className='col-sm-4 col-lg-3'>
-                        <div className='sticky-poster'>
+                      <div className='col-sm-4 col-lg-3' style={isSmallScreen ? { marginTop: '-100px' } : {}}>
+                        <Sticky top={75} enabled={!isSmallScreen}>
                           <Img loader={<ImageLoader height={300} />} src={portraitImgFullURL ? [
                             withProxy(portraitImgFullURL),
                             replaceHttps(portraitImgFullURL)
                           ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-fluid shadow-sm' />
                           <QueueButton id={id} block className='mt-2' />
-                        </div>
+                        </Sticky>
                       </div>
                       <div className='col-sm-8 col-lg-9'>
                         <h1>{series.name}</h1>

@@ -7,8 +7,6 @@ import Img from 'react-image'
 
 import ImageLoader from '../../Loading/ImageLoader'
 
-import withProxy, { replaceHttps } from '../../../lib/withProxy'
-
 class MangaSeriesCard extends Component {
   render () {
     if (!this.props.data || !this.props.data.locale) return null

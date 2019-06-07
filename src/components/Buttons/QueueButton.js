@@ -57,6 +57,7 @@ class QueueButton extends Component {
       Tag = Button
       attrs = props
     }
+
     return (
       <Tag
         color={colored
