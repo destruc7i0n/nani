@@ -57,9 +57,9 @@ class Player extends Component {
 
     const toggleFullscreenState = () => this.setState({ fullscreen: isFullscreen() })
 
-    document.addEventListener('fullscreenchange', toggleFullscreenState, false);
-    document.addEventListener('webkitfullscreenchange', toggleFullscreenState, false);
-    document.addEventListener('mozfullscreenchange', toggleFullscreenState, false);
+    document.addEventListener('fullscreenchange', toggleFullscreenState, false)
+    document.addEventListener('webkitfullscreenchange', toggleFullscreenState, false)
+    document.addEventListener('mozfullscreenchange', toggleFullscreenState, false)
   }
 
   componentDidUpdate (prevProps, prevState, snapshot) {
@@ -191,12 +191,23 @@ class Player extends Component {
         el.webkitEnterFullScreen()
     }
 
+    const cancelFullscreen = (el) => {
+      if (el.exitFullscreen)
+        el.exitFullscreen()
+      else if (el.webkitCancelFullScreen)
+        el.webkitCancelFullScreen()
+      else if (el.webkitExitFullscreen)
+        el.webkitExitFullscreen()
+      else if (el.mozCancelFullScreen)
+        el.mozCancelFullScreen()
+      else if (el.msExitFullscreen)
+        el.msExitFullscreen()
+    }
+
     if (!isFullscreen()) {
       requestFullscreen(this.playerContainerRef.current)
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen()
-      }
+      cancelFullscreen(document)
     }
   }
 
