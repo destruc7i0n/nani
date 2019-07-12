@@ -116,13 +116,13 @@
     opacity: 0.3;
 }
 
-.video-resuming {
-    width: 100%;
-    background-color: rgba(0,0,0,.6);
-    font-style: italic;
-    color: #fff;
-    padding: 1rem;
-}
+/*.video-resuming {*/
+    /*width: 100%;*/
+    /*background-color: rgba(0,0,0,.6);*/
+    /*font-style: italic;*/
+    /*color: #fff;*/
+    /*padding: 1rem;*/
+/*}*/
 
 .player-width {
     width: 100% !important;

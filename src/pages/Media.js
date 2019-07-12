@@ -11,6 +11,7 @@ import Img from 'react-image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Video from '../components/Video/Video'
+import Player from '../components/Player/Player'
 import Collection from '../components/Collections/Collection'
 import MALButton from '../components/Buttons/MALButton'
 import AniListButton from '../components/Buttons/AniListButton'
@@ -279,25 +280,34 @@ class Media extends Component {
                       </Fragment>
                       // loaded video
                       : <div className='embed-responsive-item'>
-                        <Video
-                          streamUrl={streamData.stream_data.streams[0].url}
-                          autoplay={autoplay}
+                        {/*<Video*/}
+                          {/*streamUrl={streamData.stream_data.streams[0].url}*/}
+                          {/*autoplay={autoplay}*/}
+                          {/*playCallback={() => this.setState({ videoPlayed: true })}*/}
+                          {/*key={mediaId}*/}
+                          {/*id={mediaId}*/}
+                        {/*/>*/}
+                        <Player
+                          media={mediaObj}
+                          stream={streamData.stream_data.streams[0].url}
+                          poster={currentMedia.img}
+                          autoPlay={autoplay}
                           playCallback={() => this.setState({ videoPlayed: true })}
                           key={mediaId}
                           id={mediaId}
                         />
-                        {
-                          // only show if more than 30 seconds, not 0 and not played yet
-                          finishedWatching && !videoPlayed
-                            ? <div className='video-overlay'>
-                              <div className='video-resuming'>
-                                <FontAwesomeIcon icon='fast-forward' />
-                                {' '}
-                                Resuming from {formatTime(mediaObj.playhead)}
-                              </div>
-                            </div>
-                            : null
-                        }
+                        {/*{*/}
+                          {/*// only show if more than 30 seconds, not 0 and not played yet*/}
+                          {/*finishedWatching && !videoPlayed*/}
+                            {/*? <div className='video-overlay'>*/}
+                              {/*<div className='video-resuming'>*/}
+                                {/*<FontAwesomeIcon icon='fast-forward' />*/}
+                                {/*{' '}*/}
+                                {/*Resuming from {formatTime(mediaObj.playhead)}*/}
+                              {/*</div>*/}
+                            {/*</div>*/}
+                            {/*: null*/}
+                        {/*}*/}
                       </div>
                     }
                   </div>
