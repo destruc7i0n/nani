@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classNames from 'classnames'
 
-import { formatTime } from '../../lib/util'
+import { DoubleEventHandler, formatTime } from '../../lib/util'
 
 import ProgressBar from './ProgressBar'
 
@@ -19,9 +19,15 @@ class Controls extends Component {
     }
 
     this.hoverTimeout = null
+    this.clickTimeout = null
+    this.doubleTapHandler = new DoubleEventHandler(500)
 
     this.toggleVisibility = this.toggleVisibility.bind(this)
     this.handleMouseLeave = this.handleMouseLeave.bind(this)
+    this.coverClick = this.coverClick.bind(this)
+    this.cancelClick = this.cancelClick.bind(this)
+    this.coverDoubleClick = this.coverDoubleClick.bind(this)
+    this.coverDoubleTap = this.coverDoubleTap.bind(this)
   }
 
   toggleVisibility () {
@@ -41,6 +47,32 @@ class Controls extends Component {
     if (this.hoverTimeout) clearTimeout(this.hoverTimeout)
   }
 
+  cancelClick () {
+    clearTimeout(this.clickTimeout)
+    this.clickTimeout = null
+  }
+
+  coverClick () {
+    const { togglePlay } = this.props
+    this.clickTimeout = setTimeout(() => {
+      this.clickTimeout && togglePlay()
+    }, 200)
+  }
+
+  coverDoubleClick () {
+    const { toggleFullscreen } = this.props
+    this.clickTimeout = null
+    toggleFullscreen()
+  }
+
+  coverDoubleTap (e) {
+    const { toggleFullscreen } = this.props
+    this.doubleTapHandler.handle(e, () => {
+      this.cancelClick()
+      toggleFullscreen()
+    })
+  }
+
   render () {
     const { hovering } = this.state
     const {
@@ -53,21 +85,23 @@ class Controls extends Component {
       play,
       pause,
       setTime,
-      togglePlay,
       setQuality,
       quality,
       levels,
-      duration = media.duration,
-      watchTime = media.playhead
     } = this.props
+
+    let duration = this.props.duration || media.duration
+    let watchTime = this.props.watchTime || media.playhead
+
+    const controlsVisible = hovering || paused
 
     return (
       <div
-        className={classNames('controls', { 'visible': hovering, 'no-cursor': !hovering })}
+        className={classNames('controls', { 'visible': controlsVisible, 'no-cursor': !controlsVisible })}
         onMouseMove={this.toggleVisibility}
         onMouseOut={this.handleMouseLeave}
       >
-        <div className='cover' onClick={togglePlay} />
+        <div className='cover' onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverDoubleTap} />
 
         <div className='episode-information text-white'>
           <h3>{media.collection_name || 'Loading...'}</h3>

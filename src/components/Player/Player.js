@@ -73,9 +73,11 @@ class Player extends Component {
   }
 
   updateEpisode () {
-    const { stream } = this.props
+    const { stream, media } = this.props
 
     const oldHls = this.hls
+
+    this.loggedTime = media.playhead || 0
 
     if (Hls.isSupported()) {
       const hls = new Hls({ enableWorker: false })
@@ -268,12 +270,12 @@ class Player extends Component {
         <video preload='metadata' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline />
 
         {loadingVideo && inited && <div className='player-center-overlay text-white'><Loading /></div>}
-        {!inited && (
+        {paused && (
           <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
             <div className=''>
               <FontAwesomeIcon icon='play' size='4x' />
             </div>
-            {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
+            {this.shouldResume() && !inited && <div className='mt-1 bg-dark rounded-pill px-2'>
               <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
             </div>}
           </div>

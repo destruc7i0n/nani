@@ -29,8 +29,15 @@
   display: flex;
   flex-direction: column;
   font-size: 26px;
+  flex: 1;
   text-align: left;
   padding: 10px;
+  user-select: none;
+  pointer-events: none;
+
+  > * {
+    font-size: inherit;
+  }
 
   background: linear-gradient(
     to bottom,
