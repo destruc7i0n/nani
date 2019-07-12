@@ -4,3 +4,10 @@ export const formatTime = (secs) => {
   seconds = seconds < 10 ? `0${seconds}` : seconds
   return `${minutes}:${seconds}`
 }
+
+export const isFullscreen = () => !!(
+  document.webkitFullscreenElement ||
+  document.webkitIsFullScreen ||
+  document.mozFullScreen ||
+  document.msFullscreenElement
+)

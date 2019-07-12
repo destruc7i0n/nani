@@ -65,7 +65,7 @@ class Controls extends Component {
       <div className={classNames('controls', { 'visible': hovering })} onMouseMove={this.toggleVisibility} onMouseOut={this.handleMouseLeave}>
         <div className='cover' onClick={togglePlay} />
 
-        <div className='episode-information'>
+        <div className='episode-information text-white'>
           <h3>{media.collection_name || 'Loading...'}</h3>
           {fullscreen && <h4>Episode {media.episode_number}: {media.name}</h4>}
         </div>

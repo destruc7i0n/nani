@@ -10,7 +10,6 @@ import Img from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import Video from '../components/Video/Video'
 import Player from '../components/Player/Player'
 import Collection from '../components/Collections/Collection'
 import MALButton from '../components/Buttons/MALButton'
@@ -22,6 +21,8 @@ import LoadingMediaPage from '../components/Loading/LoadingMediaPage'
 import api from '../lib/api'
 import { isCancel } from 'axios'
 import withProxy, { replaceHttps } from '../lib/withProxy'
+
+import { formatTime } from '../lib/util'
 
 import './Media.css'
 
@@ -139,7 +140,7 @@ class Media extends Component {
   }
 
   render () {
-    const { streamData, error, videoPlayed, currentMedia, nextMedia, prevMedia } = this.state
+    const { streamData, error, currentMedia, nextMedia, prevMedia } = this.state
     const { match: { params: { media: mediaId } }, collectionMedia, Auth, autoplay, location } = this.props
     // the current media object and the series
     const mediaObj = currentMedia
@@ -157,17 +158,6 @@ class Media extends Component {
     const nextEpisodes = mediaObj && currentCollection
       ? currentCollection.filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
-
-    // small function to format time
-    const formatTime = (secs) => {
-      const minutes = Math.floor(secs / 60)
-      let seconds = Math.floor(secs - (minutes * 60))
-      seconds = seconds < 10 ? `0${seconds}` : seconds
-      return `${minutes}:${seconds}`
-    }
-
-    // if finished watching the episode, more than 90% done
-    const finishedWatching = mediaObj && (mediaObj.playhead / mediaObj.duration < 0.9) && mediaObj.playhead !== 0
 
     // no streams
     const noStreams = streamData.stream_data && streamData.stream_data.streams.length === 0
@@ -280,13 +270,6 @@ class Media extends Component {
                       </Fragment>
                       // loaded video
                       : <div className='embed-responsive-item'>
-                        {/*<Video*/}
-                          {/*streamUrl={streamData.stream_data.streams[0].url}*/}
-                          {/*autoplay={autoplay}*/}
-                          {/*playCallback={() => this.setState({ videoPlayed: true })}*/}
-                          {/*key={mediaId}*/}
-                          {/*id={mediaId}*/}
-                        {/*/>*/}
                         <Player
                           media={mediaObj}
                           stream={streamData.stream_data.streams[0].url}
@@ -296,18 +279,6 @@ class Media extends Component {
                           key={mediaId}
                           id={mediaId}
                         />
-                        {/*{*/}
-                          {/*// only show if more than 30 seconds, not 0 and not played yet*/}
-                          {/*finishedWatching && !videoPlayed*/}
-                            {/*? <div className='video-overlay'>*/}
-                              {/*<div className='video-resuming'>*/}
-                                {/*<FontAwesomeIcon icon='fast-forward' />*/}
-                                {/*{' '}*/}
-                                {/*Resuming from {formatTime(mediaObj.playhead)}*/}
-                              {/*</div>*/}
-                            {/*</div>*/}
-                            {/*: null*/}
-                        {/*}*/}
                       </div>
                     }
                   </div>

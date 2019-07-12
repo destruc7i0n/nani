@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Controls from './Controls'
 import Loading from '../Loading/Loading'
 
-import { formatTime } from '../../lib/util'
+import { formatTime, isFullscreen } from '../../lib/util'
 
 import './Player.scss'
 import { updatePlaybackTime } from '../../actions'
@@ -55,9 +55,11 @@ class Player extends Component {
   componentDidMount () {
     this.updateEpisode()
 
-    document.addEventListener('fullscreenchange', () => {
-      this.setState({ fullscreen: !!document.fullscreenElement })
-    })
+    const toggleFullscreenState = () => this.setState({ fullscreen: isFullscreen() })
+
+    document.addEventListener('fullscreenchange', toggleFullscreenState, false);
+    document.addEventListener('webkitfullscreenchange', toggleFullscreenState, false);
+    document.addEventListener('mozfullscreenchange', toggleFullscreenState, false);
   }
 
   componentDidUpdate (prevProps, prevState, snapshot) {
@@ -75,22 +77,28 @@ class Player extends Component {
 
     const oldHls = this.hls
 
-    const hls = new Hls({ enableWorker: false })
+    if (Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: false })
 
-    hls.loadSource(stream)
-    hls.attachMedia(this.playerRef.current)
+      hls.loadSource(stream)
+      hls.attachMedia(this.playerRef.current)
 
-    this.hls = hls
+      this.hls = hls
 
-    if (oldHls) oldHls.destroy()
-
+      if (oldHls) oldHls.destroy()
+    } else {
+      this.playerRef.current.src = stream
+      this.playerRef.current.addEventListener('loadedmetadata', () => {
+        this.play()
+      })
+    }
     this.registerHlsEvents()
   }
 
   registerHlsEvents () {
     const { quality } = this.state
 
-    this.hls.on('hlsManifestParsed', (_event, data) => {
+    this.hls && this.hls.on('hlsManifestParsed', (_event, data) => {
       const levels = data.levels.map((level) => level.height.toString())
 
       if (levels[quality] == null) {
@@ -168,8 +176,23 @@ class Player extends Component {
   }
 
   toggleFullscreen () {
-    if (!document.fullscreenElement) {
-      this.playerContainerRef.current.requestFullscreen()
+    const requestFullscreen = (el) => {
+      if (el.requestFullscreen)
+        el.requestFullscreen()
+      else if (el.webkitRequestFullscreen)
+        el.webkitRequestFullscreen()
+      else if (el.mozRequestFullScreen)
+        el.mozRequestFullScreen()
+      else if (el.msRequestFullscreen)
+        el.msRequestFullscreen()
+      else if (el.querySelector && el.querySelector('video') && el.querySelector('video').webkitEnterFullScreen)
+        el.querySelector('video').webkitEnterFullScreen()
+      else if (el.webkitEnterFullScreen)
+        el.webkitEnterFullScreen()
+    }
+
+    if (!isFullscreen()) {
+      requestFullscreen(this.playerContainerRef.current)
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen()
@@ -231,7 +254,7 @@ class Player extends Component {
 
     return (
       <div className='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
-        <video preload='metadata' poster={poster} autoPlay={autoPlay} ref={this.playerRef} />
+        <video preload='metadata' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline />
 
         {loadingVideo && inited && <div className='player-center-overlay text-white'><Loading /></div>}
         {!inited && (
