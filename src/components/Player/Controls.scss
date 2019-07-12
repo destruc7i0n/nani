@@ -95,3 +95,11 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.no-cursor {
+  cursor: none !important;
+
+  .cover {
+    cursor: inherit;
+  }
+}

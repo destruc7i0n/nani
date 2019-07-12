@@ -62,7 +62,11 @@ class Controls extends Component {
     } = this.props
 
     return (
-      <div className={classNames('controls', { 'visible': hovering })} onMouseMove={this.toggleVisibility} onMouseOut={this.handleMouseLeave}>
+      <div
+        className={classNames('controls', { 'visible': hovering, 'no-cursor': !hovering })}
+        onMouseMove={this.toggleVisibility}
+        onMouseOut={this.handleMouseLeave}
+      >
         <div className='cover' onClick={togglePlay} />
 
         <div className='episode-information text-white'>
