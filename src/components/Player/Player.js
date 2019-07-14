@@ -303,16 +303,28 @@ class Player extends Component {
               {(streamsLoaded || !allowedToWatch) && <div className='player-dark-blur' />}
               <div className='player-dark-overlay'>
                 {!streamsLoaded && allowedToWatch && <Loading />}
-                {streamsLoaded && !streams.length && allowedToWatch && (
-                  <div className='text-center'>
-                    <h2>
-                      <FontAwesomeIcon icon='exclamation-triangle' className='text-warning' />
-                      <div className='text-white'>
-                        No video streams found!
+                {streamsLoaded && !streams.length
+                  ? allowedToWatch
+                    ? (
+                      <div className='text-center'>
+                        <h2>
+                          <FontAwesomeIcon icon='times-circle' className='text-danger' />
+                          <div className='text-white'>
+                            This video is not available.
+                          </div>
+                        </h2>
                       </div>
-                    </h2>
-                  </div>
-                )}
+                    ) : (
+                      <div className='text-center'>
+                        <h2>
+                          <FontAwesomeIcon icon='exclamation-triangle' className='text-warning' />
+                          <div className='text-white'>
+                            No video streams found!
+                          </div>
+                        </h2>
+                      </div>
+                    )
+                  : null}
                 {media.premium_only && !Auth.premium && (
                   <div className='text-center p-2'>
                     <h2>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { Button, Toast, ToastBody, ToastHeader } from 'reactstrap'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classNames from 'classnames'
@@ -16,6 +18,7 @@ class Controls extends Component {
 
     this.state = {
       hovering: false,
+      newPlayerInfo: false,
     }
 
     this.hoverTimeout = null
@@ -28,6 +31,7 @@ class Controls extends Component {
     this.cancelClick = this.cancelClick.bind(this)
     this.coverDoubleClick = this.coverDoubleClick.bind(this)
     this.coverDoubleTap = this.coverDoubleTap.bind(this)
+    this.toggleNewPlayerInfo = this.toggleNewPlayerInfo.bind(this)
   }
 
   toggleVisibility () {
@@ -73,8 +77,15 @@ class Controls extends Component {
     })
   }
 
+  toggleNewPlayerInfo () {
+    const { newPlayerInfo } = this.state
+    this.setState({
+      newPlayerInfo: !newPlayerInfo
+    })
+  }
+
   render () {
-    const { hovering } = this.state
+    const { hovering, newPlayerInfo } = this.state
     const {
       paused,
       fullscreen,
@@ -106,6 +117,27 @@ class Controls extends Component {
         <div className='episode-information text-white'>
           <h3>{media.collection_name || 'Loading...'}</h3>
           {fullscreen && <h4>Episode {media.episode_number}: {media.name}</h4>}
+        </div>
+
+        <div className='player-info-button d-md-block d-none'>
+          {newPlayerInfo
+            ? (
+              <Toast className='bg-white'>
+                <ToastHeader toggle={this.toggleNewPlayerInfo}>
+                  New Video Player!
+                </ToastHeader>
+                <ToastBody className='text-body'>
+                  Welcome to the new custom video player! It was built to better accommodate the design and needs of this website.<br />
+                  Do you have feedback or requests of features no-longer available?
+                  Create a new <a target='_blank' rel='noopener noreferrer' href='https://github.com/destruc7i0n/nani/issues/new?title=New+video+player+feedback'>GitHub issue</a> or <a href='mailto:destruc7i0n@thedestruc7i0n.ca'>send me an email</a>.
+                </ToastBody>
+              </Toast>
+            )
+            : (
+              <Button color='primary' className='rounded-circle' onClick={this.toggleNewPlayerInfo}>
+                <FontAwesomeIcon icon='question' />
+              </Button>
+            )}
         </div>
 
         <div className='toolbar'>

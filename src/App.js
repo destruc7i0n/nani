@@ -57,6 +57,7 @@ import {
   faPause,
   faCompress,
   faExpand,
+  faQuestion,
 } from '@fortawesome/free-solid-svg-icons'
 
 import './App.css'
@@ -97,6 +98,7 @@ library.add(
   faPause,
   faCompress,
   faExpand,
+  faQuestion,
 )
 
 class App extends Component {
