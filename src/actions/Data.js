@@ -356,7 +356,7 @@ export const getMediaForCollection = (id) => (dispatch, getState) => {
   const params = {
     session_id: state.Auth.session_id,
     collection_id: id,
-    include_clips: 1,
+    include_clips: 0,
     limit: 5000,
     offset: 0,
     fields: MEDIA_FIELDS

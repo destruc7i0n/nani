@@ -1,5 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
+import { updatePlaybackTime } from '../../actions'
+import { Link, withRouter } from 'react-router-dom'
+
+import { Button } from 'reactstrap'
 
 import Hls from 'hls.js'
 
@@ -11,7 +16,6 @@ import Loading from '../Loading/Loading'
 import { formatTime, isFullscreen } from '../../lib/util'
 
 import './Player.scss'
-import { updatePlaybackTime } from '../../actions'
 
 class Player extends Component {
   constructor (props) {
@@ -53,8 +57,6 @@ class Player extends Component {
   }
 
   componentDidMount () {
-    this.updateEpisode()
-
     const toggleFullscreenState = () => this.setState({ fullscreen: isFullscreen() })
 
     document.addEventListener('fullscreenchange', toggleFullscreenState, false)
@@ -62,9 +64,13 @@ class Player extends Component {
     document.addEventListener('mozfullscreenchange', toggleFullscreenState, false)
   }
 
-  componentDidUpdate (prevProps, prevState, snapshot) {
-    const { id, stream } = this.props
-    if (prevProps.id !== id || prevProps.stream !== stream) this.updateEpisode()
+  componentDidUpdate (prevProps) {
+    const { id: oldId } = this.state
+    const { id, streams, streamsLoaded } = this.props
+    if (id !== oldId && streamsLoaded && streams.length) {
+      this.updateEpisode()
+      this.setState({ id })
+    }
   }
 
   shouldResume () {
@@ -73,7 +79,11 @@ class Player extends Component {
   }
 
   updateEpisode () {
-    const { stream, media } = this.props
+    const { streams, streamsLoaded, media } = this.props
+
+    if (!streamsLoaded || !streams.length) return
+
+    const stream = streams[0].url
 
     const oldHls = this.hls
 
@@ -87,7 +97,9 @@ class Player extends Component {
 
       this.hls = hls
 
-      if (oldHls) oldHls.destroy()
+      if (oldHls) {
+        oldHls.destroy()
+      }
     } else {
       this.playerRef.current.src = stream
       this.playerRef.current.addEventListener('loadedmetadata', () => {
@@ -112,17 +124,17 @@ class Player extends Component {
       this.setState({ levels })
     })
 
+    this.playerRef.current.oncanplay = () => {
+      this.setState({ loadingVideo: false, loaded: true, duration: (this.playerRef.current && this.playerRef.current.duration) || 0 })
+    }
+    this.playerRef.current.onwaiting = () => {
+      this.setState({ loadingVideo: true })
+    }
     this.playerRef.current.onplay = () => {
       this.setState({ paused: false })
     }
     this.playerRef.current.onpause = () => {
       this.setState({ paused: true })
-    }
-    this.playerRef.current.oncanplay = () => {
-      this.setState({ loadingVideo: false, loaded: true, duration: this.playerRef.current.duration })
-    }
-    this.playerRef.current.onwaiting = () => {
-      this.setState({ loadingVideo: true })
     }
     this.playerRef.current.onprogress = this.onLoadedProgress
     this.playerRef.current.ontimeupdate = this.onTimeUpdate
@@ -263,44 +275,103 @@ class Player extends Component {
 
   render () {
     const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, levels, inited } = this.state
-    const { poster, autoPlay, media } = this.props
+    const { Auth, poster, autoPlay, media, streamsLoaded, streams, location } = this.props
+
+    const allowedToWatch = media.premium_only ? Auth.premium : true
+    const canPlayVideo = streamsLoaded && streams.length && allowedToWatch
 
     return (
       <div className='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
-        <video preload='metadata' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline />
+        <video preload='auto' controlsList='nodownload' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline  />
 
         {loadingVideo && inited && <div className='player-center-overlay text-white'><Loading /></div>}
-        {paused && (
-          <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
-            <div className=''>
-              <FontAwesomeIcon icon='play' size='4x' />
-            </div>
-            {this.shouldResume() && !inited && <div className='mt-1 bg-dark rounded-pill px-2'>
-              <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
-            </div>}
-          </div>
-        )}
 
-        <Controls
-          media={media}
-          play={this.play}
-          pause={this.pause}
-          setTime={this.setTime}
-          togglePlay={this.togglePlay}
-          paused={paused}
-          fullscreen={fullscreen}
-          toggleFullscreen={this.toggleFullscreen}
-          duration={duration}
-          quality={quality}
-          setQuality={this.setQuality}
-          levels={levels}
-          watchTime={progressSeconds}
-          progressPercent={duration && progressSeconds && progressSeconds / duration}
-          loadedPercent={duration && loadedSeconds && loadedSeconds / duration}
-        />
+        <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
+          {canPlayVideo ? (
+            paused && (
+              <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
+                <div className=''>
+                  <FontAwesomeIcon icon='play' size='4x' />
+                </div>
+                {this.shouldResume() && !inited && <div className='mt-1 bg-dark rounded-pill px-2'>
+                  <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
+                </div>}
+              </div>
+            )
+          ) : (
+            <Fragment>
+              {(streamsLoaded || !allowedToWatch) && <div className='player-dark-blur' />}
+              <div className='player-dark-overlay'>
+                {!streamsLoaded && allowedToWatch && <Loading />}
+                {streamsLoaded && !streams.length && allowedToWatch && (
+                  <div className='text-center'>
+                    <h2>
+                      <FontAwesomeIcon icon='exclamation-triangle' className='text-warning' />
+                      <div className='text-white'>
+                        No video streams found!
+                      </div>
+                    </h2>
+                  </div>
+                )}
+                {media.premium_only && !Auth.premium && (
+                  <div className='text-center p-2'>
+                    <h2>
+                      <FontAwesomeIcon icon='crown' className='text-warning' />
+                      <div className='text-white'>
+                        You must be a
+                        {' '}
+                        <a
+                          href='http://www.crunchyroll.com/en/premium_comparison'
+                          target='_blank' rel='noopener noreferrer'
+                          className='text-white'
+                        >Crunchyroll Premium</a>
+                        {' '}
+                        subscriber to view this!
+                      </div>
+                    </h2>
+                    <Button
+                      size='sm'
+                      color='primary'
+                      className='ml-auto'
+                      tag={Link}
+                      to={{pathname: '/login', state: { prevPath: location.pathname }}}
+                    >Login</Button>
+                  </div>
+                )}
+              </div>
+            </Fragment>
+          )}
+        </div>
+
+        {canPlayVideo && (
+          <Controls
+            media={media}
+            play={this.play}
+            pause={this.pause}
+            setTime={this.setTime}
+            togglePlay={this.togglePlay}
+            paused={paused}
+            fullscreen={fullscreen}
+            toggleFullscreen={this.toggleFullscreen}
+            duration={duration}
+            quality={quality}
+            setQuality={this.setQuality}
+            levels={levels}
+            watchTime={progressSeconds}
+            progressPercent={duration && progressSeconds && progressSeconds / duration}
+            loadedPercent={duration && loadedSeconds && loadedSeconds / duration}
+          />
+        )}
       </div>
     )
   }
 }
 
-export default connect()(Player)
+export default compose(
+  withRouter,
+  connect((store) => {
+    return {
+      Auth: store.Auth
+    }
+  })
+)(Player)
