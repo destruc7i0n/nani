@@ -4,23 +4,24 @@ import { getMediaForCollection, getMediaInfo, getSeriesInfo } from '../actions'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
-import { Badge, Button } from 'reactstrap'
+import { Badge } from 'reactstrap'
 
 import Img from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import Video from '../components/Video/Video'
+import Player from '../components/Player/Player'
 import Collection from '../components/Collections/Collection'
 import MALButton from '../components/Buttons/MALButton'
 import AniListButton from '../components/Buttons/AniListButton'
 import QueueButton from '../components/Buttons/QueueButton'
-import Loading from '../components/Loading/Loading'
 import LoadingMediaPage from '../components/Loading/LoadingMediaPage'
 
 import api from '../lib/api'
 import { isCancel } from 'axios'
 import withProxy, { replaceHttps } from '../lib/withProxy'
+
+import { formatTime } from '../lib/util'
 
 import './Media.css'
 
@@ -138,8 +139,8 @@ class Media extends Component {
   }
 
   render () {
-    const { streamData, error, videoPlayed, currentMedia, nextMedia, prevMedia } = this.state
-    const { match: { params: { media: mediaId } }, collectionMedia, Auth, autoplay, location } = this.props
+    const { streamData, error, currentMedia, nextMedia, prevMedia } = this.state
+    const { match: { params: { media: mediaId } }, collectionMedia, autoplay } = this.props
     // the current media object and the series
     const mediaObj = currentMedia
 
@@ -157,19 +158,7 @@ class Media extends Component {
       ? currentCollection.filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
 
-    // small function to format time
-    const formatTime = (secs) => {
-      const minutes = Math.floor(secs / 60)
-      let seconds = Math.floor(secs - (minutes * 60))
-      seconds = seconds < 10 ? `0${seconds}` : seconds
-      return `${minutes}:${seconds}`
-    }
-
-    // if finished watching the episode, more than 90% done
-    const finishedWatching = mediaObj && (mediaObj.playhead / mediaObj.duration < 0.9) && mediaObj.playhead !== 0
-
-    // no streams
-    const noStreams = streamData.stream_data && streamData.stream_data.streams.length === 0
+    const streams = (streamData.stream_data && streamData.stream_data.streams) || []
 
     return (
       <Fragment>
@@ -216,90 +205,18 @@ class Media extends Component {
                     </div>
                   ) : null}
                   <div className='player-width position-relative embed-responsive embed-responsive-16by9'>
-                    {!loadedVideo || !streamData.stream_data.streams.length
-                      // loading video
-                      ? <Fragment>
-                        <Img src={currentMedia.img ? [
-                          withProxy(currentMedia.img),
-                          replaceHttps(currentMedia.img)
-                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} className='embed-responsive-item video-image-preview' alt={mediaObj.name} />
-                        {!noStreams ? <div className='video-center-overlay text-white'>
-                          <Loading />
-                        </div> : null}
-                        {
-                          loadedVideo && noStreams // if the video is loaded and there are no streams
-                            ? Auth.premium && mediaObj.premium_only // if this is a premium video and a premium user, something is wrong with Crunchyroll
-                              ? <div className='video-overlay'>
-                                <div className='video-resuming'>
-                                  <FontAwesomeIcon icon='exclamation-triangle' />
-                                  {' '}
-                                  No video streams found!
-                                </div>
-                              </div>
-                              // otherwise, the user cannot view this...
-                              : <Fragment>
-                                <div className='video-full-blur' />
-                                <div className='video-center-overlay'>
-                                  { !Auth.premium && mediaObj.premium_only
-                                    ? <div className='col-sm-12 text-center p-2'>
-                                      <h2>
-                                        <FontAwesomeIcon icon='crown' className='text-warning' />
-                                        <div className='text-white'>
-                                          You must be a
-                                          {' '}
-                                          <a
-                                            href='http://www.crunchyroll.com/en/premium_comparison'
-                                            target='_blank' rel='noopener noreferrer'
-                                            className='text-white'
-                                          >Crunchyroll Premium</a>
-                                          {' '}
-                                          subscriber to view this!
-                                        </div>
-                                      </h2>
-                                      <Button
-                                        size='sm'
-                                        color='primary'
-                                        className='ml-auto'
-                                        tag={Link}
-                                        to={{pathname: '/login', state: { prevPath: location.pathname }}}
-                                      >Login</Button>
-                                    </div>
-                                    : <div className='col-sm-12 text-center p-2'>
-                                      <h2>
-                                        <FontAwesomeIcon icon='times-circle' className='text-danger' />
-                                        <div className='text-white'>
-                                          This video is not available.
-                                        </div>
-                                      </h2>
-                                    </div>}
-                                </div>
-                              </Fragment>
-                            : null
-                        }
-                      </Fragment>
-                      // loaded video
-                      : <div className='embed-responsive-item'>
-                        <Video
-                          streamUrl={streamData.stream_data.streams[0].url}
-                          autoplay={autoplay}
-                          playCallback={() => this.setState({ videoPlayed: true })}
-                          key={mediaId}
-                          id={mediaId}
-                        />
-                        {
-                          // only show if more than 30 seconds, not 0 and not played yet
-                          finishedWatching && !videoPlayed
-                            ? <div className='video-overlay'>
-                              <div className='video-resuming'>
-                                <FontAwesomeIcon icon='fast-forward' />
-                                {' '}
-                                Resuming from {formatTime(mediaObj.playhead)}
-                              </div>
-                            </div>
-                            : null
-                        }
-                      </div>
-                    }
+                    <div className='embed-responsive-item'>
+                      <Player
+                        media={mediaObj}
+                        streamsLoaded={loadedVideo}
+                        streams={streams}
+                        poster={withProxy(currentMedia.img) || 'https://via.placeholder.com/640x360?text=No+Image'}
+                        autoPlay={autoplay}
+                        playCallback={() => this.setState({ videoPlayed: true })}
+                        key={mediaId}
+                        id={mediaId}
+                      />
+                    </div>
                   </div>
                 </div>
                 <h3>{mediaObj.name}</h3>
