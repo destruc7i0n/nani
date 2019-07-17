@@ -1,0 +1,28 @@
+.volume-slider {
+  position: relative;
+  width: 10%;
+  padding: 0 6px;
+  z-index: 1;
+
+  & > .background {
+    width: 100%;
+    height: 8px;
+    background: rgba(0.25, 0.25, 0.25, 0.7);
+  }
+
+  .progress {
+    cursor: pointer;
+    height: 10px;
+    background-color: rgba(62, 63, 64, 0.7) !important;
+  }
+
+  .progress-bar {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.volume-icon {
+  padding-right: 0;
+  width: 35px;
+}

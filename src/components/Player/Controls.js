@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import { DoubleEventHandler, formatTime } from '../../lib/util'
 
 import ProgressBar from './ProgressBar'
+import Volume from './Volume'
 
 import './Controls.scss'
 
@@ -20,6 +21,8 @@ class Controls extends Component {
       hovering: false,
       settingsOpen: false,
       newPlayerInfo: false,
+
+      lastVolume: null,
     }
 
     this.hoverTimeout = null
@@ -34,6 +37,7 @@ class Controls extends Component {
     this.coverDoubleTap = this.coverDoubleTap.bind(this)
     this.toggleNewPlayerInfo = this.toggleNewPlayerInfo.bind(this)
     this.toggleSettings = this.toggleSettings.bind(this)
+    this.toggleVolume = this.toggleVolume.bind(this)
   }
 
   toggleVisibility () {
@@ -93,8 +97,21 @@ class Controls extends Component {
     })
   }
 
+  toggleVolume () {
+    const { lastVolume } = this.state
+    const { volume, setVolume } = this.props
+
+    if (lastVolume === null) {
+      this.setState({ lastVolume: volume })
+      setVolume(0)
+    } else {
+      this.setState({ lastVolume: null })
+      setVolume(lastVolume)
+    }
+  }
+
   render () {
-    const { hovering, newPlayerInfo, settingsOpen } = this.state
+    const { hovering, newPlayerInfo, settingsOpen, lastVolume } = this.state
     const {
       paused,
       fullscreen,
@@ -107,6 +124,8 @@ class Controls extends Component {
       setTime,
       setSpeed,
       setQuality,
+      setVolume,
+      volume,
       quality,
       levels,
       speed,
@@ -161,6 +180,19 @@ class Controls extends Component {
           <ProgressBar setTime={setTime} progressPercent={progressPercent} loadedPercent={loadedPercent} duration={duration} />
 
           <span className='text-white time-ticker'>{formatTime(duration - watchTime)}</span>
+
+          <div className='toolbar-button cursor-pointer volume-icon' onClick={this.toggleVolume} >
+            <FontAwesomeIcon icon={
+              volume === 0
+                ? lastVolume === null
+                ? 'volume-off'
+                : 'volume-mute'
+                : volume > 0.7
+                ? 'volume-up'
+                : 'volume-down'
+            } size='lg' />
+          </div>
+          <Volume volumePercent={volume} setVolume={setVolume} />
 
           <div className='toolbar-button cursor-pointer' id='player-settings' onClick={this.toggleSettings} >
             <FontAwesomeIcon icon='cog' size='lg' />

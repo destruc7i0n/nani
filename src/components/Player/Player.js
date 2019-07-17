@@ -35,6 +35,7 @@ class Player extends Component {
       levels: [],
       quality: '1080',
       speed: 1,
+      volume: 1,
     }
 
     this.playerRef = React.createRef()
@@ -56,6 +57,7 @@ class Player extends Component {
     this.skipSeconds = this.skipSeconds.bind(this)
     this.shouldResume = this.shouldResume.bind(this)
     this.setSpeed = this.setSpeed.bind(this)
+    this.setVolume = this.setVolume.bind(this)
   }
 
   componentDidMount () {
@@ -245,6 +247,13 @@ class Player extends Component {
     this.playerRef.current.playbackRate = speed
   }
 
+  setVolume (volume) {
+    volume = Number(volume)
+
+    this.setState({ volume })
+    this.playerRef.current.volume = volume
+  }
+
   onKeyDown (e) {
     const { keyCode } = e
 
@@ -284,7 +293,7 @@ class Player extends Component {
   }
 
   render () {
-    const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, speed, levels, inited } = this.state
+    const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, speed, volume, levels, inited } = this.state
     const { Auth, poster, autoPlay, media, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
@@ -364,6 +373,8 @@ class Player extends Component {
             setTime={this.setTime}
             speed={speed}
             setSpeed={this.setSpeed}
+            volume={volume}
+            setVolume={this.setVolume}
             togglePlay={this.togglePlay}
             paused={paused}
             fullscreen={fullscreen}
