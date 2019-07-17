@@ -185,11 +185,13 @@ class Controls extends Component {
             <FontAwesomeIcon icon={
               volume === 0
                 ? lastVolume === null
-                ? 'volume-off'
-                : 'volume-mute'
-                : volume > 0.7
-                ? 'volume-up'
-                : 'volume-down'
+                  ? 'volume-off'
+                  : 'volume-mute'
+                : volume < 0.3
+                  ? 'volume-down'
+                  : volume > 0.7
+                    ? 'volume-up'
+                    : 'volume'
             } size='lg' />
           </div>
           <Volume volumePercent={volume} setVolume={setVolume} />

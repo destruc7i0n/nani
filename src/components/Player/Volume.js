@@ -9,18 +9,17 @@ class Volume extends Component {
     this.state = {
       mousePosition: null,
       mouseDown: false,
-      localVolume: props.volumePercent,
     }
 
     this.sliderRef = React.createRef()
 
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseDown = this.onMouseDown.bind(this)
+    this.setVolume = this.setVolume.bind(this)
   }
 
   onMouseMove (e) {
     const { mouseDown } = this.state
-    const { setVolume } = this.props
 
     const position = e.nativeEvent.layerX / this.sliderRef.current.clientWidth
 
@@ -29,17 +28,26 @@ class Volume extends Component {
     })
 
     if (mouseDown) {
-      setVolume(position)
+      this.setVolume(position)
     }
   }
 
   onMouseDown () {
     const { mousePosition } = this.state
-    const { setVolume } = this.props
 
     this.setState({ mouseDown: true })
 
-    setVolume(mousePosition)
+    this.setVolume(mousePosition)
+  }
+
+  setVolume (value) {
+    const { setVolume } = this.props
+
+    const clamp = (...v) => v.sort((a,b) => a-b)[1]
+
+    setVolume(
+      clamp(value, 0, 1)
+    )
   }
 
   render () {
