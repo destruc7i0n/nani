@@ -34,6 +34,7 @@ class Player extends Component {
       loaded: false,
       levels: [],
       quality: '1080',
+      speed: 1,
     }
 
     this.playerRef = React.createRef()
@@ -54,6 +55,7 @@ class Player extends Component {
     this.onKeyDown = this.onKeyDown.bind(this)
     this.skipSeconds = this.skipSeconds.bind(this)
     this.shouldResume = this.shouldResume.bind(this)
+    this.setSpeed = this.setSpeed.bind(this)
   }
 
   componentDidMount () {
@@ -236,12 +238,20 @@ class Player extends Component {
     this.playerRef.current.currentTime = value
   }
 
+  setSpeed (speed) {
+    speed = Number(speed)
+
+    this.setState({ speed })
+    this.playerRef.current.playbackRate = speed
+  }
+
   onKeyDown (e) {
     const { keyCode } = e
 
-    if (keyCode === 32) this.togglePlay()
-    if (keyCode === 39) this.skipSeconds(10)
-    if (keyCode === 37) this.skipSeconds(-10)
+    if (keyCode === 32) this.togglePlay() // space
+    if (keyCode === 70) this.toggleFullscreen() // f
+    if (keyCode === 39 || keyCode === 76) this.skipSeconds(10) // arrow right or l
+    if (keyCode === 37 || keyCode === 74) this.skipSeconds(-10) // arrow left or j
 
     if ([ 32, 39, 37 ].includes(keyCode)) e.preventDefault()
   }
@@ -274,14 +284,14 @@ class Player extends Component {
   }
 
   render () {
-    const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, levels, inited } = this.state
+    const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, speed, levels, inited } = this.state
     const { Auth, poster, autoPlay, media, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
     const canPlayVideo = streamsLoaded && streams.length && allowedToWatch
 
     return (
-      <div className='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
+      <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <video preload='auto' controlsList='nodownload' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline  />
 
         {loadingVideo && inited && <div className='player-center-overlay text-white'><Loading /></div>}
@@ -314,16 +324,7 @@ class Player extends Component {
                           </div>
                         </h2>
                       </div>
-                    ) : (
-                      <div className='text-center'>
-                        <h2>
-                          <FontAwesomeIcon icon='exclamation-triangle' className='text-warning' />
-                          <div className='text-white'>
-                            No video streams found!
-                          </div>
-                        </h2>
-                      </div>
-                    )
+                    ) : null
                   : null}
                 {media.premium_only && !Auth.premium && (
                   <div className='text-center p-2'>
@@ -361,6 +362,8 @@ class Player extends Component {
             play={this.play}
             pause={this.pause}
             setTime={this.setTime}
+            speed={speed}
+            setSpeed={this.setSpeed}
             togglePlay={this.togglePlay}
             paused={paused}
             fullscreen={fullscreen}

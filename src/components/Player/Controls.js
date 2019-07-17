@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Button, Toast, ToastBody, ToastHeader } from 'reactstrap'
+import { Button, Popover, PopoverBody, Toast, ToastBody, ToastHeader } from 'reactstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -18,6 +18,7 @@ class Controls extends Component {
 
     this.state = {
       hovering: false,
+      settingsOpen: false,
       newPlayerInfo: false,
     }
 
@@ -32,6 +33,7 @@ class Controls extends Component {
     this.coverDoubleClick = this.coverDoubleClick.bind(this)
     this.coverDoubleTap = this.coverDoubleTap.bind(this)
     this.toggleNewPlayerInfo = this.toggleNewPlayerInfo.bind(this)
+    this.toggleSettings = this.toggleSettings.bind(this)
   }
 
   toggleVisibility () {
@@ -84,8 +86,15 @@ class Controls extends Component {
     })
   }
 
+  toggleSettings () {
+    const { settingsOpen } = this.state
+    this.setState({
+      settingsOpen: !settingsOpen
+    })
+  }
+
   render () {
-    const { hovering, newPlayerInfo } = this.state
+    const { hovering, newPlayerInfo, settingsOpen } = this.state
     const {
       paused,
       fullscreen,
@@ -96,15 +105,17 @@ class Controls extends Component {
       play,
       pause,
       setTime,
+      setSpeed,
       setQuality,
       quality,
       levels,
+      speed,
     } = this.props
 
     let duration = this.props.duration || media.duration
     let watchTime = this.props.watchTime || media.playhead
 
-    const controlsVisible = hovering || paused
+    const controlsVisible = hovering || paused || settingsOpen
 
     return (
       <div
@@ -151,9 +162,33 @@ class Controls extends Component {
 
           <span className='text-white time-ticker'>{formatTime(duration - watchTime)}</span>
 
-          {fullscreen && <select name="quality" id="quality-selector" value={quality} onChange={(e) => setQuality(e.target.value)}>
-            {levels.map((level, index) => <option key={`quality-${index}`} value={level}>{level}p</option>)}
-          </select>}
+          <div className='toolbar-button cursor-pointer' id='player-settings' onClick={this.toggleSettings} >
+            <FontAwesomeIcon icon='cog' size='lg' />
+          </div>
+
+          <Popover container={fullscreen ? 'player' : 'body'} placement='top' trigger='legacy' isOpen={settingsOpen} target='player-settings' toggle={this.toggleSettings}>
+            <PopoverBody>
+              <div className='row'>
+                <div className='col'>Quality</div>
+                <div className='col'>
+                  <select name='quality' id='quality-selector' value={quality} onChange={(e) => setQuality(e.target.value)}>
+                    {levels.map((level, index) => <option key={`quality-${index}`} value={level}>{level}p</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className='row pt-2'>
+                <div className='col'>Speed</div>
+                <div className='col'>
+                  <select name='speed' id='speed-selector' value={speed} onChange={(e) => setSpeed(e.target.value)}>
+                    <option value={0.5}>0.5x</option>
+                    <option value={1}>1x</option>
+                    <option value={1.5}>1.5x</option>
+                    <option value={2}>2x</option>
+                  </select>
+                </div>
+              </div>
+            </PopoverBody>
+          </Popover>
 
           <div className='toolbar-button cursor-pointer' onClick={() => toggleFullscreen()} >
             <FontAwesomeIcon icon={fullscreen ? 'compress' : 'expand'} size='lg' />
