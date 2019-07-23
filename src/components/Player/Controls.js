@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import { Button, Popover, PopoverBody, Toast, ToastBody, ToastHeader } from 'reactstrap'
 
@@ -38,6 +39,10 @@ class Controls extends Component {
     this.toggleNewPlayerInfo = this.toggleNewPlayerInfo.bind(this)
     this.toggleSettings = this.toggleSettings.bind(this)
     this.toggleVolume = this.toggleVolume.bind(this)
+  }
+
+  componentWillUnmount () {
+    if (this.hoverTimeout) clearTimeout(this.hoverTimeout)
   }
 
   toggleVisibility () {
@@ -117,6 +122,8 @@ class Controls extends Component {
       fullscreen,
       toggleFullscreen,
       media,
+      nextMedia,
+      playNextEpisode,
       progressPercent,
       loadedPercent,
       play,
@@ -174,6 +181,10 @@ class Controls extends Component {
           <div className='toolbar-button cursor-pointer' onClick={() => paused ? play() : pause()} >
             <FontAwesomeIcon icon={paused ? 'play' : 'pause'} size='lg' />
           </div>
+
+          {nextMedia && <div className='toolbar-button cursor-pointer' onClick={playNextEpisode} >
+            <FontAwesomeIcon icon='step-forward' size='lg' />
+          </div>}
 
           <span className='text-white time-ticker'>{formatTime(watchTime)}</span>
 
@@ -233,4 +244,4 @@ class Controls extends Component {
   }
 }
 
-export default Controls
+export default connect()(Controls)

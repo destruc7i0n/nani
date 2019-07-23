@@ -33,6 +33,7 @@ class Media extends Component {
       streamData: {},
       error: '',
       videoPlayed: false,
+      currentCollection: null,
       currentMedia: null,
       nextMedia: null,
       prevMedia: null,
@@ -123,6 +124,7 @@ class Media extends Component {
     const imgFullURL = mediaObj && mediaObj.screenshot_image && mediaObj.screenshot_image.full_url
 
     this.setState({
+      currentCollection,
       currentMedia: {
         ...mediaObj,
         img: imgFullURL,
@@ -139,7 +141,7 @@ class Media extends Component {
   }
 
   render () {
-    const { streamData, error, currentMedia, nextMedia, prevMedia } = this.state
+    const { streamData, error, currentMedia, currentCollection, nextMedia, prevMedia } = this.state
     const { match: { params: { media: mediaId } }, collectionMedia, autoplay } = this.props
     // the current media object and the series
     const mediaObj = currentMedia
@@ -149,9 +151,6 @@ class Media extends Component {
 
     // check that the video URL exists
     const loadedVideo = streamData && Object.keys(streamData).length > 0 && streamData.media_id === mediaId
-
-    // the current collection
-    const currentCollection = mediaObj && collectionMedia[mediaObj.collection_id]
 
     // remove episodes that are before the one currently being watched
     const nextEpisodes = mediaObj && currentCollection
@@ -208,12 +207,12 @@ class Media extends Component {
                     <div className='embed-responsive-item'>
                       <Player
                         media={mediaObj}
+                        nextMedia={nextMedia}
                         streamsLoaded={loadedVideo}
                         streams={streams}
                         poster={withProxy(currentMedia.img) || 'https://via.placeholder.com/640x360?text=No+Image'}
                         autoPlay={autoplay}
                         playCallback={() => this.setState({ videoPlayed: true })}
-                        key={mediaId}
                         id={mediaId}
                       />
                     </div>
@@ -290,6 +289,7 @@ export default connect((store) => {
     language: store.Options.language,
     autoplay: store.Options.autoplay,
     media: store.Data.media,
-    collectionMedia: store.Data.collectionMedia
+    collectionMedia: store.Data.collectionMedia,
+    seriesCollections: store.Data.seriesCollections,
   }
 })(Media)

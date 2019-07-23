@@ -16,6 +16,20 @@ import Loading from '../Loading/Loading'
 import { formatTime, isFullscreen } from '../../lib/util'
 
 import './Player.scss'
+import { push } from "connected-react-router"
+
+const defaultState = {
+  id: null,
+
+  fullscreen: false,
+  inited: false,
+  paused: true,
+  duration: 0,
+  loadedSeconds: 0,
+  progressSeconds: 0,
+  loadingVideo: true,
+  levels: [],
+}
 
 class Player extends Component {
   constructor (props) {
@@ -31,7 +45,6 @@ class Player extends Component {
       loadedSeconds: 0,
       progressSeconds: 0,
       loadingVideo: true,
-      loaded: false,
       levels: [],
       quality: '1080',
       speed: 1,
@@ -51,6 +64,7 @@ class Player extends Component {
     this.setQuality = this.setQuality.bind(this)
     this.togglePlay = this.togglePlay.bind(this)
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
+    this.toggleFullscreenState = this.toggleFullscreenState.bind(this)
     this.onLoadedProgress = this.onLoadedProgress.bind(this)
     this.onTimeUpdate = this.onTimeUpdate.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
@@ -58,22 +72,28 @@ class Player extends Component {
     this.shouldResume = this.shouldResume.bind(this)
     this.setSpeed = this.setSpeed.bind(this)
     this.setVolume = this.setVolume.bind(this)
+    this.onVideoEnd = this.onVideoEnd.bind(this)
+    this.nextEpisode = this.nextEpisode.bind(this)
   }
 
   componentDidMount () {
-    const toggleFullscreenState = () => this.setState({ fullscreen: isFullscreen() })
+    document.addEventListener('fullscreenchange', this.toggleFullscreenState, false)
+    document.addEventListener('webkitfullscreenchange', this.toggleFullscreenState, false)
+    document.addEventListener('mozfullscreenchange', this.toggleFullscreenState, false)
+  }
 
-    document.addEventListener('fullscreenchange', toggleFullscreenState, false)
-    document.addEventListener('webkitfullscreenchange', toggleFullscreenState, false)
-    document.addEventListener('mozfullscreenchange', toggleFullscreenState, false)
+  componentWillUnmount () {
+    document.removeEventListener('fullscreenchange', this.toggleFullscreenState, false)
+    document.removeEventListener('webkitfullscreenchange', this.toggleFullscreenState, false)
+    document.removeEventListener('mozfullscreenchange', this.toggleFullscreenState, false)
   }
 
   componentDidUpdate (prevProps) {
-    const { id: oldId } = this.state
+    const { id: oldId, fullscreen } = this.state
     const { id, streams, streamsLoaded } = this.props
     if (id !== oldId && streamsLoaded && streams.length) {
       this.updateEpisode()
-      this.setState({ id })
+      this.setState({ ...defaultState, id, fullscreen })
     }
   }
 
@@ -129,7 +149,7 @@ class Player extends Component {
     })
 
     this.playerRef.current.oncanplay = () => {
-      this.setState({ loadingVideo: false, loaded: true, duration: (this.playerRef.current && this.playerRef.current.duration) || 0 })
+      this.setState({ loadingVideo: false, duration: (this.playerRef.current && this.playerRef.current.duration) || 0 })
     }
     this.playerRef.current.onwaiting = () => {
       this.setState({ loadingVideo: true })
@@ -142,7 +162,7 @@ class Player extends Component {
     }
     this.playerRef.current.onprogress = this.onLoadedProgress
     this.playerRef.current.ontimeupdate = this.onTimeUpdate
-    this.playerRef.current.addEventListener('ended', () => this.logTime())
+    this.playerRef.current.addEventListener('ended', this.onVideoEnd)
   }
 
   onLoadedProgress(e) {
@@ -229,6 +249,10 @@ class Player extends Component {
     }
   }
 
+  toggleFullscreenState () {
+    this.setState({ fullscreen: isFullscreen() })
+  }
+
   setQuality (quality) {
     const { levels } = this.state
 
@@ -265,6 +289,23 @@ class Player extends Component {
     if ([ 32, 39, 37 ].includes(keyCode)) e.preventDefault()
   }
 
+  async onVideoEnd () {
+    const { autoPlay } = this.props
+
+    await this.logTime()
+    if (autoPlay) {
+      this.nextEpisode()
+    }
+  }
+
+  nextEpisode () {
+    const { dispatch, nextMedia } = this.props
+
+    if (nextMedia && nextMedia.media_id) {
+      dispatch(push(`/series/${nextMedia.collection_id}/${nextMedia.media_id}`))
+    }
+  }
+
   skipSeconds (seconds) {
     this.playerRef.current.currentTime += seconds
   }
@@ -294,7 +335,7 @@ class Player extends Component {
 
   render () {
     const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, speed, volume, levels, inited } = this.state
-    const { Auth, poster, autoPlay, media, streamsLoaded, streams, location } = this.props
+    const { Auth, poster, autoPlay, media, nextMedia, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
     const canPlayVideo = streamsLoaded && streams.length && allowedToWatch
@@ -365,9 +406,11 @@ class Player extends Component {
           )}
         </div>
 
-        {canPlayVideo && (
+        {(canPlayVideo || fullscreen) && (
           <Controls
             media={media}
+            nextMedia={nextMedia}
+            playNextMedia={this.nextEpisode}
             play={this.play}
             pause={this.pause}
             setTime={this.setTime}

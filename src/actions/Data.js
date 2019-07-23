@@ -344,7 +344,7 @@ export const getCollectionsForSeries = (id) => (dispatch, getState) => {
         dispatch(addCollectionBulk(data.map((d) => d)))
         dispatch(addSeriesCollection({id, arr: data.map((d) => d.collection_id)}))
       })
-      resolve()
+      resolve(data)
     } catch (err) {
       await handleError(err, dispatch, state, reject)
     }
