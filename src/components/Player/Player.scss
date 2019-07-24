@@ -1,3 +1,12 @@
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);
+@import '~bootstrap/scss/mixins/breakpoints';
+
 .player {
     position: relative;
     width: 100%;
@@ -25,10 +34,24 @@
             font-size: 2.5vw;
         }
 
-        @media (max-width: 768px) {
+        @include media-breakpoint-down(md) {
             h2 {
                 font-size: 4vw;
             }
+        }
+    }
+
+    .player-icon {
+        @include media-breakpoint-down(sm) {
+            font-size: 2em;
+        }
+
+        @include media-breakpoint-between(sm, md) {
+            font-size: 3em;
+        }
+
+        @include media-breakpoint-up(md) {
+            font-size: 4em;
         }
     }
 }

@@ -123,7 +123,7 @@ class Controls extends Component {
       toggleFullscreen,
       media,
       nextMedia,
-      playNextEpisode,
+      playNextMedia,
       progressPercent,
       loadedPercent,
       play,
@@ -182,7 +182,7 @@ class Controls extends Component {
             <FontAwesomeIcon icon={paused ? 'play' : 'pause'} size='lg' />
           </div>
 
-          {nextMedia && <div className='toolbar-button cursor-pointer d-md-block d-none' onClick={playNextEpisode} >
+          {nextMedia && <div className='toolbar-button cursor-pointer d-md-block d-none' onClick={playNextMedia} >
             <FontAwesomeIcon icon='step-forward' size='lg' />
           </div>}
 
@@ -213,7 +213,7 @@ class Controls extends Component {
 
           <Popover container={fullscreen ? 'player' : 'body'} placement='top' trigger='legacy' isOpen={settingsOpen} target='player-settings' toggle={this.toggleSettings}>
             <PopoverBody>
-              {levels.length && <div className='row'>
+              {levels.length > 0 && <div className='row pb-2'>
                 <div className='col'>Quality</div>
                 <div className='col'>
                   <select name='quality' id='quality-selector' value={quality} onChange={(e) => setQuality(e.target.value)}>
@@ -221,7 +221,7 @@ class Controls extends Component {
                   </select>
                 </div>
               </div>}
-              <div className='row pt-2'>
+              <div className='row'>
                 <div className='col'>Speed</div>
                 <div className='col'>
                   <select name='speed' id='speed-selector' value={speed} onChange={(e) => setSpeed(e.target.value)}>

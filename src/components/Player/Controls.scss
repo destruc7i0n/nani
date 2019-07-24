@@ -1,3 +1,12 @@
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);
+@import '~bootstrap/scss/mixins/breakpoints';
+
 .controls {
   position: absolute;
   top: 0;
@@ -35,8 +44,18 @@
   user-select: none;
   pointer-events: none;
 
-  > * {
-    font-size: inherit;
+  > h3 {
+    @include media-breakpoint-between(xs, md) {
+      font-size: 0.7em;
+    }
+
+    @include media-breakpoint-up(md) {
+      font-size: 1em;
+    }
+
+    @include media-breakpoint-up(lg) {
+      font-size: 1.25em;
+    }
   }
 
   background: linear-gradient(

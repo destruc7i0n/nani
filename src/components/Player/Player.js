@@ -134,7 +134,7 @@ class Player extends Component {
   }
 
   registerHlsEvents () {
-    const { quality } = this.state
+    const { quality, inited } = this.state
 
     this.hls && this.hls.on('hlsManifestParsed', (_event, data) => {
       const levels = data.levels.map((level) => level.height.toString())
@@ -156,6 +156,7 @@ class Player extends Component {
     }
     this.playerRef.current.onplay = () => {
       this.setState({ paused: false })
+      if (!inited) this.play() // run for hls supported devices
     }
     this.playerRef.current.onpause = () => {
       this.setState({ paused: true })
@@ -196,14 +197,12 @@ class Player extends Component {
 
     if (!inited) this.setState({ inited: true })
 
-    this.playerRef.current.play()
+    if (this.playerRef.current.paused) this.playerRef.current.play()
   }
 
   pause () {
     const { paused } = this.state
     if (paused) return
-
-    this.logTime()
 
     this.playerRef.current.pause()
   }
@@ -345,14 +344,14 @@ class Player extends Component {
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <video preload='auto' controlsList='nodownload' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline  />
 
-        {loadingVideo && inited && <div className='player-center-overlay text-white'><Loading /></div>}
+        {loadingVideo && inited && !paused && <div className='player-center-overlay text-white'><Loading /></div>}
 
         <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
           {canPlayVideo ? (
             paused && (
               <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
                 <div className=''>
-                  <FontAwesomeIcon icon='play' size='4x' />
+                  <FontAwesomeIcon icon='play' className='player-icon' />
                 </div>
                 {this.shouldResume() && !inited && <div className='mt-1 bg-dark rounded-pill px-2'>
                   <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
