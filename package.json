@@ -14,7 +14,7 @@
     "hls.js": "^0.12.4",
     "jsonwebtoken": "^8.5.1",
     "localforage": "^1.7.3",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
     "popura": "^1.2.5",
@@ -58,7 +58,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@babel/core": "^7.5.4",
+    "@babel/core": "^7.5.5",
     "http-proxy-middleware": "^0.19.1",
     "netlify-lambda": "^1.5.0"
   }

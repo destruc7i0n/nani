@@ -51,7 +51,7 @@ export default function Options (state = {
     case SET_HOMEPAGE_CONTINUE_COUNT:
       return {
         ...state,
-        homepageContinueCount: action.payload
+        homepageContinueCount: Number(action.payload)
       }
     default:
       return state

@@ -182,7 +182,7 @@ class Controls extends Component {
             <FontAwesomeIcon icon={paused ? 'play' : 'pause'} size='lg' />
           </div>
 
-          {nextMedia && <div className='toolbar-button cursor-pointer' onClick={playNextEpisode} >
+          {nextMedia && <div className='toolbar-button cursor-pointer d-md-block d-none' onClick={playNextEpisode} >
             <FontAwesomeIcon icon='step-forward' size='lg' />
           </div>}
 
@@ -213,14 +213,14 @@ class Controls extends Component {
 
           <Popover container={fullscreen ? 'player' : 'body'} placement='top' trigger='legacy' isOpen={settingsOpen} target='player-settings' toggle={this.toggleSettings}>
             <PopoverBody>
-              <div className='row'>
+              {levels.length && <div className='row'>
                 <div className='col'>Quality</div>
                 <div className='col'>
                   <select name='quality' id='quality-selector' value={quality} onChange={(e) => setQuality(e.target.value)}>
                     {levels.map((level, index) => <option key={`quality-${index}`} value={level}>{level}p</option>)}
                   </select>
                 </div>
-              </div>
+              </div>}
               <div className='row pt-2'>
                 <div className='col'>Speed</div>
                 <div className='col'>

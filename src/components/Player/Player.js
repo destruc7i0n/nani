@@ -126,9 +126,9 @@ class Player extends Component {
       }
     } else {
       this.playerRef.current.src = stream
-      this.playerRef.current.addEventListener('loadedmetadata', () => {
-        this.play()
-      })
+      // this.playerRef.current.addEventListener('loadedmetadata', () => {
+      //   this.play()
+      // })
     }
     this.registerHlsEvents()
   }
@@ -159,6 +159,7 @@ class Player extends Component {
     }
     this.playerRef.current.onpause = () => {
       this.setState({ paused: true })
+      this.logTime()
     }
     this.playerRef.current.onprogress = this.onLoadedProgress
     this.playerRef.current.ontimeupdate = this.onTimeUpdate
