@@ -32,7 +32,6 @@ class Media extends Component {
       mediaId: '',
       streamData: {},
       error: '',
-      videoPlayed: false,
       currentCollection: null,
       currentMedia: null,
       nextMedia: null,
@@ -51,7 +50,6 @@ class Media extends Component {
         mediaId: nextMedia,
         streamData: {},
         error: '',
-        videoPlayed: false
       }
     }
     return null
@@ -157,7 +155,7 @@ class Media extends Component {
       ? currentCollection.filter((collectionMediaId) => Number(collectionMediaId) > Number(mediaId))
       : false
 
-    const streams = (streamData.stream_data && streamData.stream_data.streams) || []
+    const streams = (streamData && streamData.stream_data && streamData.stream_data.streams) || []
 
     return (
       <Fragment>
@@ -212,8 +210,7 @@ class Media extends Component {
                         streams={streams}
                         poster={withProxy(currentMedia.img) || 'https://via.placeholder.com/640x360?text=No+Image'}
                         autoPlay={autoplay}
-                        playCallback={() => this.setState({ videoPlayed: true })}
-                        id={mediaId}
+                        id={mediaObj.media_id}
                       />
                     </div>
                   </div>

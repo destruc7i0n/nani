@@ -8,6 +8,8 @@ import { Button } from 'reactstrap'
 
 import Hls from 'hls.js'
 
+import localForage from 'localforage'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Controls from './Controls'
@@ -74,12 +76,19 @@ class Player extends Component {
     this.setVolume = this.setVolume.bind(this)
     this.onVideoEnd = this.onVideoEnd.bind(this)
     this.nextEpisode = this.nextEpisode.bind(this)
+
+    this.persistKey = `nani:player`
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     document.addEventListener('fullscreenchange', this.toggleFullscreenState, false)
     document.addEventListener('webkitfullscreenchange', this.toggleFullscreenState, false)
     document.addEventListener('mozfullscreenchange', this.toggleFullscreenState, false)
+
+    const persistedState = await localForage.getItem(this.persistKey)
+    if (persistedState) {
+      this.setState({ ...JSON.parse(persistedState) })
+    }
   }
 
   componentWillUnmount () {
@@ -88,13 +97,23 @@ class Player extends Component {
     document.removeEventListener('mozfullscreenchange', this.toggleFullscreenState, false)
   }
 
-  componentDidUpdate (prevProps) {
-    const { id: oldId, fullscreen } = this.state
+  componentDidUpdate (prevProps, prevState) {
+    const { id: oldId, fullscreen, volume, speed, quality } = this.state
     const { id, streams, streamsLoaded } = this.props
     if (id !== oldId && streamsLoaded && streams.length) {
       this.updateEpisode()
       this.setState({ ...defaultState, id, fullscreen })
     }
+    if (volume !== prevState.volume || speed !== prevState.speed || quality !== prevState.quality) {
+      this.persistState()
+    }
+  }
+
+  persistState () {
+    const { volume, speed, quality } = this.state
+    localForage.setItem(this.persistKey, JSON.stringify({
+      volume, speed, quality
+    }))
   }
 
   shouldResume () {
@@ -125,6 +144,7 @@ class Player extends Component {
         oldHls.destroy()
       }
     } else {
+      console.log('Hls supported, falling back.')
       this.playerRef.current.src = stream
       // this.playerRef.current.addEventListener('loadedmetadata', () => {
       //   this.play()
@@ -134,12 +154,13 @@ class Player extends Component {
   }
 
   registerHlsEvents () {
-    const { quality, inited } = this.state
+    const { quality } = this.state
+    const { media } = this.props
 
     this.hls && this.hls.on('hlsManifestParsed', (_event, data) => {
       const levels = data.levels.map((level) => level.height.toString())
 
-      if (levels[quality] == null) {
+      if (!levels.includes(quality)) {
         const newQuality = levels[levels.length - 1]
         this.setState({ quality: newQuality })
       }
@@ -148,15 +169,22 @@ class Player extends Component {
       this.setState({ levels })
     })
 
+    this.hls && this.hls.on('hlsMediaAttached', () => {
+      if (this.shouldResume()) this.playerRef.current.currentTime = media.playhead
+    })
+
     this.playerRef.current.oncanplay = () => {
       this.setState({ loadingVideo: false, duration: (this.playerRef.current && this.playerRef.current.duration) || 0 })
+      // this seems to fix safari
+      if (!Hls.isSupported() && this.shouldResume()) {
+        this.playerRef.current.currentTime = this.props.media.playhead
+      }
     }
     this.playerRef.current.onwaiting = () => {
       this.setState({ loadingVideo: true })
     }
     this.playerRef.current.onplay = () => {
       this.setState({ paused: false })
-      if (!inited) this.play() // run for hls supported devices
     }
     this.playerRef.current.onpause = () => {
       this.setState({ paused: true })
@@ -274,8 +302,10 @@ class Player extends Component {
   setVolume (volume) {
     volume = Number(volume)
 
-    this.setState({ volume })
-    this.playerRef.current.volume = volume
+    if (volume >= 0 && volume <= 1) {
+      this.setState({ volume })
+      this.playerRef.current.volume = volume
+    }
   }
 
   onKeyDown (e) {
@@ -285,8 +315,10 @@ class Player extends Component {
     if (keyCode === 70) this.toggleFullscreen() // f
     if (keyCode === 39 || keyCode === 76) this.skipSeconds(10) // arrow right or l
     if (keyCode === 37 || keyCode === 74) this.skipSeconds(-10) // arrow left or j
+    if (keyCode === 38) this.modifyVolume(10) // arrow up
+    if (keyCode === 40) this.modifyVolume(-10) // arrow down
 
-    if ([ 32, 39, 37 ].includes(keyCode)) e.preventDefault()
+    if ([ 32, 39, 37, 70, 76, 74, 38, 40 ].includes(keyCode)) e.preventDefault()
   }
 
   async onVideoEnd () {
@@ -308,6 +340,18 @@ class Player extends Component {
 
   skipSeconds (seconds) {
     this.playerRef.current.currentTime += seconds
+  }
+
+  modifyVolume (amount) {
+    let { volume } = this.state
+
+    amount /= 100
+
+    volume += amount
+    if (volume > 1) volume = 1
+    if (volume === 0) volume = 0
+
+    this.setVolume(volume)
   }
 
   async logTime (t) {
@@ -342,7 +386,7 @@ class Player extends Component {
 
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
-        <video preload='auto' controlsList='nodownload' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline  />
+        <video preload='metadata' controlsList='nodownload' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline  />
 
         {loadingVideo && inited && !paused && <div className='player-center-overlay text-white'><Loading /></div>}
 
