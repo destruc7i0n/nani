@@ -16,6 +16,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
+    z-index: 0;
     height: 100%;
     width: 50%;
     overflow: hidden;
@@ -33,7 +34,6 @@
 .video-image-left img, .video-image-right img {
     width: 100%;
     height: auto;
-    filter: blur(5px);
     pointer-events: none;
 }
 
@@ -53,6 +53,16 @@
 
 .video-image-right {
     right: -10vw;
+}
+
+.video-image-left, .video-image-overlay-left, .video-image-left img {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+.video-image-right, .video-image-overlay-right, .video-image-right img {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 }
 
 .video-image-overlay-left, .video-image-overlay-right {

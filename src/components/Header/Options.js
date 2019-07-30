@@ -148,7 +148,7 @@ class Options extends Component {
               <Label for='language' sm={6}>Content Language</Label>
               <div className='col-sm-6 d-flex align-items-center'>
                 <select className='custom-select' id='language' value={language} onChange={({ target: { value } }) => dispatch(setLanguage(value))}>
-                  {languages.map((language) => <option value={language.id}>{language.text}</option>)}
+                  {languages.map((language) => <option value={language.id} key={`language-${language.id}`}>{language.text}</option>)}
                 </select>
               </div>
             </div>
