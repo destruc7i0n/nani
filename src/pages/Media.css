@@ -76,10 +76,6 @@
     box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .2);
 }
 
-.embed-responsive-item {
-    z-index: 2;
-}
-
 @media (max-width: 768px) {
     .player-width {
         width: 90% !important;

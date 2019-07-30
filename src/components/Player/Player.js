@@ -55,6 +55,7 @@ class Player extends Component {
 
     this.playerRef = React.createRef()
     this.playerContainerRef = React.createRef()
+    this.controlsRef = React.createRef()
 
     this.hls = null
 
@@ -225,14 +226,14 @@ class Player extends Component {
 
     if (!inited) this.setState({ inited: true })
 
-    if (this.playerRef.current.paused) this.playerRef.current.play()
+    if (this.playerRef.current && this.playerRef.current.paused) this.playerRef.current.play()
   }
 
   pause () {
     const { paused } = this.state
     if (paused) return
 
-    this.playerRef.current.pause()
+    if (this.playerRef.current && !this.playerRef.current.paused) this.playerRef.current.pause()
   }
 
   togglePlay () {
@@ -289,14 +290,14 @@ class Player extends Component {
   }
 
   setTime (value) {
-    this.playerRef.current.currentTime = value
+    if (this.playerRef.current) this.playerRef.current.currentTime = value
   }
 
   setSpeed (speed) {
     speed = Number(speed)
 
     this.setState({ speed })
-    this.playerRef.current.playbackRate = speed
+    if (this.playerRef.current) this.playerRef.current.playbackRate = speed
   }
 
   setVolume (volume) {
@@ -304,7 +305,7 @@ class Player extends Component {
 
     if (volume >= 0 && volume <= 1) {
       this.setState({ volume })
-      this.playerRef.current.volume = volume
+      if (this.playerRef.current) this.playerRef.current.volume = volume
     }
   }
 
@@ -318,7 +319,11 @@ class Player extends Component {
     if (keyCode === 38) this.modifyVolume(10) // arrow up
     if (keyCode === 40) this.modifyVolume(-10) // arrow down
 
-    if ([ 32, 39, 37, 70, 76, 74, 38, 40 ].includes(keyCode)) e.preventDefault()
+    if ([ 32, 39, 37, 70, 76, 74, 38, 40 ].includes(keyCode)) {
+      e.preventDefault()
+      // make the controls show
+      if (this.controlsRef.current) this.controlsRef.current.toggleVisibility()
+    }
   }
 
   async onVideoEnd () {
@@ -339,7 +344,7 @@ class Player extends Component {
   }
 
   skipSeconds (seconds) {
-    this.playerRef.current.currentTime += seconds
+    if (this.playerRef.current) this.playerRef.current.currentTime += seconds
   }
 
   modifyVolume (amount) {
@@ -452,6 +457,7 @@ class Player extends Component {
 
         {(canPlayVideo || fullscreen) && (
           <Controls
+            ref={this.controlsRef}
             media={media}
             nextMedia={nextMedia}
             playNextMedia={this.nextEpisode}

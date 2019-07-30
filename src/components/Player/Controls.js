@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 
 import { Button, Popover, PopoverBody, Toast, ToastBody, ToastHeader } from 'reactstrap'
 
@@ -244,4 +243,4 @@ class Controls extends Component {
   }
 }
 
-export default connect()(Controls)
+export default Controls
