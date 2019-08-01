@@ -77,6 +77,7 @@ class Player extends Component {
     this.setVolume = this.setVolume.bind(this)
     this.onVideoEnd = this.onVideoEnd.bind(this)
     this.nextEpisode = this.nextEpisode.bind(this)
+    this.isPlaying = this.isPlaying.bind(this)
 
     this.persistKey = `nani:player`
   }
@@ -115,6 +116,12 @@ class Player extends Component {
     localForage.setItem(this.persistKey, JSON.stringify({
       volume, speed, quality
     }))
+  }
+
+  isPlaying () {
+    const video = this.playerRef.current
+    if (!video) return false
+    return !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2)
   }
 
   shouldResume () {
@@ -226,14 +233,14 @@ class Player extends Component {
 
     if (!inited) this.setState({ inited: true })
 
-    if (this.playerRef.current && this.playerRef.current.paused) this.playerRef.current.play()
+    if (this.playerRef.current && !this.isPlaying()) this.playerRef.current.play()
   }
 
   pause () {
     const { paused } = this.state
     if (paused) return
 
-    if (this.playerRef.current && !this.playerRef.current.paused) this.playerRef.current.pause()
+    if (this.playerRef.current && this.isPlaying()) this.playerRef.current.pause()
   }
 
   togglePlay () {

@@ -23,17 +23,25 @@ class ProgressBar extends Component {
   }
 
   onMouseMove (e) {
-    this.setState({
-      hovering: true,
-      mousePosition: e.nativeEvent.layerX / this.barRef.current.clientWidth
-    })
+    const { duration } = this.props
+
+    const mousePosition = e.nativeEvent.layerX / this.barRef.current.clientWidth
+    const time = Math.round(mousePosition * duration)
+
+    if (time <= duration) {
+      this.setState({
+        hovering: true,
+        time,
+        mousePosition
+      })
+    }
   }
 
   onClick () {
-    const { mousePosition } = this.state
+    const { mousePosition, hovering } = this.state
     const { duration, setTime } = this.props
 
-    setTime(Math.round(Math.round(mousePosition * duration)))
+    if (hovering) setTime(Math.round(mousePosition * duration))
   }
 
   render () {

@@ -41,10 +41,6 @@
     .video-image-left a, .video-image-right a {
         max-height: 90%;
     }
-
-    .video-image-left img, .video-image-right img {
-        filter: blur(2px);
-    }
 }
 
 .video-image-left {
@@ -69,7 +65,7 @@
     top: 0;
     bottom: 0;
     background-color: #111;
-    opacity: 0.5;
+    opacity: 0.6;
     width: 100%;
     min-height: 100%;
     z-index: 1;
