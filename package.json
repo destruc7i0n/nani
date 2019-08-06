@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.19",
-    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-solid-svg-icons": "^5.10.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
@@ -30,7 +30,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "react-stickynode": "^2.1.1",
-    "react-transition-group": "^4.2.1",
+    "react-transition-group": "^4.2.2",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.4",
     "redux-persist": "^5.10.0",
@@ -60,6 +60,6 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "http-proxy-middleware": "^0.19.1",
-    "netlify-lambda": "^1.5.0"
+    "netlify-lambda": "^1.5.1"
   }
 }

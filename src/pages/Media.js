@@ -10,6 +10,8 @@ import Img from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import PlayerContainer from '../components/Player/PlayerContainer'
+
 import Player from '../components/Player/Player'
 import Collection from '../components/Collections/Collection'
 import MALButton from '../components/Buttons/MALButton'
@@ -172,49 +174,52 @@ class Media extends Component {
             )
             : (
               <div className='col-sm-12'>
-                <div className='d-flex mb-4 mt-2 justify-content-center position-relative'>
-                  {prevMedia ? (
-                    <div className='position-absolute video-image-left'>
-                      <Link
-                        className='position-relative'
-                        to={`/series/${mediaObj.collection_id}/${prevMedia.media_id}`}
-                      >
-                        <div className='position-absolute video-image-overlay-left' />
-                        <Img src={prevMedia.img ? [
-                          withProxy(prevMedia.img),
-                          replaceHttps(prevMedia.img)
-                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={prevMedia.name} />
-                      </Link>
-                    </div>
-                  ) : null}
-                  {nextMedia ? (
-                    <div className='position-absolute video-image-right'>
-                      <Link
-                        className='position-relative'
-                        to={`/series/${mediaObj.collection_id}/${nextMedia.media_id}`}
-                      >
-                        <div className='position-absolute video-image-overlay-right' />
-                        <Img src={nextMedia.img ? [
-                          withProxy(nextMedia.img),
-                          replaceHttps(nextMedia.img)
-                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={nextMedia.name} />
-                      </Link>
-                    </div>
-                  ) : null}
-                  <div className='player-width position-relative embed-responsive embed-responsive-16by9'>
-                    <div className='embed-responsive-item'>
-                      <Player
-                        media={mediaObj}
-                        nextMedia={nextMedia}
-                        streamsLoaded={loadedVideo}
-                        streams={streams}
-                        poster={withProxy(currentMedia.img) || 'https://via.placeholder.com/640x360?text=No+Image'}
-                        autoPlay={autoplay}
-                        id={mediaObj.media_id}
-                      />
+                <PlayerContainer>
+                  <div className='d-flex mb-4 mt-2 justify-content-center position-relative'>
+                    {prevMedia ? (
+                      <div className='position-absolute video-image-left'>
+                        <Link
+                          className='position-relative'
+                          to={`/series/${mediaObj.collection_id}/${prevMedia.media_id}`}
+                        >
+                          <div className='position-absolute video-image-overlay-left' />
+                          <Img src={prevMedia.img ? [
+                            withProxy(prevMedia.img),
+                            replaceHttps(prevMedia.img)
+                          ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={prevMedia.name} />
+                        </Link>
+                      </div>
+                    ) : null}
+                    {nextMedia ? (
+                      <div className='position-absolute video-image-right'>
+                        <Link
+                          className='position-relative'
+                          to={`/series/${mediaObj.collection_id}/${nextMedia.media_id}`}
+                        >
+                          <div className='position-absolute video-image-overlay-right' />
+                          <Img src={nextMedia.img ? [
+                            withProxy(nextMedia.img),
+                            replaceHttps(nextMedia.img)
+                          ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={nextMedia.name} />
+                        </Link>
+                      </div>
+                    ) : null}
+
+                    <div className='player-width position-relative embed-responsive embed-responsive-16by9'>
+                      <div className='embed-responsive-item'>
+                        <Player
+                          media={mediaObj}
+                          nextMedia={nextMedia}
+                          streamsLoaded={loadedVideo}
+                          streams={streams}
+                          poster={withProxy(currentMedia.img) || 'https://via.placeholder.com/640x360?text=No+Image'}
+                          autoPlay={autoplay}
+                          id={mediaObj.media_id}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                </PlayerContainer>
                 <h3>{mediaObj.name}</h3>
                 <h5 className='d-flex flex-column flex-md-row flex-wrap'>
                   <Badge

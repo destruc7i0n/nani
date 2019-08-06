@@ -193,6 +193,7 @@ class Player extends Component {
     }
     this.playerRef.current.onplay = () => {
       this.setState({ paused: false })
+      if (!this.state.inited) this.setState({ inited: true })
     }
     this.playerRef.current.onpause = () => {
       this.setState({ paused: true })
@@ -230,8 +231,6 @@ class Player extends Component {
     if (!paused) return
 
     if (!inited && this.shouldResume()) this.setTime(media.playhead)
-
-    if (!inited) this.setState({ inited: true })
 
     if (this.playerRef.current && !this.isPlaying()) this.playerRef.current.play()
   }

@@ -165,7 +165,7 @@ class Controls extends Component {
                 <ToastBody className='text-body'>
                   Welcome to the new custom video player! It was built to better accommodate the design and needs of this website.<br />
                   Do you have feedback or requests of features no-longer available?
-                  Create a new <a target='_blank' rel='noopener noreferrer' href='https://github.com/destruc7i0n/nani/issues/new?title=New+video+player+feedback'>GitHub issue</a> or <a href='mailto:destruc7i0n@thedestruc7i0n.ca'>send me an email</a>.
+                  You can create a new <a target='_blank' rel='noopener noreferrer' href='https://github.com/destruc7i0n/nani/issues/new?title=New+video+player+feedback'>GitHub issue</a> or <a href='mailto:destruc7i0n@thedestruc7i0n.ca'>send me an email</a>.
                 </ToastBody>
               </Toast>
             )

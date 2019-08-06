@@ -16,6 +16,8 @@ import AboutAlert from './Alerts/AboutAlert'
 
 import { cancelCurrentRequests } from '../lib/api'
 
+const isMediaPage = (url) => matchPath(url, { path: '/series/:id/:media', exact: true })
+
 class AppContainer extends Component {
   constructor (props) {
     super(props)
@@ -27,7 +29,10 @@ class AppContainer extends Component {
   async componentDidMount () {
     const { dispatch, Auth, history } = this.props
     // cancel requests on page change
-    this.unlisten = history.listen(() => cancelCurrentRequests())
+    this.unlisten = history.listen(() => {
+      // do not cancel media page requests
+      if (!isMediaPage(this.props.location.pathname)) cancelCurrentRequests()
+    })
 
     // init session
     try {
@@ -50,8 +55,6 @@ class AppContainer extends Component {
     const {location: from} = prevProps
     const {dispatch, Auth, location: to} = this.props
 
-    const isMediaPage = (url) => matchPath(url, { path: '/series/:id/:media', exact: true })
-
     // check if not to same page and not from some pages
     if (from && from.pathname !== to.pathname && !isMediaPage(from.pathname)) {
       window.scrollTo(0, 0)
@@ -70,6 +73,7 @@ class AppContainer extends Component {
   render () {
     const { initSession } = this.state
     const { dispatch, Auth, theme, children, error, location: { pathname } } = this.props
+
     const isLoginPage = matchPath(pathname, { path: '/login', exact: true })
     const isSeriesPage = matchPath(pathname, { path: '/series/:id', exact: true })
 
