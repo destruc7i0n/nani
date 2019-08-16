@@ -137,8 +137,8 @@ class Controls extends Component {
       speed,
     } = this.props
 
-    let duration = this.props.duration || media.duration
-    let watchTime = this.props.watchTime || media.playhead
+    let duration = this.props.duration
+    let watchTime = this.props.watchTime
 
     const controlsVisible = hovering || paused || settingsOpen
 
