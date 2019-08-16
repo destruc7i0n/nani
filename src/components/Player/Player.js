@@ -54,8 +54,6 @@ class Player extends Component {
     this.playerContainerRef = React.createRef()
     this.controlsRef = React.createRef()
 
-    this.hls = null
-
     this.loggedTime = props.media.playhead || 0
 
     this.play = this.play.bind(this)
@@ -74,7 +72,6 @@ class Player extends Component {
     this.setVolume = this.setVolume.bind(this)
     this.onVideoEnd = this.onVideoEnd.bind(this)
     this.nextEpisode = this.nextEpisode.bind(this)
-    this.isPlaying = this.isPlaying.bind(this)
     this.getLevels = this.getLevels.bind(this)
 
     this.persistKey = `nani:player`
@@ -134,12 +131,6 @@ class Player extends Component {
     localForage.setItem(this.persistKey, JSON.stringify({
       volume, speed, quality
     }))
-  }
-
-  isPlaying () {
-    const video = this.playerRef.current
-    if (!video) return false
-    return !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2)
   }
 
   shouldResume () {
@@ -325,6 +316,7 @@ class Player extends Component {
         await dispatch(updatePlaybackTime(time, id))
       } catch (err) {
         console.error(err)
+        setTimeout(async () => this.logTime(t), 1000 * 5) // try again in a few seconds
       }
       this.loggedTime = time
     }
