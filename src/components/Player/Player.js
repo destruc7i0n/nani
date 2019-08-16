@@ -25,6 +25,7 @@ const defaultState = {
 
   stream: null,
   canPlay: true,
+  ready: false,
 
   fullscreen: false,
   inited: false,
@@ -140,10 +141,10 @@ class Player extends Component {
   }
 
   play () {
-    const { paused } = this.state
+    const { paused, ready } = this.state
     const { media } = this.props
 
-    if (!paused) return
+    if (!paused || !ready) return
 
     if (this.shouldResume()) this.setTime(media.playhead)
 
@@ -169,7 +170,7 @@ class Player extends Component {
 
   onReady () {
     this.getLevels()
-    this.setState({ loadingVideo: false })
+    this.setState({ loadingVideo: false, ready: true })
   }
 
   togglePlay () {
@@ -325,11 +326,10 @@ class Player extends Component {
   }
 
   render () {
-    const { stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, levels, inited, loadedPercent, progressPercent, canPlay } = this.state
+    const { stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, levels, inited, loadedPercent, progressPercent, canPlay, ready } = this.state
     const { Auth, poster, media, nextMedia, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
-    const canPlayVideo = !loadingVideo && allowedToWatch && canPlay
 
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
@@ -353,7 +353,7 @@ class Player extends Component {
           onEnded={this.onVideoEnd}
         />
 
-        {loadingVideo && allowedToWatch && canPlay && <div className='player-center-overlay loading-circle-overlay text-white'><Loading /></div>}
+        {((loadingVideo && !paused) || (!ready && canPlay)) && <div className='player-center-overlay loading-circle-overlay text-white'><Loading /></div>}
         {!inited && (
           <div className='player-center-overlay text-white'>
             <img src={poster} className='w-100 h-100' alt='' />
@@ -361,7 +361,7 @@ class Player extends Component {
         )}
 
         <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
-          {canPlayVideo ? (
+          {ready ? (
             paused && (
               <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
                 <div className=''>
@@ -374,7 +374,7 @@ class Player extends Component {
             )
           ) : (
             <Fragment>
-              {(streamsLoaded || !allowedToWatch) && !loadingVideo && <div className='player-dark-blur' />}
+              {(!allowedToWatch || (!streams.length && streamsLoaded)) && <div className='player-dark-blur' />}
               <div className='player-dark-overlay'>
                 {!streamsLoaded && allowedToWatch && <Loading />}
                 {streamsLoaded && !streams.length
@@ -420,7 +420,7 @@ class Player extends Component {
           )}
         </div>
 
-        {(canPlayVideo || fullscreen) && (
+        {(ready || fullscreen) && (
           <Controls
             ref={this.controlsRef}
             media={media}
