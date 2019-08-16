@@ -482,7 +482,7 @@ export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
       dispatch(setPlayheadTime(time, id))
       resolve()
     } catch (err) {
-      await handleError(err, dispatch, state, reject)
+      console.error(err)
     }
   })
 }

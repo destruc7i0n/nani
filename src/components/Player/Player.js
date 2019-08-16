@@ -3,6 +3,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { updatePlaybackTime } from '../../actions'
 import { Link, withRouter } from 'react-router-dom'
+import { push } from 'connected-react-router'
 
 import { Button } from 'reactstrap'
 
@@ -18,7 +19,6 @@ import Loading from '../Loading/Loading'
 import { formatTime, isFullscreen } from '../../lib/util'
 
 import './Player.scss'
-import { push } from "connected-react-router"
 
 const defaultState = {
   id: null,
@@ -126,7 +126,8 @@ class Player extends Component {
 
   shouldResume () {
     const { media } = this.props
-    return media && media.playhead !== 0 && (media.playhead / media.duration < 0.9)
+    const { inited, progressSeconds } = this.state
+    return media && media.playhead !== 0 && (media.playhead / media.duration < 0.9) && !inited && progressSeconds < 1
   }
 
   updateEpisode () {
@@ -163,7 +164,6 @@ class Player extends Component {
 
   registerHlsEvents () {
     const { quality } = this.state
-    const { media } = this.props
 
     this.hls && this.hls.on('hlsManifestParsed', (_event, data) => {
       const levels = data.levels.map((level) => level.height.toString())
@@ -178,14 +178,14 @@ class Player extends Component {
     })
 
     this.hls && this.hls.on('hlsMediaAttached', () => {
-      if (this.shouldResume()) this.playerRef.current.currentTime = media.playhead
+      if (this.shouldResume()) this.setTime(this.props.media.playhead)
     })
 
     this.playerRef.current.oncanplay = () => {
       this.setState({ loadingVideo: false, duration: (this.playerRef.current && this.playerRef.current.duration) || 0 })
       // this seems to fix safari
       if (!Hls.isSupported() && this.shouldResume()) {
-        this.playerRef.current.currentTime = this.props.media.playhead
+        this.setTime(this.props.media.playhead)
       }
     }
     this.playerRef.current.onwaiting = () => {
@@ -225,12 +225,12 @@ class Player extends Component {
   }
 
   play () {
-    const { paused, inited } = this.state
+    const { paused } = this.state
     const { media } = this.props
 
     if (!paused) return
 
-    if (!inited && this.shouldResume()) this.setTime(media.playhead)
+    if (this.shouldResume()) this.setTime(media.playhead)
 
     if (this.playerRef.current && !this.isPlaying()) this.playerRef.current.play()
   }
@@ -408,7 +408,7 @@ class Player extends Component {
                 <div className=''>
                   <FontAwesomeIcon icon='play' className='player-icon' />
                 </div>
-                {this.shouldResume() && !inited && <div className='mt-1 bg-dark rounded-pill px-2'>
+                {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
                   <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
                 </div>}
               </div>
