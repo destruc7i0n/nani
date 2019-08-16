@@ -150,6 +150,15 @@ class Player extends Component {
     this.setState({ paused: false })
   }
 
+  pause () {
+    const { paused } = this.state
+    if (paused) return
+
+    this.setState({ paused: true })
+
+    this.logTime()
+  }
+
   onStart () {
     const { media } = this.props
 
@@ -161,13 +170,6 @@ class Player extends Component {
   onReady () {
     this.getLevels()
     this.setState({ loadingVideo: false })
-  }
-
-  pause () {
-    const { paused } = this.state
-    if (paused) return
-
-    this.setState({ paused: true })
   }
 
   togglePlay () {
