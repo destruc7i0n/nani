@@ -7,7 +7,7 @@ import { push } from 'connected-react-router'
 
 import { Button } from 'reactstrap'
 
-import Hls from 'hls.js'
+import ReactPlayer from 'react-player'
 
 import localForage from 'localforage'
 
@@ -23,12 +23,18 @@ import './Player.scss'
 const defaultState = {
   id: null,
 
+  stream: null,
+  canPlay: true,
+  ready: false,
+
   fullscreen: false,
   inited: false,
   paused: true,
   duration: 0,
   loadedSeconds: 0,
+  loadedPercent: 0,
   progressSeconds: 0,
+  progressPercent: 0,
   loadingVideo: true,
   levels: [],
 }
@@ -38,16 +44,8 @@ class Player extends Component {
     super (props)
 
     this.state = {
-      id: null,
-
-      fullscreen: false,
-      inited: false,
-      paused: true,
-      duration: 0,
-      loadedSeconds: 0,
-      progressSeconds: 0,
-      loadingVideo: true,
-      levels: [],
+      ...defaultState,
+      paused: !props.autoPlay,
       quality: '1080',
       speed: 1,
       volume: 1,
@@ -56,8 +54,6 @@ class Player extends Component {
     this.playerRef = React.createRef()
     this.playerContainerRef = React.createRef()
     this.controlsRef = React.createRef()
-
-    this.hls = null
 
     this.loggedTime = props.media.playhead || 0
 
@@ -68,8 +64,8 @@ class Player extends Component {
     this.togglePlay = this.togglePlay.bind(this)
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
     this.toggleFullscreenState = this.toggleFullscreenState.bind(this)
-    this.onLoadedProgress = this.onLoadedProgress.bind(this)
-    this.onTimeUpdate = this.onTimeUpdate.bind(this)
+    this.onStart = this.onStart.bind(this)
+    this.onReady = this.onReady.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.skipSeconds = this.skipSeconds.bind(this)
     this.shouldResume = this.shouldResume.bind(this)
@@ -77,7 +73,7 @@ class Player extends Component {
     this.setVolume = this.setVolume.bind(this)
     this.onVideoEnd = this.onVideoEnd.bind(this)
     this.nextEpisode = this.nextEpisode.bind(this)
-    this.isPlaying = this.isPlaying.bind(this)
+    this.getLevels = this.getLevels.bind(this)
 
     this.persistKey = `nani:player`
   }
@@ -101,13 +97,33 @@ class Player extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { id: oldId, fullscreen, volume, speed, quality } = this.state
-    const { id, streams, streamsLoaded } = this.props
-    if (id !== oldId && streamsLoaded && streams.length) {
-      this.updateEpisode()
-      this.setState({ ...defaultState, id, fullscreen })
+    const { id, streams, streamsLoaded, autoPlay } = this.props
+    if (id !== oldId && streamsLoaded) {
+      let stream = ''
+      if (streams.length) stream = streams[0].url
+      this.setState({ ...defaultState, id, fullscreen, stream, canPlay: ReactPlayer.canPlay(stream), paused: !autoPlay, })
     }
     if (volume !== prevState.volume || speed !== prevState.speed || quality !== prevState.quality) {
       this.persistState()
+    }
+  }
+
+  getLevels () {
+    const { quality } = this.state
+    if (this.playerRef.current) {
+      const Hls = this.playerRef.current.getInternalPlayer('hls')
+
+      if (Hls) {
+        const levels = Hls.levels.map((level) => level.height.toString())
+
+        if (!levels.includes(quality)) {
+          const newQuality = levels[levels.length - 1]
+          this.setState({ quality: newQuality })
+        }
+        Hls.loadLevel = levels.indexOf(this.state.quality)
+
+        this.setState({ levels })
+      }
     }
   }
 
@@ -118,128 +134,43 @@ class Player extends Component {
     }))
   }
 
-  isPlaying () {
-    const video = this.playerRef.current
-    if (!video) return false
-    return !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2)
-  }
-
   shouldResume () {
     const { media } = this.props
     const { inited, progressSeconds } = this.state
     return media && media.playhead !== 0 && (media.playhead / media.duration < 0.9) && !inited && progressSeconds < 1
   }
 
-  updateEpisode () {
-    const { streams, streamsLoaded, media } = this.props
-
-    if (!streamsLoaded || !streams.length) return
-
-    const stream = streams[0].url
-
-    const oldHls = this.hls
-
-    this.loggedTime = media.playhead || 0
-
-    if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: false })
-
-      hls.loadSource(stream)
-      hls.attachMedia(this.playerRef.current)
-
-      this.hls = hls
-
-      if (oldHls) {
-        oldHls.destroy()
-      }
-    } else {
-      console.log('Hls supported, falling back.')
-      this.playerRef.current.src = stream
-      // this.playerRef.current.addEventListener('loadedmetadata', () => {
-      //   this.play()
-      // })
-    }
-    this.registerHlsEvents()
-  }
-
-  registerHlsEvents () {
-    const { quality } = this.state
-
-    this.hls && this.hls.on('hlsManifestParsed', (_event, data) => {
-      const levels = data.levels.map((level) => level.height.toString())
-
-      if (!levels.includes(quality)) {
-        const newQuality = levels[levels.length - 1]
-        this.setState({ quality: newQuality })
-      }
-      this.hls.loadLevel = levels.indexOf(this.state.quality)
-
-      this.setState({ levels })
-    })
-
-    this.hls && this.hls.on('hlsMediaAttached', () => {
-      if (this.shouldResume()) this.setTime(this.props.media.playhead)
-    })
-
-    this.playerRef.current.oncanplay = () => {
-      this.setState({ loadingVideo: false, duration: (this.playerRef.current && this.playerRef.current.duration) || 0 })
-      // this seems to fix safari
-      if (!Hls.isSupported() && this.shouldResume()) {
-        this.setTime(this.props.media.playhead)
-      }
-    }
-    this.playerRef.current.onwaiting = () => {
-      this.setState({ loadingVideo: true })
-    }
-    this.playerRef.current.onplay = () => {
-      this.setState({ paused: false })
-      if (!this.state.inited) this.setState({ inited: true })
-    }
-    this.playerRef.current.onpause = () => {
-      this.setState({ paused: true })
-      this.logTime()
-    }
-    this.playerRef.current.onprogress = this.onLoadedProgress
-    this.playerRef.current.ontimeupdate = this.onTimeUpdate
-    this.playerRef.current.addEventListener('ended', this.onVideoEnd)
-  }
-
-  onLoadedProgress(e) {
-    const { inited } = this.state
-    const { media } = this.props
-    if (!media || !inited) return
-
-    const element = e.target
-    if (element.buffered.length) {
-      const buffered = element.buffered.end(0)
-      this.setState({ loadedSeconds: buffered })
-    }
-  }
-
-  onTimeUpdate (e) {
-    const { media } = this.props
-    if (!media) return
-
-    const element = e.target
-    this.setState({ progressSeconds: element.currentTime })
-  }
-
   play () {
-    const { paused } = this.state
+    const { paused, ready } = this.state
     const { media } = this.props
 
-    if (!paused) return
+    if (!paused || !ready) return
 
     if (this.shouldResume()) this.setTime(media.playhead)
 
-    if (this.playerRef.current && !this.isPlaying()) this.playerRef.current.play()
+    this.setState({ paused: false })
   }
 
   pause () {
     const { paused } = this.state
     if (paused) return
 
-    if (this.playerRef.current && this.isPlaying()) this.playerRef.current.pause()
+    this.setState({ paused: true })
+
+    this.logTime()
+  }
+
+  onStart () {
+    const { media } = this.props
+
+    if (this.shouldResume()) this.setTime(media.playhead)
+
+    this.setState({ inited: true })
+  }
+
+  onReady () {
+    this.getLevels()
+    this.setState({ loadingVideo: false, ready: true })
   }
 
   togglePlay () {
@@ -291,19 +222,25 @@ class Player extends Component {
   setQuality (quality) {
     const { levels } = this.state
 
-    this.setState({ quality })
-    this.hls.currentLevel = levels.indexOf(quality)
+    if (this.playerRef.current) {
+      const Hls = this.playerRef.current.getInternalPlayer('hls')
+
+      if (Hls) {
+        Hls.currentLevel = levels.indexOf(quality)
+
+        this.setState({ quality })
+      }
+    }
   }
 
   setTime (value) {
-    if (this.playerRef.current) this.playerRef.current.currentTime = value
+    if (this.playerRef.current) this.playerRef.current.seekTo(value)
   }
 
   setSpeed (speed) {
     speed = Number(speed)
 
     this.setState({ speed })
-    if (this.playerRef.current) this.playerRef.current.playbackRate = speed
   }
 
   setVolume (volume) {
@@ -311,7 +248,6 @@ class Player extends Component {
 
     if (volume >= 0 && volume <= 1) {
       this.setState({ volume })
-      if (this.playerRef.current) this.playerRef.current.volume = volume
     }
   }
 
@@ -350,7 +286,7 @@ class Player extends Component {
   }
 
   skipSeconds (seconds) {
-    if (this.playerRef.current) this.playerRef.current.currentTime += seconds
+    if (this.playerRef.current) this.setTime(this.playerRef.current.getCurrentTime() + seconds)
   }
 
   modifyVolume (amount) {
@@ -383,26 +319,49 @@ class Player extends Component {
         await dispatch(updatePlaybackTime(time, id))
       } catch (err) {
         console.error(err)
+        setTimeout(async () => this.logTime(t), 1000 * 5) // try again in a few seconds
       }
       this.loggedTime = time
     }
   }
 
   render () {
-    const { loadingVideo, paused, duration, fullscreen, progressSeconds, loadedSeconds, quality, speed, volume, levels, inited } = this.state
-    const { Auth, poster, autoPlay, media, nextMedia, streamsLoaded, streams, location } = this.props
+    const { stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, levels, inited, loadedPercent, progressPercent, canPlay, ready } = this.state
+    const { Auth, poster, media, nextMedia, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
-    const canPlayVideo = streamsLoaded && streams.length && allowedToWatch
 
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
-        <video preload='metadata' controlsList='nodownload' poster={poster} autoPlay={autoPlay} ref={this.playerRef} playsInline  />
+        <ReactPlayer
+          url={stream}
+          playing={!paused}
+          volume={volume}
+          playbackRate={speed}
+          className='video-player'
+          width='100%'
+          height='100%'
+          ref={this.playerRef}
 
-        {loadingVideo && inited && !paused && <div className='player-center-overlay text-white'><Loading /></div>}
+          onBuffer={() => this.setState({ loadingVideo: true })}
+          onBufferEnd={() => this.setState({ loadingVideo: false })}
+          onProgress={({ loadedSeconds, playedSeconds: progressSeconds, played: progressPercent, loaded: loadedPercent }) =>
+            this.setState({ loadedSeconds, progressSeconds, progressPercent, loadedPercent })}
+          onDuration={(duration) => this.setState({ duration })}
+          onReady={this.onReady}
+          onStart={this.onStart}
+          onEnded={this.onVideoEnd}
+        />
+
+        {((loadingVideo && !paused) || (!ready && canPlay)) && <div className='player-center-overlay loading-circle-overlay text-white'><Loading /></div>}
+        {!inited && (
+          <div className='player-center-overlay text-white'>
+            <img src={poster} className='w-100 h-100' alt='' />
+          </div>
+        )}
 
         <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
-          {canPlayVideo ? (
+          {ready ? (
             paused && (
               <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
                 <div className=''>
@@ -415,7 +374,7 @@ class Player extends Component {
             )
           ) : (
             <Fragment>
-              {(streamsLoaded || !allowedToWatch) && <div className='player-dark-blur' />}
+              {(!allowedToWatch || (!streams.length && streamsLoaded)) && <div className='player-dark-blur' />}
               <div className='player-dark-overlay'>
                 {!streamsLoaded && allowedToWatch && <Loading />}
                 {streamsLoaded && !streams.length
@@ -461,7 +420,7 @@ class Player extends Component {
           )}
         </div>
 
-        {(canPlayVideo || fullscreen) && (
+        {(ready || fullscreen) && (
           <Controls
             ref={this.controlsRef}
             media={media}
@@ -483,8 +442,8 @@ class Player extends Component {
             setQuality={this.setQuality}
             levels={levels}
             watchTime={progressSeconds}
-            progressPercent={duration && progressSeconds && progressSeconds / duration}
-            loadedPercent={duration && loadedSeconds && loadedSeconds / duration}
+            progressPercent={progressPercent}
+            loadedPercent={loadedPercent}
           />
         )}
       </div>

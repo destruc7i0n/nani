@@ -483,6 +483,7 @@ export const updatePlaybackTime = (time, id) => (dispatch, getState) => {
       resolve()
     } catch (err) {
       console.error(err)
+      reject(err)
     }
   })
 }
