@@ -13,10 +13,13 @@ import localForage from 'localforage'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import Img from 'react-image'
+
 import Controls from './Controls'
 import Loading from '../Loading/Loading'
 
 import { formatTime, isFullscreen } from '../../lib/util'
+import withProxy, { replaceHttps } from '../../lib/withProxy'
 
 import './Player.scss'
 
@@ -90,9 +93,14 @@ class Player extends Component {
   }
 
   componentWillUnmount () {
+    const { paused } = this.state
+
     document.removeEventListener('fullscreenchange', this.toggleFullscreenState, false)
     document.removeEventListener('webkitfullscreenchange', this.toggleFullscreenState, false)
     document.removeEventListener('mozfullscreenchange', this.toggleFullscreenState, false)
+
+    // if the video is playing and attempting to unmount, log the time
+    if (!paused) this.logTime()
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -156,8 +164,6 @@ class Player extends Component {
     if (paused) return
 
     this.setState({ paused: true })
-
-    this.logTime()
   }
 
   onStart () {
@@ -348,6 +354,7 @@ class Player extends Component {
           onProgress={({ loadedSeconds, playedSeconds: progressSeconds, played: progressPercent, loaded: loadedPercent }) =>
             this.setState({ loadedSeconds, progressSeconds, progressPercent, loadedPercent })}
           onDuration={(duration) => this.setState({ duration })}
+          onPause={() => this.logTime()}
           onReady={this.onReady}
           onStart={this.onStart}
           onEnded={this.onVideoEnd}
@@ -355,8 +362,11 @@ class Player extends Component {
 
         {((loadingVideo && !paused) || (!ready && canPlay)) && <div className='player-center-overlay loading-circle-overlay text-white'><Loading /></div>}
         {!inited && (
-          <div className='player-center-overlay text-white'>
-            <img src={poster} className='w-100 h-100' alt='' />
+          <div className='player-center-overlay'>
+            <Img src={poster ? [
+              withProxy(poster),
+              replaceHttps(poster)
+            ] : 'https://via.placeholder.com/1920x1080?text=No+Image'} alt={media.title} className='w-100 h-100' />
           </div>
         )}
 
