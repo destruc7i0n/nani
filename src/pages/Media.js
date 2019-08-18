@@ -212,7 +212,7 @@ class Media extends Component {
                           nextMedia={nextMedia}
                           streamsLoaded={loadedVideo}
                           streams={streams}
-                          poster={withProxy(currentMedia.img) || 'https://via.placeholder.com/640x360?text=No+Image'}
+                          poster={currentMedia.img}
                           autoPlay={autoplay}
                           id={mediaObj.media_id}
                         />

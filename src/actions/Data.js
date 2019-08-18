@@ -3,6 +3,8 @@
 import axios, { isCancel } from 'axios'
 import { omit } from 'lodash'
 
+import { matchPath } from 'react-router'
+
 import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 
 import { batch } from 'react-redux'
@@ -49,9 +51,13 @@ export const handleError = async (err, dispatch, state, reject) => {
         case 'bad_session': { // when the session has expired?
           // create a new session
           await dispatch(startSession())
-          // move to an empty page and then back
-          await dispatch(push('/empty'))
-          await dispatch(replace(path))
+
+          // move to an empty page and then back if not on the media page
+          const isMediaPage = matchPath(path, { path: '/series/:id/:media', exact: true })
+          if (!isMediaPage) {
+            await dispatch(push('/empty'))
+            await dispatch(replace(path))
+          }
           break
         }
         case 'bad_request': { // when removed from the devices and the like
