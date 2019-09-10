@@ -110,6 +110,7 @@ class Player extends Component {
       let stream = ''
       if (streams.length) stream = streams[0].url
       this.setState({ ...defaultState, id, fullscreen, stream, canPlay: ReactPlayer.canPlay(stream), paused: !autoPlay, })
+      this.loggedTime = this.props.media.playhead || 0
     }
     if (volume !== prevState.volume || speed !== prevState.speed || quality !== prevState.quality) {
       this.persistState()
@@ -360,28 +361,32 @@ class Player extends Component {
           onEnded={this.onVideoEnd}
         />
 
-        {((loadingVideo && !paused) || (!ready && canPlay)) && <div className='player-center-overlay loading-circle-overlay text-white'><Loading /></div>}
         {!inited && (
           <div className='player-center-overlay'>
             <Img src={poster ? [
               withProxy(poster),
               replaceHttps(poster)
             ] : 'https://via.placeholder.com/1920x1080?text=No+Image'} alt={media.title} className='w-100 h-100' />
+            {(!ready && canPlay) && <div className='player-center-overlay text-white'><Loading /></div>}
           </div>
         )}
 
         <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
           {ready ? (
-            paused && (
-              <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
-                <div className=''>
+            <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
+              {paused ? (
+                <Fragment>
                   <FontAwesomeIcon icon='play' className='player-icon' />
-                </div>
-                {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
-                  <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
-                </div>}
-              </div>
-            )
+                  {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
+                    <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
+                  </div>}
+                </Fragment>
+              ) : (
+                loadingVideo ? (
+                  <FontAwesomeIcon icon='circle-notch' pulse className='player-icon' size='3x' />
+                ) : null)
+              }
+            </div>
           ) : (
             <Fragment>
               {(!allowedToWatch || (!streams.length && streamsLoaded)) && <div className='player-dark-blur' />}

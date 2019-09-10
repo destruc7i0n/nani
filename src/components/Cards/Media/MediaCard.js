@@ -68,9 +68,9 @@ class MediaCard extends Component {
                           {media.name || `Episode ${media.episode_number}`}
                         </small>
                         {
-                          showTime
+                          showTime && media.available_time
                             ? <Badge className='text-uppercase w-100' color='success'>
-                              {format(new Date(media.available_time), '[Released at] h:mm aa')}
+                              {format(new Date(media.available_time), '\'Released at\' h:mm aa')}
                             </Badge>
                             : null
                         }
