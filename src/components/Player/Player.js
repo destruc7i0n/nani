@@ -31,6 +31,8 @@ const defaultState = {
   ready: false,
 
   fullscreen: false,
+  canPlayPIP: false,
+  pip: false,
   inited: false,
   paused: true,
   duration: 0,
@@ -66,9 +68,11 @@ class Player extends Component {
     this.setQuality = this.setQuality.bind(this)
     this.togglePlay = this.togglePlay.bind(this)
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
+    this.togglePIP = this.togglePIP.bind(this)
     this.toggleFullscreenState = this.toggleFullscreenState.bind(this)
     this.onStart = this.onStart.bind(this)
     this.onReady = this.onReady.bind(this)
+    this.onPause = this.onPause.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.skipSeconds = this.skipSeconds.bind(this)
     this.shouldResume = this.shouldResume.bind(this)
@@ -167,6 +171,13 @@ class Player extends Component {
     this.setState({ paused: true })
   }
 
+  onPause () {
+    const { paused } = this.state
+    if (!paused) this.setState({ paused: true })
+
+    this.logTime()
+  }
+
   onStart () {
     const { media } = this.props
 
@@ -176,8 +187,12 @@ class Player extends Component {
   }
 
   onReady () {
+    const { stream } = this.state
+
+    const canPlayPIP = ReactPlayer.canEnablePIP(stream)
+
     this.getLevels()
-    this.setState({ loadingVideo: false, ready: true })
+    this.setState({ loadingVideo: false, ready: true, canPlayPIP })
   }
 
   togglePlay () {
@@ -224,6 +239,12 @@ class Player extends Component {
 
   toggleFullscreenState () {
     this.setState({ fullscreen: isFullscreen() })
+  }
+
+  togglePIP () {
+    const { canPlayPIP, pip, fullscreen } = this.state
+    if (fullscreen) this.toggleFullscreen()
+    if (canPlayPIP) this.setState({ pip: !pip, fullscreen: false })
   }
 
   setQuality (quality) {
@@ -333,7 +354,7 @@ class Player extends Component {
   }
 
   render () {
-    const { stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, levels, inited, loadedPercent, progressPercent, canPlay, ready } = this.state
+    const { stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, pip, levels, inited, loadedPercent, progressPercent, canPlay, canPlayPIP, ready } = this.state
     const { Auth, poster, media, nextMedia, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
@@ -341,10 +362,12 @@ class Player extends Component {
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <ReactPlayer
+          key={media.media_id}
           url={stream}
           playing={!paused}
           volume={volume}
           playbackRate={speed}
+          pip={pip}
           className='video-player'
           width='100%'
           height='100%'
@@ -355,10 +378,12 @@ class Player extends Component {
           onProgress={({ loadedSeconds, playedSeconds: progressSeconds, played: progressPercent, loaded: loadedPercent }) =>
             this.setState({ loadedSeconds, progressSeconds, progressPercent, loadedPercent })}
           onDuration={(duration) => this.setState({ duration })}
-          onPause={() => this.logTime()}
+          onPause={this.onPause}
           onReady={this.onReady}
           onStart={this.onStart}
           onEnded={this.onVideoEnd}
+          onEnablePIP={() => this.setState({ pip: true })}
+          onDisablePIP={() => this.setState({ pip: false })}
         />
 
         {!inited && (
@@ -438,6 +463,7 @@ class Player extends Component {
         {(ready || fullscreen) && (
           <Controls
             ref={this.controlsRef}
+            readyToPlay={ready && inited}
             media={media}
             nextMedia={nextMedia}
             playNextMedia={this.nextEpisode}
@@ -452,6 +478,9 @@ class Player extends Component {
             paused={paused}
             fullscreen={fullscreen}
             toggleFullscreen={this.toggleFullscreen}
+            canPlayPIP={canPlayPIP}
+            togglePIP={this.togglePIP}
+            pip={pip}
             duration={duration}
             quality={quality}
             setQuality={this.setQuality}

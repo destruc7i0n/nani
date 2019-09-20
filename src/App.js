@@ -62,6 +62,7 @@ import {
   faVolumeDown,
   faVolumeMute,
   faVolumeOff,
+  faClone,
 } from '@fortawesome/free-solid-svg-icons'
 
 import './App.css'
@@ -115,6 +116,7 @@ library.add(
   faVolumeDown,
   faVolumeOff,
   faVolume,
+  faClone,
 )
 
 class App extends Component {

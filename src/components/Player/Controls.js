@@ -117,9 +117,13 @@ class Controls extends Component {
   render () {
     const { hovering, newPlayerInfo, settingsOpen, lastVolume } = this.state
     const {
+      readyToPlay,
       paused,
       fullscreen,
       toggleFullscreen,
+      togglePIP,
+      canPlayPIP,
+      pip,
       media,
       nextMedia,
       playNextMedia,
@@ -140,7 +144,7 @@ class Controls extends Component {
     let duration = this.props.duration
     let watchTime = this.props.watchTime
 
-    const controlsVisible = hovering || paused || settingsOpen
+    const controlsVisible = hovering || paused || settingsOpen || pip
 
     return (
       <div
@@ -233,6 +237,12 @@ class Controls extends Component {
               </div>
             </PopoverBody>
           </Popover>
+
+          {canPlayPIP && readyToPlay && (
+            <div className='toolbar-button cursor-pointer' onClick={() => togglePIP()} >
+              <FontAwesomeIcon icon='clone' size='lg' />
+            </div>
+          )}
 
           <div className='toolbar-button cursor-pointer' onClick={() => toggleFullscreen()} >
             <FontAwesomeIcon icon={fullscreen ? 'compress' : 'expand'} size='lg' />
