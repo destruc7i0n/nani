@@ -121,6 +121,40 @@ class Player extends Component {
     }
   }
 
+  async getImageDimensions (src) {
+    return new Promise((r) => {
+      const img = new Image()
+      img.onload = () => r({ width: img.width, height: img.height })
+      img.src = src
+    })
+  }
+
+  async handleMediaSession () {
+    if ('mediaSession' in navigator) {
+      const { media } = this.props
+
+      const { width: mediumWidth, height: mediumHeight } = await this.getImageDimensions(media.screenshot_image.medium_url)
+      const { width: largeWidth, height: largeHeight } = await this.getImageDimensions(media.screenshot_image.large_url)
+      const { width: fullWidthWidth, height: fullWidthHeight } = await this.getImageDimensions(media.screenshot_image.fwide_url)
+
+      // eslint-disable-next-line
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: media.name,
+        artist: media.collection_name,
+        artwork: [
+          { src: media.screenshot_image.medium_url, sizes: `${mediumWidth}x${mediumHeight}`, type: 'image/jpg' },
+          { src: media.screenshot_image.large_url, sizes: `${largeWidth}x${largeHeight}`, type: 'image/jpg' },
+          { src: media.screenshot_image.fwide_url, sizes: `${fullWidthWidth}x${fullWidthHeight}`, type: 'image/jpg' }
+        ]
+      })
+
+      navigator.mediaSession.setActionHandler('play', () => this.play())
+      navigator.mediaSession.setActionHandler('pause', () => this.pause())
+      navigator.mediaSession.setActionHandler('seekbackward', () => this.skipSeconds(-10))
+      navigator.mediaSession.setActionHandler('seekforward', () => this.skipSeconds(10))
+    }
+  }
+
   getLevels () {
     const { quality } = this.state
     if (this.playerRef.current) {
@@ -184,6 +218,8 @@ class Player extends Component {
     if (this.shouldResume()) this.setTime(media.playhead)
 
     this.setState({ inited: true })
+
+    this.handleMediaSession()
   }
 
   onReady () {
@@ -262,7 +298,11 @@ class Player extends Component {
   }
 
   setTime (value) {
-    if (this.playerRef.current) this.playerRef.current.seekTo(value)
+    try {
+      if (this.playerRef.current) this.playerRef.current.seekTo(value)
+    } catch (e) {
+      console.error('Could not seek video!')
+    }
   }
 
   setSpeed (speed) {
