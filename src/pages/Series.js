@@ -93,7 +93,11 @@ class Series extends Component {
 
     // load the latest collection
     if (token && latestCollection) {
-      dispatch(getAniListItem(latestCollection.name, latestCollectionId))
+      try {
+        dispatch(getAniListItem(latestCollection.name, latestCollectionId))
+      } catch (e) {
+        console.error(e)
+      }
     }
 
     // check if the collection has been loaded
