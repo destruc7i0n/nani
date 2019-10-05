@@ -7,4 +7,8 @@
     .navbar.bg-dark {
         padding-top: max(0.5rem, env(safe-area-inset-top));
     }
+
+    body {
+        padding-top: calc(5.2rem + env(safe-area-inset-top));
+    }
 }

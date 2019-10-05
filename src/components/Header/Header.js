@@ -37,7 +37,7 @@ class Header extends Component {
     const { collapsed } = this.state
     const { dispatch, location, Auth } = this.props
     return (
-      <nav className='mb-4 navbar navbar-expand-md sticky-top navbar-dark bg-dark'>
+      <nav className='mb-4 navbar navbar-expand-md fixed-top navbar-dark bg-dark'>
         <div className='container'>
           <NavbarBrand tag={Link} to='/'>
             <div className='logo d-md-none d-lg-inline-block' style={{ width: '2rem', height: '2rem' }} />
