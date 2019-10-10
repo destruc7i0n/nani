@@ -6,7 +6,7 @@ html { overflow-y: scroll; }
 /* overrides modal adding padding */
 body {
     padding-right: 0 !important;
-    overflow: hidden;
+    padding-top: 5.2rem;
 }
 
 .logo {
