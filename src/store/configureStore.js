@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore, compose } from 'redux'
-import localForage from 'localforage'
+import localForage from './localForage'
 import { createBrowserHistory } from 'history'
 import { persistCombineReducers, persistStore, createMigrate } from 'redux-persist'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
@@ -21,10 +21,12 @@ export default function configureStore (preloadedState) {
     }
   }
 
+  const storage = localForage.init()
+
   // only persist auth
   const persistorConfig = {
     version: 1,
-    storage: localForage,
+    storage,
     key: 'nani',
     whitelist: ['Auth', 'Options'],
     migrate: createMigrate(migrations, { debug: false })
