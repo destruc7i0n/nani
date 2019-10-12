@@ -72,7 +72,7 @@ class AppContainer extends Component {
 
   render () {
     const { initSession } = this.state
-    const { dispatch, Auth, theme, children, error, location: { pathname } } = this.props
+    const { dispatch, Auth, theme, showPremiumAlert, children, error, location: { pathname } } = this.props
 
     const isLoginPage = matchPath(pathname, { path: '/login', exact: true })
     const isSeriesPage = matchPath(pathname, { path: '/series/:id', exact: true })
@@ -102,7 +102,7 @@ class AppContainer extends Component {
             </Alert>
             : null }
           { !isLoginPage && !isSeriesPage ? <AboutAlert /> : null }
-          { !Auth.premium && !isLoginPage && !isSeriesPage
+          { !Auth.premium && !isLoginPage && !isSeriesPage && showPremiumAlert
             ? <Alert color='info' className='d-flex align-items-center'>
               You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll has to offer.
               <Button
@@ -126,6 +126,7 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
+      showPremiumAlert: store.Options.showPremiumAlert,
       theme: store.Options.theme,
       error: store.Data.error,
       Auth: store.Auth

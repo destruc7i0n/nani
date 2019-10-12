@@ -19,10 +19,25 @@ import './MediaCard.css'
 
 class MediaCard extends Component {
   render () {
-    const { Auth, media, width, showTime = false, series } = this.props
+    const { Auth, media, width, showTime = false, mediaPage = false, series } = this.props
     // grab the series for the media
     const mediaSeries = media && series[media.series_id] ? series[media.series_id] : {}
     const imgFullURL = media && media.screenshot_image && media.screenshot_image.full_url
+
+    const episodeNumber = media.episode_number
+    const episodeTextDefault = `Episode ${media.episode_number}`
+
+    let showEpisodeLengthBadge = true
+    let showEpisodeNumberBadge = true
+    let title = mediaSeries.name || episodeTextDefault
+    let subtitle = media.name || episodeTextDefault
+
+    if (mediaPage) {
+      showEpisodeNumberBadge = false
+      title = subtitle
+      subtitle = episodeTextDefault
+    }
+
     return (
       <div className={`col-12 col-sm-6 col-lg-${width} d-flex pb-4`}>
         <Card
@@ -45,12 +60,14 @@ class MediaCard extends Component {
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
                       <CardImgOverlay className='p-1 pl-4'>
-                        {media.episode_number
+                        {showEpisodeNumberBadge && episodeNumber
                           ? <Badge color='primary mr-1' pill>
-                            {`E${media.episode_number}`}
+                            {`E${episodeNumber}`}
                           </Badge>
                           : null}
-                        {media.duration ? <Badge color='secondary' pill>{Math.ceil(media.duration / 60)} min</Badge> : null}
+                        {showEpisodeLengthBadge && media.duration
+                          ? <Badge color='secondary' pill>{Math.ceil(media.duration / 60)} min</Badge>
+                          : null}
                       </CardImgOverlay>
                     </div>
                     <div className='col-12'>
@@ -62,10 +79,10 @@ class MediaCard extends Component {
                               <FontAwesomeIcon icon='crown' className='text-warning' />{' '}
                             </Fragment>
                             : null}
-                          {mediaSeries.name || `Episode ${media.episode_number}` }
+                          {title}
                         </span>
                         <small className='d-block text-truncate font-italic text-secondary'>
-                          {media.name || `Episode ${media.episode_number}`}
+                          {subtitle}
                         </small>
                         {
                           showTime && media.available_time

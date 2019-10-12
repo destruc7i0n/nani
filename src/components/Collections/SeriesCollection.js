@@ -87,14 +87,16 @@ class SeriesCollection extends Component {
                   order={order}
                   loading={!loaded && !collectionMedia[id]}
                   perPage={perPage}
-                  showTitle={false} />
+                  showTitle={false}
+                  mediaPage />
               </Fragment>
             )
             : !loaded && defaultLoaded ? (
                 <Collection
-                  loading={true}
+                  loading
                   perPage={perPage}
-                  showTitle={false} />
+                  showTitle={false}
+                  mediaPage />
               ) : null
         }
       </div>

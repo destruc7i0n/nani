@@ -273,7 +273,8 @@ class Media extends Component {
                     loading={collectionMedia[mediaObj.collection_id] === undefined}
                     title='Next Episodes'
                     titleTag='h4'
-                    perPage={4} />
+                    perPage={4}
+                    mediaPage />
                   : null
                 }
               </div>

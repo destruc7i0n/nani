@@ -11,7 +11,8 @@ import {
   setTheme,
   toggleAutoplay,
   toggleAutoTheme,
-  toggleOrderControls
+  toggleOrderControls,
+  togglePremiumAlert
 } from '../../actions'
 
 import {
@@ -32,7 +33,7 @@ import {
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import './Options.css'
+import './Options.scss'
 
 class Options extends Component {
   constructor (props) {
@@ -114,7 +115,7 @@ class Options extends Component {
 
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, continueCount, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, continueCount, showPremiumAlert, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
@@ -122,7 +123,7 @@ class Options extends Component {
         <Button onClick={this.toggle} className='w-100'>
           <FontAwesomeIcon icon='cog' />
         </Button>
-        <Modal isOpen={open} toggle={this.toggle}>
+        <Modal className='options-modal' isOpen={open} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Options</ModalHeader>
           <ModalBody>
             <h3>Preferences</h3>
@@ -138,11 +139,11 @@ class Options extends Component {
             <div className='row'>
               <Label for='autoplay' sm={6}>
                 Automatically change theme?
-                <small>Based on computer colour theme, if possible.</small>
               </Label>
               <div className='col-sm-6 d-flex align-items-center'>
                 <input type='checkbox' id='autoTheme' checked={autoTheme} onChange={() => dispatch(toggleAutoTheme())} />
               </div>
+              <small className='col pb-2 option-info'>Based on computer colour theme, if possible.</small>
             </div>
             <div className='row'>
               <Label for='language' sm={6}>Content Language</Label>
@@ -174,6 +175,13 @@ class Options extends Component {
                   <option value={16}>16</option>
                 </select>
               </div>
+            </div>
+            <div className='row'>
+              <Label for='autoplay' sm={6}>Show premium account alert?</Label>
+              <div className='col-sm-6 d-flex align-items-center'>
+                <input type='checkbox' id='showPremiumAlert' checked={showPremiumAlert} onChange={() => dispatch(togglePremiumAlert())} />
+              </div>
+              <small className='col pb-2 option-info'>Shown when not logged in with a Crunchyroll premium account.</small>
             </div>
 
             <br/>
@@ -303,6 +311,7 @@ export default connect((store) => {
     theme: store.Options.theme,
     autoTheme: store.Options.autoThemeChange,
     continueCount: store.Options.homepageContinueCount,
+    showPremiumAlert: store.Options.showPremiumAlert,
     languages: store.Data.languages,
     mal: store.Auth.mal,
     anilist: store.Auth.anilist

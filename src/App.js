@@ -65,7 +65,7 @@ import {
   faClone,
 } from '@fortawesome/free-solid-svg-icons'
 
-import './App.css'
+import './App.scss'
 import './themes/light.scss'
 import './themes/dark.scss'
 

@@ -7,6 +7,11 @@ html { overflow-y: scroll; }
 body {
     padding-right: 0 !important;
     padding-top: 5.2rem;
+
+    /* ios padding */
+    @supports (padding-top: max(0px)) {
+        padding-top: calc(5.2rem + env(safe-area-inset-top));
+    }
 }
 
 .logo {
