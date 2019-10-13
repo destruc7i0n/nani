@@ -146,7 +146,7 @@ class Series extends Component {
                   <CardBody className='main-details-card-body'>
                     <div className='row'>
                       <div className='col-sm-4 col-lg-3' style={isSmallScreen ? { marginTop: '-100px' } : {}}>
-                        <div className='sticky-poster'>
+                        <div>
                           <Img loader={<ImageLoader height={300} />} src={portraitImgFullURL ? [
                             withProxy(portraitImgFullURL),
                             replaceHttps(portraitImgFullURL)

@@ -6,4 +6,10 @@
     .option-info {
         color: darken(#ffffff, 40%);
     }
+
+    /* ios padding */
+    @supports (padding-top: max(0px)) {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-top);
+    }
 }

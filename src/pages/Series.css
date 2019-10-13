@@ -14,11 +14,6 @@
     }
 }
 
-.sticky-poster {
-    position: sticky;
-    top: 75px;
-}
-
 .series-banner {
     position: relative;
     margin-top: -50px;

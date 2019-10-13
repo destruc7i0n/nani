@@ -3,10 +3,12 @@ import localForage from 'localforage'
 export default {
   init () {
     try {
-      // IOS 12.2 fixed crash IndexedDB
+      // IOS fixed crash IndexedDB
       // DOMException: Connection to Indexed Database server lost. Refresh the page to try again
+      // Disable IndexedDB for Safari
       let driver = []
-      if (window.device && window.device.platform.toLowerCase() === 'ios') {
+      if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
+        // console.log('Safari: No IndexedDB usage')
         driver = [
           localForage.WEBSQL,
           localForage.LOCALSTORAGE
