@@ -394,7 +394,7 @@ class Player extends Component {
   }
 
   render () {
-    const { stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, pip, levels, inited, loadedPercent, progressPercent, canPlay, canPlayPIP, ready } = this.state
+    const { id, stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, pip, levels, inited, loadedPercent, progressPercent, canPlay, canPlayPIP, ready } = this.state
     const { Auth, poster, media, nextMedia, streamsLoaded, streams, location } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
@@ -402,7 +402,7 @@ class Player extends Component {
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <ReactPlayer
-          key={media.media_id}
+          key={id}
           url={stream}
           playing={!paused}
           volume={volume}
@@ -456,7 +456,6 @@ class Player extends Component {
             <Fragment>
               {(!allowedToWatch || (!streams.length && streamsLoaded)) && <div className='player-dark-blur' />}
               <div className='player-dark-overlay'>
-                {!streamsLoaded && allowedToWatch && <Loading />}
                 {streamsLoaded && !streams.length
                   ? allowedToWatch
                     ? (
