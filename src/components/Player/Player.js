@@ -73,6 +73,7 @@ class Player extends Component {
     this.onStart = this.onStart.bind(this)
     this.onReady = this.onReady.bind(this)
     this.onPause = this.onPause.bind(this)
+    this.onPlay = this.onPlay.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.skipSeconds = this.skipSeconds.bind(this)
     this.shouldResume = this.shouldResume.bind(this)
@@ -164,10 +165,17 @@ class Player extends Component {
         const levels = Hls.levels.map((level) => level.height.toString())
 
         if (!levels.includes(quality)) {
-          const newQuality = levels[levels.length - 1]
-          this.setState({ quality: newQuality })
+          if (quality !== 'auto') {
+            const newQuality = levels[levels.length - 1]
+            this.setState({ quality: newQuality })
+          }
         }
-        Hls.loadLevel = levels.indexOf(this.state.quality)
+
+        if (quality === 'auto') {
+          Hls.loadLevel = -1
+        } else {
+          Hls.loadLevel = levels.indexOf(this.state.quality)
+        }
 
         this.setState({ levels })
       }
@@ -210,6 +218,11 @@ class Player extends Component {
     if (!paused) this.setState({ paused: true })
 
     this.logTime()
+  }
+
+  onPlay () {
+    const { paused } = this.state
+    if (paused) this.setState({ paused: false })
   }
 
   onStart () {
@@ -290,7 +303,11 @@ class Player extends Component {
       const Hls = this.playerRef.current.getInternalPlayer('hls')
 
       if (Hls) {
-        Hls.currentLevel = levels.indexOf(quality)
+        if (quality === 'auto') {
+          Hls.currentLevel = -1
+        } else {
+          Hls.currentLevel = levels.indexOf(quality)
+        }
 
         this.setState({ quality })
       }
@@ -419,6 +436,7 @@ class Player extends Component {
             this.setState({ loadedSeconds, progressSeconds, progressPercent, loadedPercent })}
           onDuration={(duration) => this.setState({ duration })}
           onPause={this.onPause}
+          onPlay={this.onPlay}
           onReady={this.onReady}
           onStart={this.onStart}
           onEnded={this.onVideoEnd}

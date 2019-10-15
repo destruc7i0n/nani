@@ -7,6 +7,7 @@ export default {
       // DOMException: Connection to Indexed Database server lost. Refresh the page to try again
       // Disable IndexedDB for Safari
       let driver = []
+      // eslint-disable-next-line no-useless-escape
       if (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) {
         // console.log('Safari: No IndexedDB usage')
         driver = [

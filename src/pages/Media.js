@@ -17,6 +17,7 @@ import Collection from '../components/Collections/Collection'
 import MALButton from '../components/Buttons/MALButton'
 import AniListButton from '../components/Buttons/AniListButton'
 import QueueButton from '../components/Buttons/QueueButton'
+import WatchedButton from '../components/Buttons/WatchedButton'
 import LoadingMediaPage from '../components/Loading/LoadingMediaPage'
 
 import api from '../lib/api'
@@ -257,6 +258,7 @@ class Media extends Component {
                       <AniListButton id={mediaObj.media_id} media={mediaObj} className='mr-md-2 mb-1' />
                     </Fragment>
                     : null}
+                  <WatchedButton media={mediaObj} badge refreshQueue className='mr-md-2 mb-1' />
                   <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
                 </h5>
                 <p>{mediaObj.description}</p>

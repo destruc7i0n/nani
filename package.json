@@ -5,7 +5,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "@fortawesome/react-fontawesome": "^0.1.5",
+    "@fortawesome/react-fontawesome": "^0.1.6",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
@@ -19,11 +19,11 @@
     "popura": "^1.2.5",
     "qs": "^6.9.0",
     "react": "^16.10.2",
-    "react-content-loader": "^4.3.0",
+    "react-content-loader": "^4.3.2",
     "react-debounce-input": "^3.2.0",
     "react-dom": "^16.10.2",
     "react-helmet": "6.0.0-beta",
-    "react-image": "^2.2.0",
+    "react-image": "^2.2.1",
     "react-player": "^1.13.0",
     "react-popper": "1.3.4",
     "react-redux": "^7.1.1",
@@ -57,7 +57,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.6.4",
     "http-proxy-middleware": "^0.20.0",
     "netlify-lambda": "^1.6.3"
   }

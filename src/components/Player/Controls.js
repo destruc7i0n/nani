@@ -220,6 +220,7 @@ class Controls extends Component {
                 <div className='col'>Quality</div>
                 <div className='col'>
                   <select name='quality' id='quality-selector' value={quality} onChange={(e) => setQuality(e.target.value)}>
+                    <option value='auto'>Auto</option>
                     {levels.map((level, index) => <option key={`quality-${index}`} value={level}>{level}p</option>)}
                   </select>
                 </div>

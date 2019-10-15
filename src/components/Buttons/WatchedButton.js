@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getQueue, updatePlaybackTime } from '../../actions'
 
-import { Button } from 'reactstrap'
+import { Badge, Button } from 'reactstrap'
 
 import classNames from 'classnames'
 
@@ -10,6 +10,27 @@ class WatchedButton extends Component {
   constructor (props) {
     super(props)
     this.handle = this.handle.bind(this)
+
+    this.state = {
+      visible: false
+    }
+  }
+
+  componentDidMount () {
+    this.refreshVisible()
+  }
+
+  componentDidUpdate (prevProps, prevState, snapshot) {
+    if (prevProps.media.media_id !== this.props.media.media_id) {
+      this.refreshVisible()
+    }
+  }
+
+  refreshVisible () {
+    const { media } = this.props
+    if (media.playhead && media.duration && media.playhead !== media.duration) {
+      this.setState({ visible: true })
+    }
   }
 
   async handle (e) {
@@ -21,23 +42,33 @@ class WatchedButton extends Component {
       if (refreshQueue) {
         await dispatch(getQueue(true))
       }
+      this.setState({ visible: false })
     } catch (err) {
       console.error(err)
     }
   }
 
   render () {
+    const { visible } = this.state
     // grab some unnecessary props to make them not go into the tag (because of ...props)
-    const { dispatch, media, className, ...props } = this.props
-    return (
-      <Button
+    const { dispatch, media, className, badge, ...props } = this.props
+
+    let Tag
+    if (badge) {
+      Tag = Badge
+    } else {
+      Tag = Button
+    }
+
+    return visible ? (
+      <Tag
         color='light'
         onClick={this.handle}
-        className={classNames(className, 'mw-100 text-truncate')
+        className={classNames(className, 'mw-100 text-truncate cursor-pointer')
         } {...props}>
         Mark as Watched
-      </Button>
-    )
+      </Tag>
+    ) : null
   }
 }
 
