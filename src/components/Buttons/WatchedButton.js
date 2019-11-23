@@ -53,19 +53,24 @@ class WatchedButton extends Component {
     // grab some unnecessary props to make them not go into the tag (because of ...props)
     const { dispatch, media, className, badge, ...props } = this.props
 
-    let Tag
+    let Tag, attrs
     if (badge) {
       Tag = Badge
+      attrs = {
+        ...props,
+        href: '#'
+      }
     } else {
       Tag = Button
+      attrs = props
     }
 
     return visible ? (
       <Tag
         color='light'
         onClick={this.handle}
-        className={classNames(className, 'mw-100 text-truncate cursor-pointer')
-        } {...props}>
+        className={classNames(className, 'mw-100 text-truncate')
+        } {...attrs}>
         Mark as Watched
       </Tag>
     ) : null

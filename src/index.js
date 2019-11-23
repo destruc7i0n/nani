@@ -20,8 +20,4 @@ render(
   </Provider>,
   document.getElementById('root'))
 
-serviceWorker.register({
-  onUpdate () {
-    window.location.reload(true)
-  }
-})
+serviceWorker.register()

@@ -25,9 +25,11 @@ class SeriesCollection extends Component {
     const { defaultLoaded, hash } = this.props
     if (defaultLoaded && !loaded) {
       await this.load()
-      if (hash) {
+
+      const el = document.getElementById(hash)
+      if (hash && el) {
         // scroll to the hash
-        setTimeout(() => document.getElementById(hash).scrollIntoView({ behavior: 'smooth' }), 0)
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 0)
       }
       this.setState({ expanded: true })
     }
