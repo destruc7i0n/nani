@@ -28,7 +28,6 @@ class WatchedButton extends Component {
 
   refreshVisible () {
     const { media } = this.props
-    console.log('refreshing', media)
     if (media.playhead !== null && media.duration && media.playhead !== media.duration) {
       this.setState({ visible: true })
     }
