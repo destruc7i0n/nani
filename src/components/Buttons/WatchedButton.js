@@ -28,7 +28,8 @@ class WatchedButton extends Component {
 
   refreshVisible () {
     const { media } = this.props
-    if (media.playhead && media.duration && media.playhead !== media.duration) {
+    console.log('refreshing', media)
+    if (media.playhead !== null && media.duration && media.playhead !== media.duration) {
       this.setState({ visible: true })
     }
   }
@@ -69,7 +70,7 @@ class WatchedButton extends Component {
       <Tag
         color='light'
         onClick={this.handle}
-        className={classNames(className, 'mw-100 text-truncate')
+        className={classNames(className, 'mw-100 text-truncate cursor-pointer')
         } {...attrs}>
         Mark as Watched
       </Tag>
