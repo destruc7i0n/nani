@@ -134,19 +134,34 @@ class Player extends Component {
     if ('mediaSession' in navigator) {
       const { media } = this.props
 
-      const { width: mediumWidth, height: mediumHeight } = await this.getImageDimensions(media.screenshot_image.medium_url)
-      const { width: largeWidth, height: largeHeight } = await this.getImageDimensions(media.screenshot_image.large_url)
-      const { width: fullWidthWidth, height: fullWidthHeight } = await this.getImageDimensions(media.screenshot_image.fwide_url)
+      if (!media.screenshot_image) return
+
+      let artwork = []
+
+      if (media.screenshot_image.medium_url) {
+        const { width: mediumWidth, height: mediumHeight } = await this.getImageDimensions(media.screenshot_image.medium_url)
+        artwork.push(
+          { src: media.screenshot_image.medium_url, sizes: `${mediumWidth}x${mediumHeight}`, type: 'image/jpg' }
+        )
+      }
+      if (media.screenshot_image.large_url) {
+        const { width: largeWidth, height: largeHeight } = await this.getImageDimensions(media.screenshot_image.large_url)
+        artwork.push(
+          { src: media.screenshot_image.large_url, sizes: `${largeWidth}x${largeHeight}`, type: 'image/jpg' }
+        )
+      }
+      if (media.screenshot_image.fwide_url) {
+        const { width: fullWidthWidth, height: fullWidthHeight } = await this.getImageDimensions(media.screenshot_image.fwide_url)
+        artwork.push(
+          { src: media.screenshot_image.fwide_url, sizes: `${fullWidthWidth}x${fullWidthHeight}`, type: 'image/jpg' }
+        )
+      }
 
       // eslint-disable-next-line
       navigator.mediaSession.metadata = new MediaMetadata({
         title: media.name,
         artist: media.collection_name,
-        artwork: [
-          { src: media.screenshot_image.medium_url, sizes: `${mediumWidth}x${mediumHeight}`, type: 'image/jpg' },
-          { src: media.screenshot_image.large_url, sizes: `${largeWidth}x${largeHeight}`, type: 'image/jpg' },
-          { src: media.screenshot_image.fwide_url, sizes: `${fullWidthWidth}x${fullWidthHeight}`, type: 'image/jpg' }
-        ]
+        artwork
       })
 
       navigator.mediaSession.setActionHandler('play', () => this.play())
