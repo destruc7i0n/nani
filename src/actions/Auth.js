@@ -66,7 +66,7 @@ export const startSession = () => (dispatch, getState) => {
           expires: data.expires
         })
       )
-      resolve()
+      resolve(data.session_id)
     } catch (err) {
       await handleError(err, dispatch, state, reject)
     }

@@ -50,13 +50,23 @@ export const handleError = async (err, dispatch, state, reject) => {
       switch (data.code) {
         case 'bad_session': { // when the session has expired?
           // create a new session
-          await dispatch(startSession())
+          let sessionId
+          try {
+            sessionId = await dispatch(startSession())
+          } catch (e) {
+            window.location.reload()
+          }
 
           // move to an empty page and then back if not on the media page
           const isMediaPage = matchPath(path, { path: '/series/:id/:media', exact: true })
           if (!isMediaPage) {
-            await dispatch(push('/empty'))
-            await dispatch(replace(path))
+            if (sessionId) {
+              dispatch(push('/empty'))
+              dispatch(replace(path))
+            } else {
+              await dispatch(logout(true))
+              dispatch(push('/login'))
+            }
           }
           break
         }
