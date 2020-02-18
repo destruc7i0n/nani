@@ -90,6 +90,8 @@ class SearchInput extends Component {
     const { dispatch, searchIds } = this.props
     const { key } = event
 
+    let initialSelectedIndex = Number(selectedIndex)
+
     if (key === 'ArrowUp') { // up
       if (value === '' || value < 3) return
       event.preventDefault()
@@ -120,6 +122,23 @@ class SearchInput extends Component {
       // un-focus
       this.blur()
       this.setState({ focused: false })
+    }
+
+    const indexDelta = selectedIndex - initialSelectedIndex
+
+    if (key === 'ArrowUp' || key === 'ArrowDown') {
+      let id = searchIds[selectedIndex]
+
+      // scroll when needed
+      let shouldScroll = false
+      if (selectedIndex > 5 && indexDelta > 0) shouldScroll = true
+      if (selectedIndex < 5 && indexDelta < 0) shouldScroll = true
+
+      if (shouldScroll) {
+        // check if can scroll
+        const el = document.getElementById(`search-series-${id}`)
+        if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView()
+      }
     }
   }
 
@@ -208,6 +227,7 @@ class SearchInput extends Component {
               >
                 {searchIds.map((id, index) => (
                   <Link
+                    id={`search-series-${id}`}
                     to={`/series/${id}`}
                     className={classNames('dropdown-item p-2 d-flex flex-row', { 'active': index === selectedIndex })}
                     key={`searchResult-${index}`}
@@ -237,7 +257,7 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
-      searchIds: (store.Data.searchIds || []).splice(0, 5),
+      searchIds: (store.Data.searchIds || []),
       series: store.Data.series
     }
   })

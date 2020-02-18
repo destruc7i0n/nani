@@ -1,4 +1,6 @@
 .dropdown-menu.show {
     right: 0;
     left: 0;
+    overflow-y: auto;
+    max-height: 250px;
 }
