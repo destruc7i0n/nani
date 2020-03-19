@@ -25,4 +25,8 @@
     position: absolute;
     top: -35px;
   }
+
+  .progress-percent {
+    pointer-events: none;
+  }
 }

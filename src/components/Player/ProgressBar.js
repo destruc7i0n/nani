@@ -68,7 +68,7 @@ class ProgressBar extends Component {
           <div className='progress-bar' style={{
             width: progressPercent * 100 + '%'
           }} />
-          {loadedPercent > progressPercent && <div className='progress-bar bg-secondary' style={{
+          {loadedPercent > progressPercent && <div className='progress-bar bg-secondary progress-percent' style={{
             width: (loadedPercent - progressPercent) * 100 + '%'
           }} />}
         </div>
