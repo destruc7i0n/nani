@@ -181,11 +181,11 @@ class Controls extends Component {
         </div>
 
         <div className='toolbar'>
-          <div className='toolbar-button cursor-pointer' onClick={() => paused ? play() : pause()} >
+          <div className='toolbar-button cursor-pointer' title={paused ? 'Play' : 'Pause'} onClick={() => paused ? play() : pause()} >
             <FontAwesomeIcon icon={paused ? 'play' : 'pause'} size='lg' />
           </div>
 
-          {nextMedia && <div className='toolbar-button cursor-pointer d-md-block d-none' onClick={playNextMedia} >
+          {nextMedia && <div className='toolbar-button cursor-pointer d-md-block d-none' title='Next Episode' onClick={playNextMedia} >
             <FontAwesomeIcon icon='step-forward' size='lg' />
           </div>}
 
@@ -195,7 +195,7 @@ class Controls extends Component {
 
           <span className='text-white time-ticker'>{formatTime(duration - watchTime)}</span>
 
-          <div className='toolbar-button cursor-pointer volume-icon' onClick={this.toggleVolume} >
+          <div className='toolbar-button cursor-pointer volume-icon' title='Volume' onClick={this.toggleVolume} >
             <FontAwesomeIcon icon={
               volume === 0
                 ? lastVolume === null
@@ -210,7 +210,7 @@ class Controls extends Component {
           </div>
           <Volume volumePercent={volume} setVolume={setVolume} />
 
-          <div className='toolbar-button cursor-pointer' id='player-settings' onClick={this.toggleSettings} >
+          <div className='toolbar-button cursor-pointer' id='player-settings' title='Settings' onClick={this.toggleSettings} >
             <FontAwesomeIcon icon='cog' size='lg' />
           </div>
 
@@ -240,12 +240,12 @@ class Controls extends Component {
           </Popover>
 
           {canPlayPIP && readyToPlay && (
-            <div className='toolbar-button cursor-pointer' onClick={() => togglePIP()} >
+            <div className='toolbar-button cursor-pointer' title='Toggle PiP' onClick={() => togglePIP()} >
               <FontAwesomeIcon icon='clone' size='lg' />
             </div>
           )}
 
-          <div className='toolbar-button cursor-pointer' onClick={() => toggleFullscreen()} >
+          <div className='toolbar-button cursor-pointer' title={fullscreen ? 'Minimize' : 'Fullscreen'} onClick={() => toggleFullscreen()} >
             <FontAwesomeIcon icon={fullscreen ? 'compress' : 'expand'} size='lg' />
           </div>
         </div>

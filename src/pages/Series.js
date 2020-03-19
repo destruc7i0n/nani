@@ -134,10 +134,10 @@ class Series extends Component {
           : (
             <Fragment>
               <div className='series-banner' style={{
-                background: [
+                background: landscapeImgFullURL ? [
                   `url(${withProxy(landscapeImgFullURL)}) top left / cover no-repeat`,
                   `url(${replaceHttps(landscapeImgFullURL)}) top left / cover no-repeat`
-                ].join(', ')
+                ].join(', ') : 'https://via.placeholder.com/1920x1080?text=No+Image'
               }}>
                 <div className='series-banner-overlay' />
               </div>
