@@ -31,7 +31,9 @@ class Queue extends Component {
     const { queue } = this.props
     const { type: viewType = 'episodes' } = parse(this.props.location.search.slice(1))
 
-    const queueIds = queue.map((item) => item.most_likely_media.media_id)
+    const queueIds = queue
+      .filter(item => item.most_likely_media !== undefined)
+      .map((item) => item.most_likely_media.media_id)
     const queueSeries = queue.map((item) => item.series)
     return (
       <Fragment>

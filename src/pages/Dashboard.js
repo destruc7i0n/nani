@@ -54,6 +54,7 @@ class Dashboard extends Component {
       .map((item) => item.media.media_id)
 
     const queueIds = queue
+      .filter(item => item.most_likely_media !== undefined)
       .map((item) => item.most_likely_media.media_id)
       .filter((id) => !uncompletedHistory.includes(id))
 
