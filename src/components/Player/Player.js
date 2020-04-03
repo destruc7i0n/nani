@@ -378,10 +378,10 @@ class Player extends Component {
   }
 
   nextEpisode () {
-    const { dispatch, nextMedia, isFullPage } = this.props
+    const { dispatch, nextMedia } = this.props
 
     if (nextMedia && nextMedia.media_id) {
-      dispatch(push(`/series/${nextMedia.collection_id}/${nextMedia.media_id}${isFullPage ? '/full' : ''}`))
+      dispatch(push(`/series/${nextMedia.collection_id}/${nextMedia.media_id}`))
     }
   }
 
