@@ -1,4 +1,6 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
+
+import classNames from 'classnames'
 
 import { Alert } from 'reactstrap'
 
@@ -23,13 +25,14 @@ class PlayerContainer extends Component {
 
   render () {
     const { error } = this.state
+    const { fullWidth = false } = this.props
     return (
-      <Fragment>
+      <div className={classNames('player-container', { 'theatre': fullWidth })}>
         {error && <Alert color='danger' className='align-items-center' toggle={() => this.setState({ error: false })}>
           Something went wrong!
         </Alert>}
         {this.props.children}
-      </Fragment>
+      </div>
     )
   }
 }

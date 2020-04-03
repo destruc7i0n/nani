@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Button, Popover, PopoverBody, Toast, ToastBody, ToastHeader } from 'reactstrap'
 
@@ -139,12 +140,25 @@ class Controls extends Component {
       quality,
       levels,
       speed,
+      isFullPage,
+      toggleFullPage,
     } = this.props
 
     let duration = this.props.duration
     let watchTime = this.props.watchTime
 
     const controlsVisible = hovering || paused || settingsOpen || pip
+
+    const fullScreenView = fullscreen || isFullPage
+
+    const linkTitle = (
+      <Link to={`/series/${media.series_id}#collection_${media.collection_id}`} className='text-white'>
+        <div className='d-flex' style={{ pointerEvents: 'all' }}>
+          <FontAwesomeIcon icon='arrow-left' size='lg' className='pr-2' />
+          <h3>{media.collection_name || 'Loading...'}</h3>
+        </div>
+      </Link>
+    )
 
     return (
       <div
@@ -155,8 +169,10 @@ class Controls extends Component {
         <div className='cover' onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverDoubleTap} />
 
         <div className='episode-information text-white'>
-          <h3>{media.collection_name || 'Loading...'}</h3>
-          {fullscreen && <h4>Episode {media.episode_number}: {media.name}</h4>}
+          {isFullPage ? linkTitle : (
+            <h3>{media.collection_name || 'Loading...'}</h3>
+          )}
+          {fullScreenView && <h4>Episode {media.episode_number}: {media.name}</h4>}
         </div>
 
         <div className='player-info-button d-md-block d-none'>
@@ -214,7 +230,7 @@ class Controls extends Component {
             <FontAwesomeIcon icon='cog' size='lg' />
           </div>
 
-          <Popover container={fullscreen ? 'player' : 'body'} placement='top' trigger='legacy' isOpen={settingsOpen} target='player-settings' toggle={this.toggleSettings}>
+          <Popover container={fullScreenView ? 'player' : 'body'} placement='top' trigger='legacy' isOpen={settingsOpen} target='player-settings' toggle={this.toggleSettings}>
             <PopoverBody>
               {levels.length > 0 && <div className='row pb-2'>
                 <div className='col'>Quality</div>
@@ -244,6 +260,10 @@ class Controls extends Component {
               <FontAwesomeIcon icon='clone' size='lg' />
             </div>
           )}
+
+          <div className='toolbar-button cursor-pointer d-none d-md-block' title={isFullPage ? 'Small' : 'Full Page'} onClick={() => toggleFullPage()} >
+            <FontAwesomeIcon icon={isFullPage ? 'video' : 'desktop'} size='lg' />
+          </div>
 
           <div className='toolbar-button cursor-pointer' title={fullscreen ? 'Minimize' : 'Fullscreen'} onClick={() => toggleFullscreen()} >
             <FontAwesomeIcon icon={fullscreen ? 'compress' : 'expand'} size='lg' />

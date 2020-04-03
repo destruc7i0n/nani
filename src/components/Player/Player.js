@@ -378,10 +378,10 @@ class Player extends Component {
   }
 
   nextEpisode () {
-    const { dispatch, nextMedia } = this.props
+    const { dispatch, nextMedia, isFullPage } = this.props
 
     if (nextMedia && nextMedia.media_id) {
-      dispatch(push(`/series/${nextMedia.collection_id}/${nextMedia.media_id}`))
+      dispatch(push(`/series/${nextMedia.collection_id}/${nextMedia.media_id}${isFullPage ? '/full' : ''}`))
     }
   }
 
@@ -427,7 +427,7 @@ class Player extends Component {
 
   render () {
     const { id, stream, loadingVideo, paused, duration, fullscreen, progressSeconds, quality, speed, volume, pip, levels, inited, loadedPercent, progressPercent, canPlay, canPlayPIP, ready } = this.state
-    const { Auth, poster, media, nextMedia, streamsLoaded, streams, location } = this.props
+    const { Auth, poster, media, nextMedia, streamsLoaded, streams, location, isFullPage, toggleFullPage } = this.props
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
 
@@ -473,12 +473,12 @@ class Player extends Component {
           {ready ? (
             <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
               {paused ? (
-                <Fragment>
+                <>
                   <FontAwesomeIcon icon='play' className='player-icon' />
                   {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
                     <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
                   </div>}
-                </Fragment>
+                </>
               ) : (
                 loadingVideo ? (
                   <FontAwesomeIcon icon='circle-notch' pulse className='player-icon' size='3x' />
@@ -532,7 +532,7 @@ class Player extends Component {
           )}
         </div>
 
-        {(ready || fullscreen) && (
+        {(ready || fullscreen || isFullPage) && (
           <Controls
             ref={this.controlsRef}
             readyToPlay={ready && inited}
@@ -549,6 +549,8 @@ class Player extends Component {
             togglePlay={this.togglePlay}
             paused={paused}
             fullscreen={fullscreen}
+            isFullPage={isFullPage}
+            toggleFullPage={toggleFullPage}
             toggleFullscreen={this.toggleFullscreen}
             canPlayPIP={canPlayPIP}
             togglePIP={this.togglePIP}

@@ -63,6 +63,9 @@ import {
   faVolumeMute,
   faVolumeOff,
   faClone,
+  faArrowLeft,
+  faVideo,
+  faDesktop,
 } from '@fortawesome/free-solid-svg-icons'
 
 import './App.scss'
@@ -117,6 +120,9 @@ library.add(
   faVolumeOff,
   faVolume,
   faClone,
+  faArrowLeft,
+  faVideo,
+  faDesktop,
 )
 
 class App extends Component {

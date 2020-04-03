@@ -77,13 +77,14 @@ class AppContainer extends Component {
     const isLoginPage = matchPath(pathname, { path: '/login', exact: true })
     const isSeriesPage = matchPath(pathname, { path: '/series/:id', exact: true })
 
-    return (
-      <Fragment>
-        <Helmet titleTemplate='%s - nani'>
-          <body className={theme} />
-        </Helmet>
-        { !isLoginPage ? <Header /> : null }
-        <main role='main' className={classNames({ 'container': !isSeriesPage })}>
+    const noHeader = isLoginPage
+    const noContainerLayout = isSeriesPage
+    const noAlerts = isSeriesPage || isLoginPage
+    const noFooter = isLoginPage
+
+    const layout = (
+      <>
+        <main role='main' className={classNames({ 'container': !noContainerLayout })}>
           { error && !isSeriesPage
             ? <Alert color='danger' className='d-flex align-items-center' toggle={() => dispatch(setError(''))}>
               {{
@@ -101,8 +102,8 @@ class AppContainer extends Component {
               }[(error || true).toString()]}
             </Alert>
             : null }
-          { !isLoginPage && !isSeriesPage ? <AboutAlert /> : null }
-          { !Auth.premium && !isLoginPage && !isSeriesPage && showPremiumAlert
+          { !noAlerts ? <AboutAlert /> : null }
+          { !Auth.premium && !noAlerts && showPremiumAlert
             ? <Alert color='info' className='d-flex align-items-center'>
               You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll has to offer.
               <Button
@@ -116,7 +117,17 @@ class AppContainer extends Component {
             : null}
           { initSession ? children : <Loading /> }
         </main>
-        { !isLoginPage ? <Footer /> : null }
+        { !noFooter ? <Footer /> : null }
+      </>
+    )
+
+    return (
+      <Fragment>
+        <Helmet titleTemplate='%s - nani'>
+          <body className={theme} />
+        </Helmet>
+        { !noHeader ? <Header /> : null }
+        { layout }
       </Fragment>
     )
   }

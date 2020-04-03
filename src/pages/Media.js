@@ -34,11 +34,12 @@ class Media extends Component {
     this.state = {
       mediaId: '',
       streamData: {},
-      error: '',
+      error: false,
       currentCollection: null,
       currentMedia: null,
       nextMedia: null,
       prevMedia: null,
+      fullPage: false,
     }
     this.loadVideo = this.loadVideo.bind(this)
     this.getVideoData = this.getVideoData.bind(this)
@@ -142,7 +143,7 @@ class Media extends Component {
   }
 
   render () {
-    const { streamData, error, currentMedia, currentCollection, nextMedia, prevMedia } = this.state
+    const { streamData, error, currentMedia, currentCollection, nextMedia, prevMedia, fullPage } = this.state
     const { match: { params: { media: mediaId } }, collectionMedia, autoplay } = this.props
     // the current media object and the series
     const mediaObj = currentMedia
@@ -160,6 +161,137 @@ class Media extends Component {
 
     const streams = (streamData && streamData.stream_data && streamData.stream_data.streams) || []
 
+    const player = (
+      <Player
+        media={mediaObj}
+        nextMedia={nextMedia}
+        streamsLoaded={loadedVideo}
+        streams={streams}
+        poster={currentMedia && currentMedia.img}
+        autoPlay={autoplay}
+        id={mediaObj && mediaObj.media_id}
+        isFullPage={fullPage}
+        toggleFullPage={() => this.setState({ fullPage: !fullPage })}
+      />
+    )
+
+    // add or remove the classes needed for their respective views
+    // I would have loved to use multiple components, though react seems to like remounting the player
+    // no matter what I do...
+    const containedPlayer = (
+      <div className={fullPage ? '' : 'player-width position-relative embed-responsive embed-responsive-16by9'}>
+        <div className={fullPage ? 'position-relative vw-100 vh-100 overflow-hidden' : 'embed-responsive-item'}>
+          {player}
+        </div>
+      </div>
+    )
+
+    const defaultView = (
+      <div className='row'>
+        { !loadedDetails
+          ? (
+          <LoadingMediaPage />
+        )
+          : (
+            <div className='col-sm-12'>
+              <PlayerContainer fullWidth={fullPage}>
+                <div className={!fullPage ? 'd-flex mb-4 mt-2 justify-content-center position-relative' : ''}>
+                  {prevMedia && !fullPage ? (
+                    <div className='position-absolute video-image-left'>
+                      <Link
+                        className='position-relative'
+                        to={`/series/${mediaObj.collection_id}/${prevMedia.media_id}`}
+                      >
+                        <div className='position-absolute video-image-overlay-left' />
+                        <Img src={prevMedia.img ? [
+                          withProxy(prevMedia.img),
+                          replaceHttps(prevMedia.img)
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={prevMedia.name} />
+                      </Link>
+                    </div>
+                  ) : null}
+                  {nextMedia && !fullPage ? (
+                    <div className='position-absolute video-image-right'>
+                      <Link
+                        className='position-relative'
+                        to={`/series/${mediaObj.collection_id}/${nextMedia.media_id}`}
+                      >
+                        <div className='position-absolute video-image-overlay-right' />
+                        <Img src={nextMedia.img ? [
+                          withProxy(nextMedia.img),
+                          replaceHttps(nextMedia.img)
+                        ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={nextMedia.name} />
+                      </Link>
+                    </div>
+                  ) : null}
+
+                  {containedPlayer}
+                </div>
+              </PlayerContainer>
+              <h3>{mediaObj.name}</h3>
+              <h5 className='d-flex flex-column flex-md-row flex-wrap'>
+                <Badge
+                  color='success'
+                  tag={Link}
+                  to={`/series/${mediaObj.series_id}#collection_${mediaObj.collection_id}`}
+                  className='text-white mb-1 text-truncate mr-md-2'
+                >
+                  <FontAwesomeIcon icon='tv' />
+                  {' '}
+                  {mediaObj.collection_name || 'Loading...'}
+                </Badge>
+                {mediaObj.episode_number
+                  ? <Badge color='secondary' className='mr-md-2 mb-1 badge-outline'>
+                    <FontAwesomeIcon icon='list-ol' />
+                    {' '}
+                    Episode {mediaObj.episode_number}
+                  </Badge>
+                  : null}
+                <Badge color='info' className='mr-md-2 mb-1 badge-outline'>
+                  <FontAwesomeIcon icon='clock' />
+                  {' '}
+                  {formatTime(mediaObj.duration)}
+                </Badge>
+                <Badge color='secondary' className='mr-md-2 mb-1' tag='a' target='_blank' rel='noopener noreferrer' href={`
+                      http://www.crunchyroll.com/media-${mediaObj.media_id}
+                    `}>
+                  <FontAwesomeIcon icon='search' />
+                  {' '}
+                  Open on Crunchyroll
+                </Badge>
+                {currentCollection
+                  ? <Fragment>
+                    <MALButton id={mediaObj.collection_id} media={mediaObj} className='mr-md-2 mb-1' />
+                    <AniListButton id={mediaObj.media_id} media={mediaObj} className='mr-md-2 mb-1' />
+                  </Fragment>
+                  : null}
+                <WatchedButton media={mediaObj} badge refreshQueue className='mr-md-2 mb-1' />
+                <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
+              </h5>
+              <p>{mediaObj.description}</p>
+              {nextEpisodes && nextEpisodes.length
+                ? <Collection
+                  mediaIds={
+                    collectionMedia[mediaObj.collection_id]
+                      // get all the next episodes
+                      ? collectionMedia[mediaObj.collection_id].slice(
+                      collectionMedia[mediaObj.collection_id].indexOf(mediaId) + 1
+                      )
+                      : []
+                  }
+                  loading={collectionMedia[mediaObj.collection_id] === undefined}
+                  title='Next Episodes'
+                  titleTag='h4'
+                  perPage={4}
+                  mediaPage />
+                : null
+              }
+            </div>
+          )
+        }
+      </div>
+    )
+
     return (
       <Fragment>
         <Helmet defer={false}>
@@ -167,122 +299,8 @@ class Media extends Component {
             {loadedDetails ? `Episode ${mediaObj.episode_number}: ${mediaObj.name} - ${mediaObj.collection_name}` : 'Loading...'}
           </title>
         </Helmet>
-        { <h1 className='col-sm-12 text-center text-danger'>{error}</h1> || null }
-        <div className='row'>
-          { !loadedDetails
-            ? (
-              <LoadingMediaPage />
-            )
-            : (
-              <div className='col-sm-12'>
-                <PlayerContainer>
-                  <div className='d-flex mb-4 mt-2 justify-content-center position-relative'>
-                    {prevMedia ? (
-                      <div className='position-absolute video-image-left'>
-                        <Link
-                          className='position-relative'
-                          to={`/series/${mediaObj.collection_id}/${prevMedia.media_id}`}
-                        >
-                          <div className='position-absolute video-image-overlay-left' />
-                          <Img src={prevMedia.img ? [
-                            withProxy(prevMedia.img),
-                            replaceHttps(prevMedia.img)
-                          ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={prevMedia.name} />
-                        </Link>
-                      </div>
-                    ) : null}
-                    {nextMedia ? (
-                      <div className='position-absolute video-image-right'>
-                        <Link
-                          className='position-relative'
-                          to={`/series/${mediaObj.collection_id}/${nextMedia.media_id}`}
-                        >
-                          <div className='position-absolute video-image-overlay-right' />
-                          <Img src={nextMedia.img ? [
-                            withProxy(nextMedia.img),
-                            replaceHttps(nextMedia.img)
-                          ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={nextMedia.name} />
-                        </Link>
-                      </div>
-                    ) : null}
-
-                    <div className='player-width position-relative embed-responsive embed-responsive-16by9'>
-                      <div className='embed-responsive-item'>
-                        <Player
-                          media={mediaObj}
-                          nextMedia={nextMedia}
-                          streamsLoaded={loadedVideo}
-                          streams={streams}
-                          poster={currentMedia.img}
-                          autoPlay={autoplay}
-                          id={mediaObj.media_id}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </PlayerContainer>
-                <h3>{mediaObj.name}</h3>
-                <h5 className='d-flex flex-column flex-md-row flex-wrap'>
-                  <Badge
-                    color='success'
-                    tag={Link}
-                    to={`/series/${mediaObj.series_id}#collection_${mediaObj.collection_id}`}
-                    className='text-white mb-1 text-truncate mr-md-2'
-                  >
-                    <FontAwesomeIcon icon='tv' />
-                    {' '}
-                    {mediaObj.collection_name || 'Loading...'}
-                  </Badge>
-                  {mediaObj.episode_number
-                    ? <Badge color='secondary' className='mr-md-2 mb-1 badge-outline'>
-                      <FontAwesomeIcon icon='list-ol' />
-                      {' '}
-                      Episode {mediaObj.episode_number}
-                    </Badge>
-                    : null}
-                  <Badge color='info' className='mr-md-2 mb-1 badge-outline'>
-                    <FontAwesomeIcon icon='clock' />
-                    {' '}
-                    {formatTime(mediaObj.duration)}
-                  </Badge>
-                  <Badge color='secondary' className='mr-md-2 mb-1' tag='a' target='_blank' rel='noopener noreferrer' href={`
-                      http://www.crunchyroll.com/media-${mediaObj.media_id}
-                    `}>
-                    <FontAwesomeIcon icon='search' />
-                    {' '}
-                    Open on Crunchyroll
-                  </Badge>
-                  {currentCollection
-                    ? <Fragment>
-                      <MALButton id={mediaObj.collection_id} media={mediaObj} className='mr-md-2 mb-1' />
-                      <AniListButton id={mediaObj.media_id} media={mediaObj} className='mr-md-2 mb-1' />
-                    </Fragment>
-                    : null}
-                  <WatchedButton media={mediaObj} badge refreshQueue className='mr-md-2 mb-1' />
-                  <QueueButton id={mediaObj.series_id} badge className='mr-md-2 mb-1' />
-                </h5>
-                <p>{mediaObj.description}</p>
-                {nextEpisodes && nextEpisodes.length
-                  ? <Collection
-                    mediaIds={
-                      collectionMedia[mediaObj.collection_id]
-                        // get all the next episodes
-                        ? collectionMedia[mediaObj.collection_id].slice(
-                          collectionMedia[mediaObj.collection_id].indexOf(mediaId) + 1
-                        )
-                        : []
-                    }
-                    loading={collectionMedia[mediaObj.collection_id] === undefined}
-                    title='Next Episodes'
-                    titleTag='h4'
-                    perPage={4}
-                    mediaPage />
-                  : null
-                }
-              </div>
-            )
-          }
-        </div>
+        { error && <h1 className='col-sm-12 text-center text-danger'>{error}</h1> }
+        { defaultView }
       </Fragment>
     )
   }

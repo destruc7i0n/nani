@@ -82,6 +82,17 @@
     box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .2);
 }
 
+.theatre {
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    position: fixed;
+}
+
 @media (max-width: 768px) {
     .player-width {
         width: 90% !important;
