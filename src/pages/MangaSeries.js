@@ -209,10 +209,10 @@ class MangaSeries extends Component {
 
     const Navigation = ({ top }) => (
       <div className={classNames('col-12 row', { 'pb-3': top, 'pt-3': !top })}>
-        <div className='col-2'>
-          <Button color='success' block size='sm' disabled={isFirstPage} onClick={() => this.updatePage('-')}>Prev Page</Button>
+        <div className='d-none d-sm-block col-sm-2'>
+          <Button color='success' block size='sm' disabled={isFirstPage} onClick={() => this.updatePage('-')}>Prev</Button>
         </div>
-        <div className='col-8'>
+        <div className='col-12 col-sm-8'>
           <select className='form-control w-100 h-100' value={currentChapter} onChange={({ target: { value } }) => this.setState({ currentChapter: value })}>
             {chapters.map((chapter, index) => (
               // try to handle the names of the chapter to be informative...
@@ -224,8 +224,8 @@ class MangaSeries extends Component {
             ))}
           </select>
         </div>
-        <div className='col-2'>
-          <Button color='success' block size='sm' disabled={isLastPage} onClick={() => this.updatePage('+')}>Next Page</Button>
+        <div className='d-none d-sm-block col-sm-2'>
+          <Button color='success' block size='sm' disabled={isLastPage} onClick={() => this.updatePage('+')}>Next</Button>
         </div>
       </div>
     )
