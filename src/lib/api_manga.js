@@ -13,9 +13,9 @@ export default function api (opts) {
     method: opts.method || 'get',
     url: `https://api-manga.crunchyroll.com/${opts.route}`,
     params: !opts.data ? {
+      api_ver: API_VERSION,
       ...opts.params,
       device_type: DEVICE_TYPE,
-      api_ver: API_VERSION
     } : null,
     data: opts.data,
     cancelToken: !opts.noCancel ? source.token : null

@@ -13,6 +13,10 @@ $grid-breakpoints: (
     height: 100%;
     background-color: black;
 
+    *:focus {
+        outline: none;
+    }
+
     .video-player {
         position: absolute;
         top: 0;
