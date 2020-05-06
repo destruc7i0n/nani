@@ -261,9 +261,13 @@ class Controls extends Component {
             </div>
           )}
 
-          <div className='toolbar-button cursor-pointer d-none d-md-block' title={isFullPage ? 'Small' : 'Full Page'} onClick={() => toggleFullPage()} >
-            <FontAwesomeIcon icon={isFullPage ? 'video' : 'desktop'} size='lg' />
-          </div>
+          {!fullscreen && (
+            <div className='toolbar-button cursor-pointer d-none d-md-block'
+                 title={isFullPage ? 'Small' : 'Full Page'}
+                 onClick={() => toggleFullPage()}>
+              <FontAwesomeIcon icon={isFullPage ? 'video' : 'desktop'} size='lg'/>
+            </div>
+          )}
 
           <div className='toolbar-button cursor-pointer' title={fullscreen ? 'Minimize' : 'Fullscreen'} onClick={() => toggleFullscreen()} >
             <FontAwesomeIcon icon={fullscreen ? 'compress' : 'expand'} size='lg' />
