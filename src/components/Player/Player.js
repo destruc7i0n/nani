@@ -464,7 +464,7 @@ class Player extends Component {
             <Img src={poster ? [
               withProxy(poster),
               replaceHttps(poster)
-            ] : 'https://via.placeholder.com/1920x1080?text=No+Image'} alt={media.title} className='w-100 h-100' />
+            ] : 'https://via.placeholder.com/1920x1080?text=No+Image'} alt={media.title} className='w-100' />
             {(!ready && canPlay) && <div className='player-center-overlay text-white'><Loading /></div>}
           </div>
         )}

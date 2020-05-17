@@ -36,6 +36,7 @@ class Controls extends Component {
     this.cancelClick = this.cancelClick.bind(this)
     this.coverDoubleClick = this.coverDoubleClick.bind(this)
     this.coverDoubleTap = this.coverDoubleTap.bind(this)
+    this.coverTap = this.coverTap.bind(this)
     this.toggleNewPlayerInfo = this.toggleNewPlayerInfo.bind(this)
     this.toggleSettings = this.toggleSettings.bind(this)
     this.toggleVolume = this.toggleVolume.bind(this)
@@ -86,6 +87,16 @@ class Controls extends Component {
       this.cancelClick()
       toggleFullscreen()
     })
+  }
+
+  coverTap (e) {
+    const { hovering } = this.state
+    const { paused } = this.props
+
+    if (!hovering && !paused) e.preventDefault()
+
+    if (!hovering) this.toggleVisibility()
+    this.coverDoubleTap(e)
   }
 
   toggleNewPlayerInfo () {
@@ -166,7 +177,7 @@ class Controls extends Component {
         onMouseMove={this.toggleVisibility}
         onMouseOut={this.handleMouseLeave}
       >
-        <div className='cover' onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverDoubleTap} />
+        <div className='cover' onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverTap} />
 
         <div className='episode-information text-white'>
           {isFullPage ? linkTitle : (
