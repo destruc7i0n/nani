@@ -128,7 +128,7 @@ class Options extends Component {
           <ModalBody>
             <h3>Preferences</h3>
             <div className='preferences row'>
-              <Label for='language' sm={6}>Theme</Label>
+              <Label for='theme' sm={6}>Theme</Label>
               <div className='col-sm-6 d-flex align-items-center'>
                 <select className='custom-select' id='theme' value={theme} onChange={({ target: { value } }) => dispatch(setTheme(value))}>
                   <option value='light'>Light</option>
@@ -137,7 +137,7 @@ class Options extends Component {
               </div>
             </div>
             <div className='row'>
-              <Label for='autoplay' sm={6}>
+              <Label for='autoTheme' sm={6}>
                 Automatically change theme?
               </Label>
               <div className='col-sm-6 d-flex align-items-center'>
@@ -160,13 +160,13 @@ class Options extends Component {
               </div>
             </div>
             <div className='row'>
-              <Label for='autoplay' sm={6}>Show episode order controls?</Label>
+              <Label for='orderControls' sm={6}>Show episode order controls?</Label>
               <div className='col-sm-6 d-flex align-items-center'>
                 <input type='checkbox' id='orderControls' checked={orderControls} onChange={() => dispatch(toggleOrderControls())} />
               </div>
             </div>
             <div className='row'>
-              <Label for='autoplay' sm={10}>Dashboard "Continue Watching" episode card count:</Label>
+              <Label for='continueCardCount' sm={10}>Dashboard "Continue Watching" episode card count:</Label>
               <div className='col-sm-2 d-flex align-items-center justify-content-end'>
                 <select onChange={({ target: { value } }) => dispatch(setHomepageContinueCount(value))} value={continueCount}>
                   <option value={4}>4</option>
@@ -177,7 +177,7 @@ class Options extends Component {
               </div>
             </div>
             <div className='row'>
-              <Label for='autoplay' sm={6}>Show premium account alert?</Label>
+              <Label for='showPremiumAlert' sm={6}>Show premium account alert?</Label>
               <div className='col-sm-6 d-flex align-items-center'>
                 <input type='checkbox' id='showPremiumAlert' checked={showPremiumAlert} onChange={() => dispatch(togglePremiumAlert())} />
               </div>
