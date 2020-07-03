@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { Badge, Card, CardBody, CardImg, CardImgOverlay, Progress } from 'reactstrap'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -45,7 +45,7 @@ class MediaCard extends Component {
           style={{ cursor: 'pointer' }}
         >
           {
-            media !== undefined && media.available
+            media.available
               ? (
                 <Link to={`/series/${media.series_id}/${media.media_id}`} style={{ textDecoration: 'none' }}>
                   <div className='row'>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Card, CardBody, CardImg, CardImgOverlay } from 'reactstrap'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import QueueButton from '../../Buttons/QueueButton'
 import ImageLoader from '../../Loading/ImageLoader'

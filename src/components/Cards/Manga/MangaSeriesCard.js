@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Card, CardBody, CardImg } from 'reactstrap'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import ImageLoader from '../../Loading/ImageLoader'
 
@@ -25,7 +25,7 @@ class MangaSeriesCard extends Component {
               tag={Img}
               top
               loader={<ImageLoader height={250} />}
-              src={imgFullURL || 'https://via.placeholder.com/640x960?text=No+Image'}
+              src={[imgFullURL, 'https://via.placeholder.com/640x960?text=No+Image']}
               alt={mangaData.name} />
             <CardBody className='p-2'>
               <span className='mb-1 d-block font-weight-bold text-dark text-truncate'>

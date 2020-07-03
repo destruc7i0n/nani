@@ -7,7 +7,7 @@ import { push } from 'connected-react-router'
 
 import { Manager, Reference, Popper } from 'react-popper'
 import { DebounceInput } from 'react-debounce-input'
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import classNames from 'classnames'
 
@@ -142,7 +142,7 @@ class SearchInput extends Component {
     }
   }
 
-  handleClickOutside (e) {
+  handleClickOutside () {
     const { focused } = this.state
     // only if not on mobile
     if (window.matchMedia && !window.matchMedia('(max-width: 767px)').matches && focused) {

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { Card, CardBody, CardImg, CardImgOverlay, Badge, Progress, Button } from 'reactstrap'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 

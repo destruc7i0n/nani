@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet'
 
 import { Badge, Alert, Card, CardBody } from 'reactstrap'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 

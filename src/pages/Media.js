@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import { Badge } from 'reactstrap'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 

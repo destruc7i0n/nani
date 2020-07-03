@@ -108,7 +108,7 @@ class MangaSeries extends Component {
     const { pages } = await dispatch(getMangaChapterPages(chapter.chapter_id))
 
     const pageDataRequests = pages.map(async (page) => {
-      let url = null
+      let url
 
       if (page.locale && page.locale.enUS && page.locale.enUS.encrypted_composed_image_url) {
         url = page.locale.enUS.encrypted_composed_image_url
@@ -197,7 +197,7 @@ class MangaSeries extends Component {
 
   render () {
     const { loading, loadingImage, chapters, pages: { length: numPages }, b64, currentPage, currentChapter, currentPageData, error } = this.state
-    const { series: allSeries, theme, match: { params: { id } } } = this.props
+    const { series: allSeries, match: { params: { id } } } = this.props
 
     const series = allSeries[id]
 

@@ -13,7 +13,7 @@ import localForage from 'localforage'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import Img from 'react-image'
+import { Img } from 'react-image'
 
 import Controls from './Controls'
 import Loading from '../Loading/Loading'

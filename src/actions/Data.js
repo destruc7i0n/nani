@@ -10,7 +10,7 @@ import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 import { batch } from 'react-redux'
 
 import { logout, startSession } from './Auth'
-import { push, replace } from 'connected-react-router'
+import { push } from 'connected-react-router'
 
 const MEDIA_FIELDS = [
   'media.media_id',
@@ -61,8 +61,7 @@ export const handleError = async (err, dispatch, state, reject) => {
           const isMediaPage = matchPath(path, { path: '/series/:id/:media', exact: true })
           if (!isMediaPage) {
             if (sessionId) {
-              dispatch(push('/empty'))
-              dispatch(replace(path))
+              window.location.reload()
             } else {
               await dispatch(logout(true))
               dispatch(push('/login'))
