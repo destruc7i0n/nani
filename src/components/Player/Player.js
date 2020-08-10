@@ -436,6 +436,11 @@ class Player extends Component {
         <ReactPlayer
           key={id}
           url={stream}
+          config={{
+            file: {
+              hlsVersion: '0.14.8'
+            }
+          }}
           playing={!paused}
           volume={volume}
           playbackRate={speed}
