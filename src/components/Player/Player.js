@@ -115,6 +115,9 @@ class Player extends Component {
       let stream = ''
       if (streams.length) stream = streams[0].url
 
+      if (stream.includes('pl.crunchyroll.com'))
+        stream = `https://api.allorigins.win/raw?url=` + encodeURIComponent(stream)
+
       this.setState({ ...defaultState, id, fullscreen, stream, canPlay: ReactPlayer.canPlay(stream), paused: !autoPlay, })
       this.loggedTime = this.props.media.playhead || 0
     }
@@ -439,9 +442,11 @@ class Player extends Component {
           url={stream}
           config={{
             file: {
-              hlsVersion: '0.14.8'
+              hlsVersion: '0.14.8',
+              forceHLS: true,
             }
           }}
+          onError={console.error}
           playing={!paused}
           volume={volume}
           playbackRate={speed}

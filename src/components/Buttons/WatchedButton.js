@@ -51,7 +51,7 @@ class WatchedButton extends Component {
   render () {
     const { visible } = this.state
     // grab some unnecessary props to make them not go into the tag (because of ...props)
-    const { dispatch, media, className, badge, ...props } = this.props
+    const { dispatch, media, className, badge, refreshQueue, ...props } = this.props
 
     let Tag, attrs
     if (badge) {
