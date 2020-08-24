@@ -114,6 +114,10 @@ class Player extends Component {
     if (id !== oldId && streamsLoaded) {
       let stream = ''
       if (streams.length) stream = streams[0].url
+
+      if (stream.includes('pl.crunchyroll.com'))
+        stream = 'https://cors-anywhere.herokuapp.com/' + stream
+
       this.setState({ ...defaultState, id, fullscreen, stream, canPlay: ReactPlayer.canPlay(stream), paused: !autoPlay, })
       this.loggedTime = this.props.media.playhead || 0
     }
