@@ -435,6 +435,10 @@ class Player extends Component {
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
 
+    const HAS_NAVIGATOR = typeof navigator !== 'undefined'
+    const IS_IPAD_PRO = HAS_NAVIGATOR && navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+    const IS_IOS = HAS_NAVIGATOR && (/iPad|iPhone|iPod/.test(navigator.userAgent) || IS_IPAD_PRO) && !window.MSStream
+
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <ReactPlayer
@@ -442,8 +446,9 @@ class Player extends Component {
           url={stream}
           config={{
             file: {
-              hlsVersion: '0.14.8',
-              forceHLS: true,
+              hlsVersion: '0.14.11',
+              // only force hls when not on ios
+              forceHLS: !IS_IOS,
             }
           }}
           onError={console.error}
