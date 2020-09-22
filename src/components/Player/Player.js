@@ -115,9 +115,6 @@ class Player extends Component {
       let stream = ''
       if (streams.length) stream = streams[0].url
 
-      if (stream.includes('pl.crunchyroll.com'))
-        stream = `https://api.allorigins.win/raw?url=` + encodeURIComponent(stream)
-
       this.setState({ ...defaultState, id, fullscreen, stream, canPlay: ReactPlayer.canPlay(stream), paused: !autoPlay, })
       this.loggedTime = this.props.media.playhead || 0
     }
@@ -449,6 +446,14 @@ class Player extends Component {
               hlsVersion: '0.14.11',
               // only force hls when not on ios
               forceHLS: !IS_IOS,
+              hlsOptions: {
+                xhrSetup: function (xhr, url) {
+                  // proxy these cors requests
+                  if (url.includes('pl.crunchyroll.com'))
+                    url = `https://api.allorigins.win/raw?url=` + encodeURIComponent(url)
+                  xhr.open('GET', url, true)
+                }
+              },
             }
           }}
           onError={console.error}
