@@ -44,6 +44,19 @@ const defaultState = {
   levels: [],
 }
 
+const IS_IOS = () => {
+  const HAS_NAVIGATOR = typeof navigator !== 'undefined'
+  const IS_IPAD_PRO = HAS_NAVIGATOR && navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+  const IS_IOS_BROWSER = HAS_NAVIGATOR && (/iPad|iPhone|iPod/.test(navigator.userAgent) || IS_IPAD_PRO) && !window.MSStream
+  return IS_IOS_BROWSER
+}
+
+const proxyRequests = (url) => {
+  if (url.startsWith('https://pl.crunchyroll.com'))
+    url = `https://api.allorigins.win/raw?url=` + encodeURIComponent(url)
+  return url
+}
+
 class Player extends Component {
   constructor (props) {
     super (props)
@@ -114,6 +127,12 @@ class Player extends Component {
     if (id !== oldId && streamsLoaded) {
       let stream = ''
       if (streams.length) stream = streams[0].url
+
+      console.log('Streaming from', stream)
+
+      if (IS_IOS()) {
+        stream = proxyRequests(stream)
+      }
 
       this.setState({ ...defaultState, id, fullscreen, stream, canPlay: ReactPlayer.canPlay(stream), paused: !autoPlay, })
       this.loggedTime = this.props.media.playhead || 0
@@ -432,10 +451,6 @@ class Player extends Component {
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
 
-    const HAS_NAVIGATOR = typeof navigator !== 'undefined'
-    const IS_IPAD_PRO = HAS_NAVIGATOR && navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
-    const IS_IOS = HAS_NAVIGATOR && (/iPad|iPhone|iPod/.test(navigator.userAgent) || IS_IPAD_PRO) && !window.MSStream
-
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <ReactPlayer
@@ -445,12 +460,11 @@ class Player extends Component {
             file: {
               hlsVersion: '0.14.11',
               // only force hls when not on ios
-              forceHLS: !IS_IOS,
+              forceHLS: !IS_IOS(),
               hlsOptions: {
                 xhrSetup: function (xhr, url) {
                   // proxy these cors requests
-                  if (url.includes('pl.crunchyroll.com'))
-                    url = `https://api.allorigins.win/raw?url=` + encodeURIComponent(url)
+                  url = proxyRequests(url)
                   xhr.open('GET', url, true)
                 }
               },
