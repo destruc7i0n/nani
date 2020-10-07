@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.30",
-    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
     "axios": "^0.20.0",
     "bootstrap": "4.5.0",
@@ -14,7 +14,7 @@
     "jsonwebtoken": "^8.5.1",
     "localforage": "^1.9.0",
     "lodash": "^4.17.20",
-    "moment": "^2.29.0",
+    "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "popura": "^1.2.5",
     "qs": "^6.9.4",
@@ -34,7 +34,7 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.1"
   },
   "standard": {
     "env": [

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { setError, setExpiredSession, startSession } from '../actions'
 import { Helmet } from 'react-helmet'
 import { matchPath } from 'react-router'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import { Alert, Button } from 'reactstrap'
 import classNames from 'classnames'
@@ -27,7 +27,7 @@ class AppContainer extends Component {
   }
 
   async componentDidMount () {
-    const { dispatch, Auth, history } = this.props
+    const { dispatch, history } = this.props
     // cancel requests on page change
     this.unlisten = history.listen(() => {
       // do not cancel media page requests
@@ -36,10 +36,8 @@ class AppContainer extends Component {
 
     // init session
     try {
-      // only request a new session if new session or expires
-      if (!Auth.session_id || (Auth.session_id && Auth.expires && new Date() > new Date(Auth.expires)) || (!Auth.guest && !Auth.user_id)) {
-        await dispatch(startSession())
-      }
+      // always start a new session on page load
+      await dispatch(startSession())
       this.setState({ initSession: true })
     } catch (e) {
       console.error(e)
@@ -72,7 +70,7 @@ class AppContainer extends Component {
 
   render () {
     const { initSession } = this.state
-    const { dispatch, Auth, theme, showPremiumAlert, children, error, location: { pathname } } = this.props
+    const { dispatch, theme, children, error, location: { pathname } } = this.props
 
     const isLoginPage = matchPath(pathname, { path: '/login', exact: true })
     const isSeriesPage = matchPath(pathname, { path: '/series/:id', exact: true })
@@ -103,18 +101,6 @@ class AppContainer extends Component {
             </Alert>
             : null }
           { !noAlerts ? <AboutAlert /> : null }
-          { !Auth.premium && !noAlerts && showPremiumAlert
-            ? <Alert color='info' className='d-flex align-items-center'>
-              You are not logged in to a Crunchyroll Premium account! Please login to enjoy all of the library that Crunchyroll has to offer.
-              <Button
-                size='sm'
-                color='primary'
-                className='ml-auto'
-                tag={Link}
-                to={{pathname: '/login', state: { prevPath: pathname }}}
-              >Login</Button>
-            </Alert>
-            : null}
           { initSession ? children : <Loading /> }
         </main>
         { !noFooter ? <Footer /> : null }
@@ -137,7 +123,6 @@ export default compose(
   withRouter,
   connect((store) => {
     return {
-      showPremiumAlert: store.Options.showPremiumAlert,
       theme: store.Options.theme,
       error: store.Data.error,
       Auth: store.Auth

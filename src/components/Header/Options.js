@@ -12,7 +12,6 @@ import {
   toggleAutoplay,
   toggleAutoTheme,
   toggleOrderControls,
-  togglePremiumAlert
 } from '../../actions'
 
 import {
@@ -115,7 +114,7 @@ class Options extends Component {
 
   render () {
     const { open, mal, anilist, error } = this.state
-    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, continueCount, showPremiumAlert, dispatch } = this.props
+    const { mal: malAuth, anilist: anilistAuth, language, languages, autoplay, orderControls, theme, autoTheme, continueCount, dispatch } = this.props
     const loggedInMal = malAuth.username && malAuth.token
     const loggedInAniList = anilistAuth.username && anilistAuth.token
     return (
@@ -175,13 +174,6 @@ class Options extends Component {
                   <option value={16}>16</option>
                 </select>
               </div>
-            </div>
-            <div className='row'>
-              <Label for='showPremiumAlert' sm={6}>Show premium account alert?</Label>
-              <div className='col-sm-6 d-flex align-items-center'>
-                <input type='checkbox' id='showPremiumAlert' checked={showPremiumAlert} onChange={() => dispatch(togglePremiumAlert())} />
-              </div>
-              <small className='col pb-2 option-info'>Shown when not logged in with a Crunchyroll premium account.</small>
             </div>
 
             <br/>
@@ -311,7 +303,6 @@ export default connect((store) => {
     theme: store.Options.theme,
     autoTheme: store.Options.autoThemeChange,
     continueCount: store.Options.homepageContinueCount,
-    showPremiumAlert: store.Options.showPremiumAlert,
     languages: store.Data.languages,
     mal: store.Auth.mal,
     anilist: store.Auth.anilist

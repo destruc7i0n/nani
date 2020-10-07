@@ -98,7 +98,7 @@ class Header extends Component {
                 </DropdownMenu>
               </UncontrolledDropdown>
               <NavItem>
-                <NavLink disabled={Auth.guest} tag={Link} to={'/manga'}>
+                <NavLink disabled={Auth.guest || !Auth.premium} tag={Link} to={'/manga'}>
                   <FontAwesomeIcon icon='book' className='d-md-none d-lg-inline-block' />
                   {' '}
                   Manga
