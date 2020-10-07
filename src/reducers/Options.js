@@ -6,7 +6,6 @@ import {
   SET_THEME,
   TOGGLE_AUTO_THEME,
   SET_HOMEPAGE_CONTINUE_COUNT,
-  TOGGLE_PREMIUM_ALERT
 } from '../actions'
 
 export default function Options (state = {
@@ -17,7 +16,6 @@ export default function Options (state = {
   theme: 'dark',
   autoThemeChange: true,
   homepageContinueCount: 4,
-  showPremiumAlert: true
 }, action) {
   switch (action.type) {
     case SET_LANGUAGE:
@@ -55,11 +53,6 @@ export default function Options (state = {
         ...state,
         homepageContinueCount: Number(action.payload)
       }
-    case TOGGLE_PREMIUM_ALERT:
-        return {
-          ...state,
-          showPremiumAlert: !state.showPremiumAlert
-        }
     default:
       return state
   }

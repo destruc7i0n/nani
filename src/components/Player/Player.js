@@ -545,7 +545,7 @@ class Player extends Component {
                         You must be a
                         {' '}
                         <a
-                          href='http://www.crunchyroll.com/en/premium_comparison'
+                          href='https://www.crunchyroll.com/welcome'
                           target='_blank' rel='noopener noreferrer'
                           className='text-white'
                         >Crunchyroll Premium</a>

@@ -83,7 +83,7 @@ class Dashboard extends Component {
           <title>Dashboard</title>
         </Helmet>
         {!guest ? <Fragment>
-          <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded} loadingCardsCount={4} />
+          <Collection title='Continue Watching' mediaIds={continueIds} loading={!loaded} loadingCardsCount={continueCount || 4} />
           <SeriesCardCollection
             title='Watchlist'
             link='/queue?type=watchlist'

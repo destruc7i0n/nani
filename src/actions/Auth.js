@@ -58,11 +58,18 @@ export const startSession = () => (dispatch, getState) => {
     try {
       const resp = await api({route: 'start_session', params, locale: state.Options.language, noCancel: true})
       const data = resp.data.data
+
+      let token = data.auth
+      // attempt to use the old token if valid and available
+      if (!token && state.Auth.token && (state.Auth.expires && new Date() < new Date(state.Auth.expires))) {
+        token = state.Auth.token
+      }
+
       dispatch(
         updateAuth({
           user_id: (data.user && data.user.user_id) || null,
           session_id: data.session_id,
-          token: data.auth,
+          token,
           expires: data.expires
         })
       )

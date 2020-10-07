@@ -36,8 +36,3 @@ export const setHomepageContinueCount = (count) => ({
   payload: count
 })
 
-export const TOGGLE_PREMIUM_ALERT = 'TOGGLE_PREMIUM_ALERT'
-export const togglePremiumAlert = () => ({
-  type: TOGGLE_PREMIUM_ALERT
-})
-
