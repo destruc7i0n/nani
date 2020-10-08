@@ -53,7 +53,7 @@ const IS_IOS = () => {
 
 const proxyRequests = (url) => {
   if (url.startsWith('https://pl.crunchyroll.com'))
-    url = `https://api.allorigins.win/raw?url=` + encodeURIComponent(url)
+    url = url.replace('https://pl.crunchyroll.com', '/proxy/pl')
   return url
 }
 

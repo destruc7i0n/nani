@@ -1,3 +1,4 @@
-/proxy/image/*       http://img1.ak.crunchyroll.com/:splat    200
+/proxy/pl/*          https://pl.crunchyroll.com/:splat        200
+/proxy/image/*       https://img1.ak.crunchyroll.com/:splat   200
 /proxy/manga/image/* https://api-manga.crunchyroll.com/:splat 200
 /*                   /index.html                              200
