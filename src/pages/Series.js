@@ -135,8 +135,8 @@ class Series extends Component {
             <Fragment>
               <div className='series-banner' style={{
                 background: landscapeImgFullURL ? [
+                  `url(${replaceHttps(landscapeImgFullURL)}) top left / cover no-repeat`,
                   `url(${withProxy(landscapeImgFullURL)}) top left / cover no-repeat`,
-                  `url(${replaceHttps(landscapeImgFullURL)}) top left / cover no-repeat`
                 ].join(', ') : 'https://via.placeholder.com/1920x1080?text=No+Image'
               }}>
                 <div className='series-banner-overlay' />
@@ -148,8 +148,8 @@ class Series extends Component {
                       <div className='col-sm-4 col-lg-3' style={isSmallScreen ? { marginTop: '-100px' } : {}}>
                         <div>
                           <Img loader={<ImageLoader height={300} />} src={portraitImgFullURL ? [
+                            replaceHttps(portraitImgFullURL),
                             withProxy(portraitImgFullURL),
-                            replaceHttps(portraitImgFullURL)
                           ] : 'https://via.placeholder.com/640x960?text=No+Image'} alt={series.name} className='img-fluid shadow-sm w-100' />
                           <QueueButton id={id} block className='mt-2' />
                         </div>

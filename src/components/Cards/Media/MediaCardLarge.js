@@ -41,8 +41,8 @@ class MediaCardLarge extends Component {
                         className='media-card-img rounded-top-left'
                         loader={<ImageLoader />}
                         src={imgFullURL ? [
+                          replaceHttps(imgFullURL),
                           withProxy(imgFullURL),
-                          replaceHttps(imgFullURL)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
                       <CardImgOverlay className='pl-4 pr-4 pb-3 p-2 d-flex flex-row flex-wrap align-items-start'>

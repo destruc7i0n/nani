@@ -26,8 +26,8 @@ class SeriesCard extends Component {
               top
               loader={<ImageLoader height={250} />}
               src={imgFullURL ? [
+                replaceHttps(imgFullURL),
                 withProxy(imgFullURL),
-                replaceHttps(imgFullURL)
               ] : 'https://via.placeholder.com/640x960?text=No+Image'}
               alt={data.name} />
             <CardImgOverlay className='p-1'>

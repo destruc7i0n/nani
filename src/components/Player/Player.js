@@ -497,8 +497,8 @@ class Player extends Component {
         {!inited && (
           <div className='player-center-overlay'>
             <Img src={poster ? [
-              withProxy(poster),
-              replaceHttps(poster)
+              replaceHttps(poster),
+              withProxy(poster)
             ] : 'https://via.placeholder.com/1920x1080?text=No+Image'} alt={media.title} className='w-100' />
             {(!ready && canPlay) && <div className='player-center-overlay text-white'><Loading /></div>}
           </div>

@@ -55,8 +55,8 @@ class MediaCard extends Component {
                         top
                         loader={<ImageLoader height={125} />}
                         src={imgFullURL ? [
+                          replaceHttps(imgFullURL),
                           withProxy(imgFullURL),
-                          replaceHttps(imgFullURL)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'}
                         alt={media.name} />
                       <CardImgOverlay className='p-1 pl-4'>

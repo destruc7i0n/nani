@@ -41,11 +41,6 @@ yarn build
 ```
 Install what is in the `dist` folder.
 
-## Deployment
-This is meant to be deployed on Netlify, to take advantage of their proxy feature and functions. A public version is available online, [here](https://nani.ninja/).
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/destruc7i0n/nani)
-
 ## Thanks
 * [Umi](https://github.com/remixz/umi/) for design ideas and some API functions
 

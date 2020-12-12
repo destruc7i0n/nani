@@ -204,8 +204,8 @@ class Media extends Component {
                       >
                         <div className='position-absolute video-image-overlay-left' />
                         <Img src={prevMedia.img ? [
+                          replaceHttps(prevMedia.img),
                           withProxy(prevMedia.img),
-                          replaceHttps(prevMedia.img)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={prevMedia.name} />
                       </Link>
                     </div>
@@ -218,8 +218,8 @@ class Media extends Component {
                       >
                         <div className='position-absolute video-image-overlay-right' />
                         <Img src={nextMedia.img ? [
+                          replaceHttps(nextMedia.img),
                           withProxy(nextMedia.img),
-                          replaceHttps(nextMedia.img)
                         ] : 'https://via.placeholder.com/640x360?text=No+Image'} alt={nextMedia.name} />
                       </Link>
                     </div>
