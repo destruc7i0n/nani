@@ -6,6 +6,9 @@ import { Helmet } from 'react-helmet'
 import Collection from '../components/Collections/Collection'
 import SeriesCardCollection from '../components/Collections/SeriesCardCollection'
 
+const DAY = 1000 * 60 * 60 * 24
+const daysSince = (timestamp) => Math.round(Math.abs((new Date() - new Date(timestamp)) / DAY))
+
 class Dashboard extends Component {
   constructor (props) {
     super(props)
@@ -48,22 +51,31 @@ class Dashboard extends Component {
     const cardCount = guest ? 12 : 6
 
     // combine the uncompleted history with the current queue
-    const uncompletedHistory = history
-      .filter((item) => item.media.playhead / item.media.duration < 0.9) // 90 percent done
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-      .map((item) => item.media.media_id)
 
     const queueIds = queue
       .filter(item => item.most_likely_media !== undefined)
       .map((item) => item.most_likely_media.media_id)
-      .filter((id) => !uncompletedHistory.includes(id))
+
+    // grab all the series from the queue
+    let queueSeries = queue
+      .map((item) => item.series)
+
+    const queueSeriesIds = queueSeries
+      .map(item => item.series_id)
+
+    queueSeries = queueSeries.slice(0, 6)
+
+    const uncompletedHistory = history
+      .filter((item) => item.media.playhead / item.media.duration < 0.9) // 90 percent done
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      // not in the queue
+      .filter((item) => !queueSeriesIds.includes(item.series.series_id))
+      // not more than 7 days old
+      .filter((item) => item.timestamp && daysSince(item.timestamp) <= 7)
+      .map((item) => item.media.media_id)
 
     // combine the lists and only take the first few
-    const continueIds = [...uncompletedHistory, ...queueIds].slice(0, continueCount)
-    // grab all the series from the queue
-    const queueSeries = queue
-      .map((item) => item.series)
-      .slice(0, 6)
+    const continueIds = [...queueIds, ...uncompletedHistory].slice(0, continueCount)
 
     // grab the recently updated shows
     const recentlyUpdated = recent.slice(0, cardCount)
