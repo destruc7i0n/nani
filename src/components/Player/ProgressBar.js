@@ -12,18 +12,21 @@ class ProgressBar extends Component {
 
     this.state = {
       hovering: false,
-      mousePosition: null
+      mousePosition: null,
+      mouseDown: false,
     }
 
     this.barRef = React.createRef()
     this.timestampRef = React.createRef()
 
     this.onMouseMove = this.onMouseMove.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
     this.onClick = this.onClick.bind(this)
   }
 
   onMouseMove (e) {
     const { duration } = this.props
+    const { mouseDown } = this.state
 
     const mousePosition = e.nativeEvent.layerX / this.barRef.current.clientWidth
     const time = Math.round(mousePosition * duration)
@@ -35,9 +38,23 @@ class ProgressBar extends Component {
         mousePosition
       })
     }
+    if (mouseDown) this.updateTime()
   }
 
   onClick () {
+    const { mousePosition, hovering } = this.state
+    const { duration, setTime } = this.props
+
+    if (hovering) setTime(Math.round(mousePosition * duration))
+  }
+
+  onMouseDown () {
+    this.setState({ mouseDown: true })
+
+    this.updateTime()
+  }
+
+  updateTime () {
     const { mousePosition, hovering } = this.state
     const { duration, setTime } = this.props
 
@@ -51,7 +68,9 @@ class ProgressBar extends Component {
       <div
         className='video-progress'
         onMouseMove={this.onMouseMove}
-        onMouseLeave={() => this.setState({ hovering: false })}
+        onMouseDown={this.onMouseDown}
+        onMouseUp={() => this.setState({ mouseDown: false })}
+        onMouseLeave={() => this.setState({ hovering: false, mouseDown: false })}
         onClick={this.onClick}
       >
         <div

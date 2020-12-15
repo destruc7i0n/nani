@@ -21,7 +21,6 @@ class Controls extends Component {
     this.state = {
       hovering: false,
       settingsOpen: false,
-      newPlayerInfo: false,
 
       lastVolume: null,
     }
@@ -69,10 +68,14 @@ class Controls extends Component {
   }
 
   coverClick () {
-    const { togglePlay } = this.props
-    this.clickTimeout = setTimeout(() => {
-      this.clickTimeout && togglePlay()
-    }, 200)
+    const { togglePlay, completedEpisode, nextMedia, playNextMedia } = this.props
+
+    if (completedEpisode && nextMedia) playNextMedia()
+    else {
+      this.clickTimeout = setTimeout(() => {
+        this.clickTimeout && togglePlay()
+      }, 200)
+    }
   }
 
   coverDoubleClick () {
@@ -127,7 +130,7 @@ class Controls extends Component {
   }
 
   render () {
-    const { hovering, newPlayerInfo, settingsOpen, lastVolume } = this.state
+    const { hovering, settingsOpen, lastVolume } = this.state
     const {
       readyToPlay,
       paused,
@@ -153,7 +156,10 @@ class Controls extends Component {
       speed,
       isFullPage,
       toggleFullPage,
+      completedEpisode,
     } = this.props
+
+    console.log(completedEpisode)
 
     let duration = this.props.duration
     let watchTime = this.props.watchTime
@@ -177,34 +183,13 @@ class Controls extends Component {
         onMouseMove={this.toggleVisibility}
         onMouseOut={this.handleMouseLeave}
       >
-        <div className='cover' onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverTap} />
+        <div className={classNames('cover', { clickable: paused })} onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverTap} />
 
         <div className='episode-information text-white'>
           {isFullPage ? linkTitle : (
             <h3>{media.collection_name || 'Loading...'}</h3>
           )}
           {fullScreenView && <h4>Episode {media.episode_number}: {media.name}</h4>}
-        </div>
-
-        <div className='player-info-button d-md-block d-none'>
-          {newPlayerInfo
-            ? (
-              <Toast className='bg-white'>
-                <ToastHeader toggle={this.toggleNewPlayerInfo}>
-                  New Video Player!
-                </ToastHeader>
-                <ToastBody className='text-body'>
-                  Welcome to the new custom video player! It was built to better accommodate the design and needs of this website.<br />
-                  Do you have feedback or requests of features no-longer available?
-                  You can create a new <a target='_blank' rel='noopener noreferrer' href='https://github.com/destruc7i0n/nani/issues/new?title=New+video+player+feedback'>GitHub issue</a> or <a href='mailto:destruc7i0n@thedestruc7i0n.ca'>send me an email</a>.
-                </ToastBody>
-              </Toast>
-            )
-            : (
-              <Button color='primary' className='rounded-circle' onClick={this.toggleNewPlayerInfo}>
-                <FontAwesomeIcon icon='question' />
-              </Button>
-            )}
         </div>
 
         <div className='toolbar'>
@@ -220,7 +205,7 @@ class Controls extends Component {
 
           <ProgressBar setTime={setTime} progressPercent={progressPercent} loadedPercent={loadedPercent} duration={duration} />
 
-          <span className='text-white time-ticker'>{formatTime(duration - watchTime)}</span>
+          <span className='text-white time-ticker'>{formatTime(!completedEpisode ? duration - watchTime : 0)}</span>
 
           <div className='toolbar-button cursor-pointer volume-icon' title='Volume' onClick={this.toggleVolume} >
             <FontAwesomeIcon icon={

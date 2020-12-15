@@ -451,6 +451,9 @@ class Player extends Component {
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
 
+    const completed = duration > 0 && progressSeconds > 0 && Math.floor(progressSeconds) === Math.floor(duration)
+    console.log(Math.floor(progressSeconds), Math.floor(duration), completed)
+
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
         <ReactPlayer
@@ -508,12 +511,21 @@ class Player extends Component {
           {ready ? (
             <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
               {paused ? (
-                <>
-                  <FontAwesomeIcon icon='play' className='player-icon' />
-                  {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
-                    <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
-                  </div>}
-                </>
+                (!completed || !nextMedia) ? (
+                  <div className='cursor-pointer'>
+                    <FontAwesomeIcon icon='play' className='player-icon' />
+                    {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
+                      <FontAwesomeIcon icon='fast-forward' /> {formatTime(media.playhead)}
+                    </div>}
+                  </div>
+                ) : nextMedia && (
+                  <div className='d-flex flex-column align-items-center cursor-pointer' onClick={this.nextEpisode}>
+                    <FontAwesomeIcon icon='step-forward' className='player-icon' />
+                    <div className='mt-1 bg-dark rounded-pill px-2'>
+                      Next Episode
+                    </div>
+                  </div>
+                )
               ) : (
                 loadingVideo ? (
                   <FontAwesomeIcon icon='circle-notch' pulse className='player-icon' size='3x' />
@@ -597,6 +609,7 @@ class Player extends Component {
             watchTime={progressSeconds}
             progressPercent={progressPercent}
             loadedPercent={loadedPercent}
+            completedEpisode={completed}
           />
         )}
       </div>

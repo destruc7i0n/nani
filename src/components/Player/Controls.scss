@@ -22,7 +22,9 @@ $grid-breakpoints: (
   }
 
   & > .cover {
-    cursor: pointer;
+    &.clickable {
+      cursor: pointer;
+    }
     position: absolute;
     top: 0;
     height: 100%;
@@ -66,7 +68,7 @@ $grid-breakpoints: (
   );
 }
 
-.player-info-button {
+.top-right {
   position: absolute;
   top: 0;
   right: 0;
