@@ -21,7 +21,7 @@ class ProgressBar extends Component {
 
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseDown = this.onMouseDown.bind(this)
-    this.onClick = this.onClick.bind(this)
+    this.updateTime = this.updateTime.bind(this)
   }
 
   onMouseMove (e) {
@@ -39,13 +39,6 @@ class ProgressBar extends Component {
       })
     }
     if (mouseDown) this.updateTime()
-  }
-
-  onClick () {
-    const { mousePosition, hovering } = this.state
-    const { duration, setTime } = this.props
-
-    if (hovering) setTime(Math.round(mousePosition * duration))
   }
 
   onMouseDown () {
@@ -71,7 +64,7 @@ class ProgressBar extends Component {
         onMouseDown={this.onMouseDown}
         onMouseUp={() => this.setState({ mouseDown: false })}
         onMouseLeave={() => this.setState({ hovering: false, mouseDown: false })}
-        onClick={this.onClick}
+        onClick={this.updateTime}
       >
         <div
           ref={this.timestampRef}

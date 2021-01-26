@@ -452,7 +452,6 @@ class Player extends Component {
     const allowedToWatch = media.premium_only ? Auth.premium : true
 
     const completed = duration > 0 && progressSeconds > 0 && Math.floor(progressSeconds) === Math.floor(duration)
-    console.log(Math.floor(progressSeconds), Math.floor(duration), completed)
 
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>

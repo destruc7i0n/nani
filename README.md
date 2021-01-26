@@ -2,24 +2,24 @@
 What's Crunchyroll?
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/4d112e08-f234-4720-ac6e-5fcdc9687f4b/deploy-status)](https://nani.ninja/)
-
-
-## Images
-![Dashboard](https://i.imgur.com/AhcLPOn.png)
-![Queue](https://i.imgur.com/b9anAaK.png)
-![Series](https://i.imgur.com/jXjccP3.png)
-![Video](https://i.imgur.com/kad1azD.png)
-
-There are a few more here: https://imgur.com/a/R5cNW
 
 ## Features
 - Fast, modern, and responsive interface
 - Dark theme
+- Custom video player
+  - Theatre view
 - Stream and search anime
 - Manage your queue
-- MyAnimeList & AniList updating support
-- Much more...
+- AniList updating support
+
+## Images
+![Dashboard](https://i.imgur.com/AhcLPOn.png)
+![Video](https://i.imgur.com/Lksnrf8.png)
+![Theatre](https://i.imgur.com/iMcmZr2.png)
+![Queue](https://i.imgur.com/b9anAaK.png)
+![Series](https://i.imgur.com/jXjccP3.png)
+
+There are a few more here: https://imgur.com/a/R5cNW
 
 ## Development
 To run in development, run
@@ -33,7 +33,7 @@ To build static files, run
 yarn build
 ```
 
-To build the desktop app, run
+To build the desktop app (deprecated), run
 ```sh
 cd desktop
 yarn install
@@ -45,7 +45,7 @@ Install what is in the `dist` folder.
 * [Umi](https://github.com/remixz/umi/) for design ideas and some API functions
 
 ## Contributing
-Contributions are definitely welcome!
+Contributions are welcome!
 
 ## License
 MIT

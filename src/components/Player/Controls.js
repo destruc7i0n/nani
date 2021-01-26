@@ -159,8 +159,6 @@ class Controls extends Component {
       completedEpisode,
     } = this.props
 
-    console.log(completedEpisode)
-
     let duration = this.props.duration
     let watchTime = this.props.watchTime
 
