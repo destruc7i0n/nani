@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Button, Popover, PopoverBody, Toast, ToastBody, ToastHeader } from 'reactstrap'
+import { Popover, PopoverBody } from 'reactstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -166,6 +166,7 @@ class Controls extends Component {
 
     const fullScreenView = fullscreen || isFullPage
 
+    // version of the title with the netflix-like back button
     const linkTitle = (
       <Link to={`/series/${media.series_id}#collection_${media.collection_id}`} className='text-white'>
         <div className='d-flex' style={{ pointerEvents: 'all' }}>
@@ -184,7 +185,7 @@ class Controls extends Component {
         <div className={classNames('cover', { clickable: paused })} onClick={this.coverClick} onDoubleClick={this.coverDoubleClick} onTouchEnd={this.coverTap} />
 
         <div className='episode-information text-white'>
-          {isFullPage ? linkTitle : (
+          {isFullPage && !fullscreen ? linkTitle : (
             <h3>{media.collection_name || 'Loading...'}</h3>
           )}
           {fullScreenView && <h4>Episode {media.episode_number}: {media.name}</h4>}

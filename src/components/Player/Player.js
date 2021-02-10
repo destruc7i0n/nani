@@ -18,7 +18,7 @@ import { Img } from 'react-image'
 import Controls from './Controls'
 import Loading from '../Loading/Loading'
 
-import { formatTime, isFullscreen } from '../../lib/util'
+import { formatTime, isEpisodeCompletedApprox, isFullscreen } from '../../lib/util'
 import withProxy, { replaceHttps } from '../../lib/withProxy'
 
 import './Player.scss'
@@ -150,6 +150,7 @@ class Player extends Component {
     })
   }
 
+  // connect to the browser api for keyboard shortcuts etc.
   async handleMediaSession () {
     if ('mediaSession' in navigator) {
       const { media } = this.props
@@ -227,7 +228,7 @@ class Player extends Component {
   shouldResume () {
     const { media } = this.props
     const { inited, progressSeconds } = this.state
-    return media && media.playhead !== 0 && (media.playhead / media.duration < 0.9) && !inited && progressSeconds < 1
+    return media && media.playhead !== 0 && isEpisodeCompletedApprox(media.playhead, media.duration) && !inited && progressSeconds < 1
   }
 
   play () {
@@ -433,8 +434,8 @@ class Player extends Component {
       return
     }
 
-    // log time only if it's greater than what is saved
-    if (time !== 0 && time > this.loggedTime && process.env.NODE_ENV === 'production') {
+    // always log times
+    if (time !== 0 && process.env.NODE_ENV === 'production') {
       try {
         await dispatch(updatePlaybackTime(time, id))
       } catch (err) {
@@ -451,7 +452,7 @@ class Player extends Component {
 
     const allowedToWatch = media.premium_only ? Auth.premium : true
 
-    const completed = duration > 0 && progressSeconds > 0 && Math.floor(progressSeconds) === Math.floor(duration)
+    const fullyCompleted = duration > 0 && progressSeconds > 0 && Math.floor(progressSeconds) === Math.floor(duration)
 
     return (
       <div className='player' id='player' ref={this.playerContainerRef} onKeyDown={this.onKeyDown} tabIndex='0'>
@@ -510,7 +511,7 @@ class Player extends Component {
           {ready ? (
             <div className='position-absolute d-flex justify-content-center align-items-center h-100 w-100 text-white flex-column'>
               {paused ? (
-                (!completed || !nextMedia) ? (
+                (!fullyCompleted || !nextMedia) ? (
                   <div className='cursor-pointer'>
                     <FontAwesomeIcon icon='play' className='player-icon' />
                     {this.shouldResume() && <div className='mt-1 bg-dark rounded-pill px-2'>
@@ -608,7 +609,7 @@ class Player extends Component {
             watchTime={progressSeconds}
             progressPercent={progressPercent}
             loadedPercent={loadedPercent}
-            completedEpisode={completed}
+            completedEpisode={fullyCompleted}
           />
         )}
       </div>

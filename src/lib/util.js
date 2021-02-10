@@ -5,6 +5,11 @@ export const formatTime = (secs) => {
   return `${minutes}:${seconds}`
 }
 
+// 90 percent done
+export const isEpisodeCompletedApprox = (played, duration, percent = 0.9) => {
+  return (played / duration) < percent
+}
+
 export const isFullscreen = () => !!(
   document.webkitFullscreenElement ||
   document.webkitIsFullScreen ||

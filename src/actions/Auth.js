@@ -3,7 +3,7 @@ import api, { ACCESS_TOKEN, DEVICE_TYPE, LOCALE, VERSION } from '../lib/api'
 
 import { batch } from 'react-redux'
 
-import { handleError, setHistory, setQueue } from './Data'
+import { handleError, setError, setHistory, setQueue } from './Data'
 
 export const UPDATE_AUTH = 'UPDATE_AUTH'
 export const updateAuth = (authData) => ({
@@ -108,6 +108,7 @@ export const login = (username, password) => (dispatch, getState) => {
       )
       // reset expired session
       dispatch(setExpiredSession(''))
+      if (state.Data.error === 'bad_request') dispatch(setError(''))
       resolve()
     } catch (err) {
       await handleError(err, dispatch, state, reject)

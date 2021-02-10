@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet'
 
 import Collection from '../components/Collections/Collection'
 import SeriesCardCollection from '../components/Collections/SeriesCardCollection'
+import { isEpisodeCompletedApprox } from '../lib/util'
 
 const DAY = 1000 * 60 * 60 * 24
 const daysSince = (timestamp) => Math.round(Math.abs((new Date() - new Date(timestamp)) / DAY))
@@ -66,7 +67,7 @@ class Dashboard extends Component {
     queueSeries = queueSeries.slice(0, 6)
 
     const uncompletedHistory = history
-      .filter((item) => item.media.playhead / item.media.duration < 0.9) // 90 percent done
+      .filter((item) => isEpisodeCompletedApprox(item.media.playhead, item.media.duration))
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       // not in the queue
       .filter((item) => !queueSeriesIds.includes(item.series.series_id))

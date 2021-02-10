@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { setError, setExpiredSession, startSession } from '../actions'
@@ -87,15 +87,15 @@ class AppContainer extends Component {
             ? <Alert color='danger' className='d-flex align-items-center' toggle={() => dispatch(setError(''))}>
               {{
                 'true': (
-                  <Fragment>
+                  <>
                     Uh oh! There was trouble contacting Crunchyroll. Try reloading the page or try again later.
                     <Button onClick={this.reloadPage} size='sm' className='ml-auto'>Reload</Button>
-                  </Fragment>
+                  </>
                 ),
                 'bad_request': (
-                  <Fragment>
+                  <>
                     Your session with Crunchyroll has ended. Please login.
-                  </Fragment>
+                  </>
                 )
               }[(error || true).toString()]}
             </Alert>
@@ -108,13 +108,13 @@ class AppContainer extends Component {
     )
 
     return (
-      <Fragment>
+      <>
         <Helmet titleTemplate='%s - nani'>
           <body className={theme} />
         </Helmet>
         { !noHeader ? <Header /> : null }
         { layout }
-      </Fragment>
+      </>
     )
   }
 }
