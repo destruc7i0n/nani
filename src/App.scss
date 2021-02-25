@@ -1,5 +1,9 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 
+html {
+    overflow-x: hidden;
+}
+
 /* overrides modal adding padding */
 body {
     padding-right: 0 !important;
