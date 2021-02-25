@@ -461,7 +461,6 @@ class Player extends Component {
           url={stream}
           config={{
             file: {
-              hlsVersion: '0.14.11',
               // only force hls when not on ios
               forceHLS: !IS_IOS(),
               hlsOptions: {
