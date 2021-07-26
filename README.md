@@ -1,6 +1,8 @@
 # nani
 What's Crunchyroll?
 
+A client for Crunchyroll Video Streaming and Manga.
+
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Features
@@ -11,6 +13,8 @@ What's Crunchyroll?
 - Stream and search anime
 - Manage your queue
 - AniList updating support
+- Crunchyroll manga reading
+- No Chrome extension required
 
 ## Images
 ![Dashboard](https://i.imgur.com/AhcLPOn.png)
@@ -42,7 +46,7 @@ yarn build
 Install what is in the `dist` folder.
 
 ## Thanks
-* [Umi](https://github.com/remixz/umi/) for design ideas and some API functions
+* [umi.party](https://github.com/remixz/umi/) for design inspiration and some API functions
 
 ## Contributing
 Contributions are welcome!
