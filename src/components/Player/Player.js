@@ -274,7 +274,14 @@ class Player extends Component {
   onReady () {
     const { stream } = this.state
 
-    const canPlayPIP = ReactPlayer.canEnablePIP(stream)
+    let canPlayPIP = ReactPlayer.canEnablePIP(stream)
+    // custom check for ios
+    if (IS_IOS) {
+      const video = document.createElement('video')
+      if (video && video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === 'function') {
+        canPlayPIP = true
+      }
+    }
 
     this.getLevels()
     this.setState({ loadingVideo: false, ready: true, canPlayPIP })
