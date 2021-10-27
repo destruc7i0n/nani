@@ -196,7 +196,7 @@ class Player extends Component {
   }
 
   updateMediaSessionPositionState () {
-    if (!navigator.mediaSession) return
+    if (!navigator?.mediaSession?.setPositionState) return
 
     const { duration, speed, progressSeconds } = this.state
     navigator.mediaSession.setPositionState({ duration, speed, position: progressSeconds })
