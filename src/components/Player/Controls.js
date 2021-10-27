@@ -39,6 +39,8 @@ class Controls extends Component {
     this.toggleNewPlayerInfo = this.toggleNewPlayerInfo.bind(this)
     this.toggleSettings = this.toggleSettings.bind(this)
     this.toggleVolume = this.toggleVolume.bind(this)
+    this.togglePlayState = this.togglePlayState.bind(this)
+    this.setTime = this.setTime.bind(this)
   }
 
   componentWillUnmount () {
@@ -129,6 +131,26 @@ class Controls extends Component {
     }
   }
 
+  togglePlayState () {
+    const { play, pause, paused } = this.props
+
+    if (paused) {
+      if (navigator?.mediaSession?.coordinator) navigator.mediaSession.coordinator.play()
+      else play()
+    }
+    else {
+      if (navigator?.mediaSession?.coordinator) navigator.mediaSession.coordinator.pause()
+      else pause()
+    }
+  }
+
+  setTime (time) {
+    const { setTime } = this.props
+
+    if (navigator?.mediaSession?.coordinator) navigator.mediaSession.coordinator.seekTo(time)
+    else setTime(time)
+  }
+
   render () {
     const { hovering, settingsOpen, lastVolume } = this.state
     const {
@@ -144,9 +166,6 @@ class Controls extends Component {
       playNextMedia,
       progressPercent,
       loadedPercent,
-      play,
-      pause,
-      setTime,
       setSpeed,
       setQuality,
       setVolume,
@@ -192,7 +211,7 @@ class Controls extends Component {
         </div>
 
         <div className='toolbar'>
-          <div className='toolbar-button cursor-pointer' title={paused ? 'Play' : 'Pause'} onClick={() => paused ? play() : pause()} >
+          <div className='toolbar-button cursor-pointer' title={paused ? 'Play' : 'Pause'} onClick={this.togglePlayState} >
             <FontAwesomeIcon icon={paused ? 'play' : 'pause'} size='lg' />
           </div>
 
@@ -202,7 +221,7 @@ class Controls extends Component {
 
           <span className='text-white time-ticker'>{formatTime(watchTime)}</span>
 
-          <ProgressBar setTime={setTime} progressPercent={progressPercent} loadedPercent={loadedPercent} duration={duration} />
+          <ProgressBar setTime={this.setTime} progressPercent={progressPercent} loadedPercent={loadedPercent} duration={duration} />
 
           <span className='text-white time-ticker'>{formatTime(!completedEpisode ? duration - watchTime : 0)}</span>
 

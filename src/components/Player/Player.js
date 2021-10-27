@@ -87,6 +87,8 @@ class Player extends Component {
     this.onReady = this.onReady.bind(this)
     this.onPause = this.onPause.bind(this)
     this.onPlay = this.onPlay.bind(this)
+    this.onProgress = this.onProgress.bind(this)
+    this.onDuration = this.onDuration.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.skipSeconds = this.skipSeconds.bind(this)
     this.shouldResume = this.shouldResume.bind(this)
@@ -189,7 +191,15 @@ class Player extends Component {
       navigator.mediaSession.setActionHandler('pause', () => this.pause())
       navigator.mediaSession.setActionHandler('seekbackward', () => this.skipSeconds(-10))
       navigator.mediaSession.setActionHandler('seekforward', () => this.skipSeconds(10))
+      navigator.mediaSession.setActionHandler('seekto', ({ seekTime }) => this.setTime(seekTime))
     }
+  }
+
+  updateMediaSessionPositionState () {
+    if (!navigator.mediaSession) return
+
+    const { duration, speed, progressSeconds } = this.state
+    navigator.mediaSession.setPositionState({ duration, speed, position: progressSeconds })
   }
 
   getLevels () {
@@ -254,11 +264,15 @@ class Player extends Component {
     if (!paused) this.setState({ paused: true })
 
     this.logTime()
+
+    if (navigator.mediaSession) navigator.mediaSession.playbackState = 'paused'
   }
 
   onPlay () {
     const { paused } = this.state
     if (paused) this.setState({ paused: false })
+
+    if (navigator.mediaSession) navigator.mediaSession.playbackState = 'playing'
   }
 
   onStart () {
@@ -285,6 +299,16 @@ class Player extends Component {
 
     this.getLevels()
     this.setState({ loadingVideo: false, ready: true, canPlayPIP })
+  }
+
+  onProgress ({ loadedSeconds, playedSeconds: progressSeconds, played: progressPercent, loaded: loadedPercent }) {
+    this.setState({ loadedSeconds, progressSeconds, progressPercent, loadedPercent })
+    this.updateMediaSessionPositionState()
+  }
+
+  onDuration (duration) {
+    this.setState({ duration })
+    this.updateMediaSessionPositionState()
   }
 
   togglePlay () {
@@ -491,9 +515,8 @@ class Player extends Component {
 
           onBuffer={() => this.setState({ loadingVideo: true })}
           onBufferEnd={() => this.setState({ loadingVideo: false })}
-          onProgress={({ loadedSeconds, playedSeconds: progressSeconds, played: progressPercent, loaded: loadedPercent }) =>
-            this.setState({ loadedSeconds, progressSeconds, progressPercent, loadedPercent })}
-          onDuration={(duration) => this.setState({ duration })}
+          onProgress={this.onProgress}
+          onDuration={this.onDuration}
           onPause={this.onPause}
           onPlay={this.onPlay}
           onReady={this.onReady}
