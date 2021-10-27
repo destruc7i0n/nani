@@ -145,15 +145,15 @@ class App extends Component {
     return (
       <AppContainer>
         <Switch>
-          <Route exact path='/' component={Dashboard} />
+          <AuthedRoute exact path='/' component={Dashboard} />
           <AuthedRoute exact path='/login' redirect='/' authed={!isLoggedIn()} component={Login} />
           <AuthedRoute path='/queue' authed={isLoggedIn()} component={Queue} />
           <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
-          <Route path='/recent' component={Recent} />
+          <AuthedRoute path='/recent' component={Recent} />
           <AuthedRoute path='/series/:id/:media' authed={isLoggedIn()} component={Media} />
           <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
-          <Route path='/list/:type' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
-          <Route path='/categories' component={Categories} />
+          <AuthedRoute path='/list/:type' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
+          <AuthedRoute path='/categories' component={Categories} />
           <AuthedRoute path='/manga/series/:id/:chapter?' authed={isLoggedIn(true)} component={MangaSeries} />
           <AuthedRoute path='/manga' authed={isLoggedIn(true)} component={MangaList} />
           <Route path='/empty' component={() => <Loading />} />

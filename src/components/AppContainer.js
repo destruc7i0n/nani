@@ -77,7 +77,7 @@ class AppContainer extends Component {
 
     const noHeader = isLoginPage
     const noContainerLayout = isSeriesPage
-    const noAlerts = isSeriesPage || isLoginPage
+    const noAlerts = isSeriesPage
     const noFooter = !!isLoginPage
 
     const layout = (
