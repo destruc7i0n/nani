@@ -225,7 +225,7 @@ class Controls extends Component {
 
           <span className='text-white time-ticker'>{formatTime(!completedEpisode ? duration - watchTime : 0)}</span>
 
-          <div className='toolbar-button cursor-pointer volume-icon' title='Volume' onClick={this.toggleVolume} >
+          <div className='toolbar-button cursor-pointer volume-icon d-none d-lg-block' title='Volume' onClick={this.toggleVolume} >
             <FontAwesomeIcon icon={
               volume === 0
                 ? lastVolume === null

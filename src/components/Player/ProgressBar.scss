@@ -12,13 +12,14 @@
 
   .progress {
     cursor: pointer;
-    height: 10px;
+    height: 14px;
+    border-radius: 99999px;
     background-color: rgba(62, 63, 64, 0.5) !important;
   }
 
   .progress-bar:last-child {
-    border-top-right-radius: 0.25rem;
-    border-bottom-right-radius: 0.25rem;
+    border-top-right-radius: 99999px;
+    border-bottom-right-radius: 99999px;
   }
 
   .video-timestamp {
