@@ -12,9 +12,10 @@
 
   .progress {
     cursor: pointer;
-    height: 14px;
+    height: 10px;
     border-radius: 99999px;
     background-color: rgba(62, 63, 64, 0.7) !important;
+    transition: height 100ms ease;
   }
 
   .progress-bar {
