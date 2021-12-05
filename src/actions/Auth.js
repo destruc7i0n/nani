@@ -47,7 +47,7 @@ export const startSession = () => (dispatch, getState) => {
   const params = {
     access_token: ACCESS_TOKEN,
     device_type: DEVICE_TYPE,
-    device_id: state.Auth.uuid
+    device_id: state.Auth.uuid,
   }
 
   if (state.Auth.token) {
@@ -60,17 +60,18 @@ export const startSession = () => (dispatch, getState) => {
       const data = resp.data.data
 
       let token = data.auth
+      let expires = data.expires
       // attempt to use the old token if valid and available
       if (!token && state.Auth.token && (state.Auth.expires && new Date() < new Date(state.Auth.expires))) {
         token = state.Auth.token
       }
+      if (!expires && state.Auth.expires) expires = state.Auth.expires
 
       dispatch(
         updateAuth({
-          user_id: (data.user && data.user.user_id) || null,
           session_id: data.session_id,
           token,
-          expires: data.expires
+          expires,
         })
       )
       resolve(data.session_id)
@@ -122,6 +123,8 @@ export const logout = (didExpire = false) => (dispatch, getState) => {
   form.append('session_id', state.Auth.session_id)
   form.append('locale', LOCALE)
   form.append('version', VERSION)
+
+  console.log(didExpire, state.Auth)
 
   return new Promise(async (resolve, reject) => {
     try {

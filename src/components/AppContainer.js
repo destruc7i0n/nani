@@ -27,7 +27,7 @@ class AppContainer extends Component {
   }
 
   async componentDidMount () {
-    const { dispatch, history } = this.props
+    const { dispatch, Auth, history } = this.props
     // cancel requests on page change
     this.unlisten = history.listen(() => {
       // do not cancel media page requests
@@ -36,8 +36,10 @@ class AppContainer extends Component {
 
     // init session
     try {
-      // always start a new session on page load
-      await dispatch(startSession())
+      // only request a new session if new session or expires
+      if (!Auth.session_id || (Auth.session_id && Auth.expires && new Date() > new Date(Auth.expires)) || (!Auth.guest && !Auth.user_id)) {
+        await dispatch(startSession())
+      }
       this.setState({ initSession: true })
     } catch (e) {
       console.error(e)
