@@ -142,20 +142,24 @@ class App extends Component {
   }
 
   render () {
+    const { Auth } = this.props
+    const authed = isLoggedIn(Auth, false)
+    const authedPremium = isLoggedIn(Auth, true)
+
     return (
       <AppContainer>
         <Switch>
-          <AuthedRoute exact path='/' component={Dashboard} />
-          <AuthedRoute exact path='/login' redirect='/' authed={!isLoggedIn()} component={Login} />
-          <AuthedRoute path='/queue' authed={isLoggedIn()} component={Queue} />
-          <AuthedRoute path='/history' authed={isLoggedIn()} component={History} />
+          <AuthedRoute exact path='/' authed={authed} component={Dashboard} />
+          <AuthedRoute exact path='/login' redirect='/' authed={!authed} component={Login} />
+          <AuthedRoute path='/queue' authed={authed} component={Queue} />
+          <AuthedRoute path='/history' authed={authed} component={History} />
           <AuthedRoute path='/recent' component={Recent} />
-          <AuthedRoute path='/series/:id/:media' authed={isLoggedIn()} component={Media} />
-          <AuthedRoute path='/series/:id' authed={isLoggedIn()} component={Series} />
+          <AuthedRoute path='/series/:id/:media' authed={authed} component={Media} />
+          <AuthedRoute path='/series/:id' authed={authed} component={Series} />
           <AuthedRoute path='/list/:type' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
           <AuthedRoute path='/categories' component={Categories} />
-          <AuthedRoute path='/manga/series/:id/:chapter?' authed={isLoggedIn(true)} component={MangaSeries} />
-          <AuthedRoute path='/manga' authed={isLoggedIn(true)} component={MangaList} />
+          <AuthedRoute path='/manga/series/:id/:chapter?' authed={authedPremium} component={MangaSeries} />
+          <AuthedRoute path='/manga' authed={authedPremium} component={MangaList} />
           <Route path='/empty' component={() => <Loading />} />
           <Redirect from='*' to='/' />
         </Switch>
