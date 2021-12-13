@@ -58,6 +58,7 @@ const proxyRequests = (url) => {
     }
     return url.replace('https://pl.crunchyroll.com', '/proxy/pl')
   }
+  return url
 }
 
 class Player extends Component {
