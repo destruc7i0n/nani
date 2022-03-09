@@ -167,7 +167,7 @@ class Login extends Component {
           <Button color='primary' size='lg' block type='submit'>
             {mode === 'login' ? 'Login' : 'Reset Password'}
           </Button>
-          <Button color='secondary' size='lg' block type='button' onClick={this.loginAsGuest}>Preview as Guest</Button>
+          {/* <Button color='secondary' size='lg' block type='button' onClick={this.loginAsGuest}>Preview as Guest</Button> */}
           {mode === 'login'
             ? <Button color='link' size='sm' block type='button' onClick={() => this.setState({ mode: 'forgot' })}>Forgot Password</Button>
             : null}
