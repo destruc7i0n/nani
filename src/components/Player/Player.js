@@ -53,10 +53,11 @@ const IS_IOS = () => {
 
 const proxyRequests = (url) => {
   if (url.startsWith('https://pl.crunchyroll.com')) {
-    if (process.env.REACT_APP_CORS_PROXY) {
-      return process.env.REACT_APP_CORS_PROXY + '/' + url
-    }
-    return url.replace('https://pl.crunchyroll.com', '/proxy/pl')
+    // if (process.env.REACT_APP_CORS_PROXY) {
+    //   return process.env.REACT_APP_CORS_PROXY + url
+    // }
+    // return url.replace('https://pl.crunchyroll.com', '/proxy/pl')
+    return url.replace('https://pl.crunchyroll.com', 'https://umi.party/pl-proxy')
   }
   return url
 }
