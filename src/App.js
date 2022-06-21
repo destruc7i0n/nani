@@ -153,11 +153,11 @@ class App extends Component {
           <AuthedRoute exact path='/login' redirect='/' authed={!authed} component={Login} />
           <AuthedRoute path='/queue' authed={authed} component={Queue} />
           <AuthedRoute path='/history' authed={authed} component={History} />
-          <AuthedRoute path='/recent' component={Recent} />
+          <AuthedRoute path='/recent' authed={authed} component={Recent} />
           <AuthedRoute path='/series/:id/:media' authed={authed} component={Media} />
           <AuthedRoute path='/series/:id' authed={authed} component={Series} />
-          <AuthedRoute path='/list/:type' component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
-          <AuthedRoute path='/categories' component={Categories} />
+          <AuthedRoute path='/list/:type' authed={authed} component={(props) => <SeriesList type={props.match.params.type} {...props} />} />
+          <AuthedRoute path='/categories' authed={authed} component={Categories} />
           <AuthedRoute path='/manga/series/:id/:chapter?' authed={authedPremium} component={MangaSeries} />
           <AuthedRoute path='/manga' authed={authedPremium} component={MangaList} />
           <Route path='/empty' component={() => <Loading />} />

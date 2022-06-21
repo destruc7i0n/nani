@@ -60,7 +60,7 @@ class AppContainer extends Component {
       window.scrollTo(0, 0)
     }
 
-    if (Auth.expires && new Date() > new Date(Auth.expires)) {
+    if (Auth.expires && new Date() > new Date(Auth.expires) && !Auth.expiredSession) {
       dispatch(setExpiredSession(Auth.username))
     }
   }
