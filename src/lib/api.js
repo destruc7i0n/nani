@@ -5,7 +5,7 @@ import axios, {CancelToken} from 'axios'
 export const ACCESS_TOKEN = 'LNDJgOit5yaRIWN'
 export const DEVICE_TYPE = 'com.crunchyroll.windows.desktop'
 export const LOCALE = 'enUS'
-export const VERSION = '1.1.21.0'
+export const VERSION = '1.3.1.0'
 export const CONNECTIVITY_TYPE = 'ethernet'
 
 let source = CancelToken.source()
